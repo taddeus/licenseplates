@@ -5,10 +5,10 @@ from matplotlib.pyplot import imshow, show, axis
 
 CELL_SIZE = 16
 
-def domainIterator(image):
+def domainIterator(shape):
     """Iterate over the pixels of an image."""
-    for y in xrange(image.shape[0]):
-        for x in xrange(image.shape[1]):
+    for y in xrange(shape[0]):
+        for x in xrange(shape[1]):
             yield y, x
 
 # Divide the examined window to cells (e.g. 16x16 pixels for each cell).
@@ -42,7 +42,7 @@ def compare(image):
     def cmp_pixels(y, x, p):
         return in_image(y, x, image) and image[y, x] > p
 
-    for y, x in domainIterator(features):
+    for y, x in domainIterator(features.shape):
         p = image[y, x]
 
         # Walk around the pixel in counter-clokwise order, shifting 1 but less
