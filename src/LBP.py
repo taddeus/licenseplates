@@ -1,5 +1,15 @@
-from pylab import imread, figure, show, imshow
+from pylab import imread, figure, show, imshow, zeros, axis
 
+def to_grayscale(image):
+    """Turn a RGB image to a grayscale image."""
+    result = zeros(image.shape[:2])
+    
+    for x in xrange(len(image)):
+        for y in xrange(len(image[0])):
+            result[x][y] = image[x][y].sum() / 3
+            
+    return result
+        
 # Divide the examined window to cells (e.g. 16x16 pixels for each cell).
 
 # For each pixel in a cell, compare the pixel to each of its 8 neighbors 
@@ -18,7 +28,9 @@ from pylab import imread, figure, show, imshow
 # cells. This gives the feature vector for the window.
 
 image = imread("../images/test.png")
+image = to_grayscale(image)
 
 figure()
-imshow(image)
+imshow(image, cmap='gray')
+axis('off')
 show()
