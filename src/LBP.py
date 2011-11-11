@@ -1,15 +1,7 @@
 #!/usr/bin/python
 import Image
 from numpy import array, zeros, byte
-from matplotlib.pyplot import imshow, show, axis
-
-CELL_SIZE = 16
-
-def domainIterator(shape):
-    """Iterate over the pixels of an image."""
-    for y in xrange(shape[0]):
-        for x in xrange(shape[1]):
-            yield y, x
+from matplotlib.pyplot import imshow, subplot, show, axis
 
 # Divide the examined window to cells (e.g. 16x16 pixels for each cell).
 
@@ -28,13 +20,21 @@ def domainIterator(shape):
 # Optionally normalize the histogram. Concatenate normalized histograms of all
 # cells. This gives the feature vector for the window.
 
-image = array(Image.open("../images/test.png").convert('L'))
+CELL_SIZE = 16
+
+def domain_iterator(shape):
+    """Iterate over the pixels of an image."""
+    for y in xrange(shape[0]):
+        for x in xrange(shape[1]):
+            yield y, x
+
+image = array(Image.open('../images/test.png').convert('L'))
 
 def in_image(y, x, F):
     """Check if given pixel coordinates are within the bounds of image F."""
     return 0 <= y < F.shape[0] and 0 <= x < F.shape[1]
 
-def compare(image):
+def features(image):
     """Compare each pixel to each of its eight neigheach pixel to each of its
     eight neighbours."""
     features = zeros(image.shape, dtype=byte)
@@ -42,7 +42,7 @@ def compare(image):
     def cmp_pixels(y, x, p):
         return in_image(y, x, image) and image[y, x] > p
 
-    for y, x in domainIterator(features.shape):
+    for y, x in domain_iterator(features.shape):
         p = image[y, x]
 
         # Walk around the pixel in counter-clokwise order, shifting 1 but less
@@ -59,7 +59,14 @@ def compare(image):
 
     return features
 
-#print compare(image)
+def feature_vectors(image):
+    """Create cell histograms of an image"""
+    F = features(image)
+
+V = feature_vectors(image)
+subplot(121)
 imshow(image, cmap='gray')
+subplot(122)
+imshow(V, cmap='gray')
 axis('off')
 show()
