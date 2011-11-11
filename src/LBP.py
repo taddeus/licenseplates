@@ -1,3 +1,5 @@
+from pylab import imread, figure, show, imshow
+
 # Divide the examined window to cells (e.g. 16x16 pixels for each cell).
 
 # For each pixel in a cell, compare the pixel to each of its 8 neighbors 
@@ -14,3 +16,9 @@
     
 # Optionally normalize the histogram. Concatenate normalized histograms of all 
 # cells. This gives the feature vector for the window.
+
+image = imread("../images/test.png")
+
+figure()
+imshow(image)
+show()
