@@ -1,5 +1,9 @@
 #!/usr/bin/python
-import Image as im
+import Image
+from numpy import array, zeros, byte
+from matplotlib.pyplot import imshow, show, axis
+
+CELL_SIZE = 16
 
 def domainIterator(image):
     """Iterate over the pixels of an image."""
@@ -24,5 +28,38 @@ def domainIterator(image):
 # Optionally normalize the histogram. Concatenate normalized histograms of all
 # cells. This gives the feature vector for the window.
 
-image = im.open("../images/test.png").convert('L')
-image.show()
+image = array(Image.open("../images/test.png").convert('L'))
+
+def in_image(y, x, F):
+    """Check if given pixel coordinates are within the bounds of image F."""
+    return 0 <= y < F.shape[0] and 0 <= x < F.shape[1]
+
+def compare(image):
+    """Compare each pixel to each of its eight neigheach pixel to each of its
+    eight neighbours."""
+    features = zeros(image.shape, dtype=byte)
+
+    def cmp_pixels(y, x, p):
+        return in_image(y, x, image) and image[y, x] > p
+
+    for y, x in domainIterator(features):
+        p = image[y, x]
+
+        # Walk around the pixel in counter-clokwise order, shifting 1 but less
+        # at each neighbour starting at 7 in the top-left corner. This gives a
+        # 8-bitmap
+        features[y, x] = byte(cmp_pixels(y - 1, x - 1, p)) << 7 \
+                         | byte(cmp_pixels(y - 1, x, p)) << 6 \
+                         | byte(cmp_pixels(y - 1, x + 1, p)) << 5 \
+                         | byte(cmp_pixels(y, x + 1, p)) << 4 \
+                         | byte(cmp_pixels(y + 1, x + 1, p)) << 3 \
+                         | byte(cmp_pixels(y + 1, x, p)) << 2 \
+                         | byte(cmp_pixels(y + 1, x - 1, p)) << 1 \
+                         | byte(cmp_pixels(y, x - 1, p))
+
+    return features
+
+#print compare(image)
+imshow(image, cmap='gray')
+axis('off')
+show()
