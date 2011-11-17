@@ -1,6 +1,6 @@
 \documentclass[a4paper]{article}
 
-\title{Teaching a computer to learn, find and read licence plates}
+\title{Using local binary patterns to read license plates in photographs}
 \date{November 17th, 2011}
 
 % Paragraph indentation
@@ -11,35 +11,41 @@
 \maketitle
 
 \section*{Project members}
-Gijs van der Voort\\Richard Torenvliet\\Jayke Meijer\\Tadde\"us Kroes\\Fabi\'en Tesselaar
+Gijs van der Voort\\
+Richard Torenvliet\\
+Jayke Meijer\\
+Tadde\"us Kroes\\
+Fabi\'en Tesselaar
 
 \tableofcontents
 \setcounter{secnumdepth}{1}
 
-\section{Introduction}
+\section{Problem description}
 
-Licence plates are used all over the world. The plates are, usually, attached to the front and rear
-of a motorised vehicle and used for identifying this vehicle. Every
-country can have more or less its own version of a licence plate, but all these systems do not 
-differ greatly. We will be focusing on the Dutch system for licence plates.
+license plates are used for uniquely identifying motorized vehicles and are 
+made to be read by humans from great distances and in all kinds of weather 
+conditions.
 
-\section{Problem Description}
+Reading license plates with a computer is much more difficult. Our dataset
+contains photographs from license plates from all sorts of angles and distance. 
+Meaning that not only do we have to implement a method to read the actual 
+characters, but also have to determine the location of the license plate and its
+transformation due to different angles.
 
-License plates are used for identification and thus made to recognize from great
-distances and still be seen in many weather conditions. Our learning set of photos contains
-'' ik weet niet precies wat voor camera ''. The angle in which these pictures are taken or the angle 
-of the approaching vehicles are always different and some licence plates are a bit dirty,
-but for a human they are still pretty easy to identify. A computer or perhaps a small
-chipset will need to be thoroughly practiced. In short our program must be able to
-do the following:
+We will focus our research in reading the transformed characters of the 
+lisence plate, on which we know where the letters are located. This is because
+Microsoft recently published a new and effective method to find the location of 
+text in an image.
+
+In short our program must be able to do the following:
 
 \begin{enumerate}
-\item Find the location of the license plate.
-\item Use perspective transformations to obtain an upfront view.
+\item Use perspective transformation to obtain an upfront view of license plate.
 \item Reduce noise where possible.
-\item Find the locations of each letter and extract it.
-\item Apply a Local Binary Pattern algorithm on each letter.
-\item Match the found patterns with results from the learning set and return the best match for each letter.
+\item Extract each character using the location points in the info file.
+\item Transform character to a normal form. 
+\item Create a local binary pattern histogram vector.
+\item Match the found vector with the learning set.
 \end{enumerate}
 
 \section{Solution}
@@ -47,55 +53,68 @@ do the following:
 Now that we know the problem we can start with stating our solution. This will
 come in a few steps as well.
 
-\subsection{Localizing the plate}
+\subsection{Transformation}
 
-The photos are of very high contrast. Most of the time only the lights of a vehicle
-are visible in addition to the license plate. We can first crop the image until
-it finds brighter pixel values in a row or column. Then we can apply ''?? weet niet hoor'' local histogram
-matching to find out whether we have a light or license plate.
-
-\subsection{Transformations}
-
-Once the locations of the four corner points of the license plate have been
-found, a simple perspective transformation will be sufficient to transform and
-resize the plate to a normalized format.
+A simple perspective transformation will be sufficient to transform and resize 
+the plate to a normalized format. Corners of license plates can be found in the
+data files.
 
 \subsection{Reducing noise}
 
-Weet niet precies hoe, maar van die kleine rondjes / vlekjes / stipjes moeten
-we wel een beetje weghalen want die maken het wel een beetje lelijk
-
-Taddeus: Ik brainstorm hier een beetje...:
-
 Small amounts of noise will probably be suppressed by usage of a Gaussian
-filter. A real problem occurs in very dirty licence plates, where branches and
+filter. A real problem occurs in very dirty license plates, where branches and
 dirt over a letter could radically change the local binary pattern. A question
 we can ask ourselves here, is whether we want to concentrate ourselves on
-these exceptional cases. By law, license plates have to be readable.
-Therefore, we will first direct our attention at getting a higher score in the
-'regular' test set before addressing these cases.
+these exceptional cases. By law, license plates have to be readable. Therefore, 
+we will first direct our attention at getting a higher score in the 'regular' 
+test set before addressing these cases. Looking at how LBP work, there is a good 
+change that our features are, to a certain degree, indifferent to noise on the 
+plates.
 
 \subsection{Extracting a letter}
 
-De karakteristiek bepalen van het dash/streepje (-) dan heb je in elk geval al
-drie groepen met maar 1 of 2 letters (ws 2). Hier kun je volgens mij dan wel 
-makkelijk zoeken op een overgang van letter naar andere letter omdat er stuk
-white-space tussenzit
+Because we are already given the locations of the characters, we only need to 
+transform those locations using the same perspective transform used to to
+create a front facing license plate.
+
+\begin{enumerate}
+\item Crop the image in such a way that the character precisely fits the image.
+\item Scale the image to a standard height.
+\item Extend the image on either the left or right side to a certain width. 
+\end{enumerate}
+
+The resulting image will always have the same size, the character contained will
+always be of the same height, and the character will alway be positioned at 
+either the left of right side of the image.
 
 \subsection{Local binary patterns}
 
-Hier moet een vrij groot verhaal omdat dit ons belangrijkste algoritme moet zijn
+Once we have separate digits and characters, we intend to use Local Binary 
+Patterns to determine what character or digit we are dealing with. Local Binary 
+Patters are a way to classify a texture, because it can create a histogram which
+describes the distribution of line directions in the image. Since letters on a 
+license plate are mainly build up of straight lines and simple curves, it should 
+theoretically be possible to identify these using Local Binary Patterns.
 
-+ not sure if it will work out :o
+This will actually be the first thing we implement, since it is not known if it 
+will give the desired results. Our first goal is therefore a proof of concept 
+that using LBP's is a good way to determine which character we are dealing with.
+
+Important to note is that by now, we have transformed this letter to a standard 
+size, which eliminates the need to normalize the histograms generated by the 
+algorithm.
+
+Once we have a Local Binary Pattern of the character, we use a Support Vector 
+Machine to determine what letter we are dealing with. For this, the feature 
+vector of the image will be a concatenation of the histograms of the cells in 
+the image.
 
 \subsection{Matching the database}
 
-Als we al die histogrammen opslaan, hoe gaan we dat slim met elkaar vergelijken
-(of naja sneller dan brute force)
-
-
-\section{Conclusion}
-
-This will be fun.
+In order to determine what character we are dealing with, we use a SVM, as said 
+before. To prevent us from having to teach this SVM each time we start the 
+program, we are going to save the SVM to a pickle object, which packs an object 
+in Python to a certain data format, so it can be unpacked somewhere else, or, in 
+our case, when executing the program to identify a character.
 
 \end{document}
