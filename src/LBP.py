@@ -47,7 +47,7 @@ def features(image):
 
         # Walk around the pixel in counter-clokwise order, shifting 1 bit less
         # at each neighbour starting at 7 in the top-left corner. This gives a
-        # 8-bitmap
+        # 8-bit feature number of a pixel
         features[y, x] = byte(cmp_pixels(y - 1, x - 1, p)) << 7 \
                          | byte(cmp_pixels(y - 1, x, p)) << 6 \
                          | byte(cmp_pixels(y - 1, x + 1, p)) << 5 \
