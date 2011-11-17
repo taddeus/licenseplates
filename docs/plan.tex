@@ -3,6 +3,10 @@
 \title{Teaching a computer to learn, find and read licence plates}
 \date{November 17th, 2011}
 
+% Paragraph indentation
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1ex plus 0.5ex minus 0.2ex}
+
 \begin{document}
 \maketitle
 
@@ -15,49 +19,61 @@ Gijs van der Voort\\Richard Torenvliet\\Jayke Meijer\\Tadde\"us Kroes\\Fabi\'en 
 \section{Introduction}
 
 Licence plates are used all over the world. The plates are, usually, attached to the front and rear
-of a motorised vehicle and used for indentifying this vehicle. Every
+of a motorised vehicle and used for identifying this vehicle. Every
 country can have more or less its own version of a licence plate, but all these systems do not 
-differ greatly. We will be focusing on the dutch system for licence plates.
+differ greatly. We will be focusing on the Dutch system for licence plates.
 
 \section{Problem Description}
 
-License plates are used for indentification and thus made to recognize from great
+License plates are used for identification and thus made to recognize from great
 distances and still be seen in many weather conditions. Our learning set of photos contains
-''' ik weet niet precies wat voor camera ''. The angle in which these pictures are taken or the angle 
+'' ik weet niet precies wat voor camera ''. The angle in which these pictures are taken or the angle 
 of the approaching vehicles are always different and some licence plates are a bit dirty,
-but for a human they are still pretty easy to indentify. A computer or perhaps a small
-chipset will need to be thourougly practiced. In short our program must be able to
+but for a human they are still pretty easy to identify. A computer or perhaps a small
+chipset will need to be thoroughly practiced. In short our program must be able to
 do the following:
 
-\begin{itemize}
+\begin{enumerate}
 \item Find the location of the license plate.
-\item Use transformations so it gets an upfront view.
+\item Use perspective transformations to obtain an upfront view.
 \item Reduce noise where possible.
-\item Get the locations of each letter and extracting it.
-\item Apply a local binary pattern algorithm on each letter.
-\item Matching the found patterns with found results and return the best match.
-\end{itemize}
+\item Find the locations of each letter and extract it.
+\item Apply a Local Binary Pattern algorithm on each letter.
+\item Match the found patterns with results from the learning set and return the best match for each letter.
+\end{enumerate}
 
 \section{Solution}
 
 Now that we know the problem we can start with stating our solution. This will
-come in a few steps aswell.
+come in a few steps as well.
 
 \subsection{Localizing the plate}
 
 The photos are of very high contrast. Most of the time only the lights of a vehicle
-are visible in addition to the license plate. We can first crop the image untill
+are visible in addition to the license plate. We can first crop the image until
 it finds brighter pixel values in a row or column. Then we can apply ''?? weet niet hoor'' local histogram
 matching to find out whether we have a light or license plate.
 
 \subsection{Transformations}
 
-Affine transformations will do the trick
+Once the locations of the four corner points of the license plate have been
+found, a simple perspective transformation will be sufficient to transform and
+resize the plate to a normalized format.
 
 \subsection{Reducing noise}
 
 Weet niet precies hoe, maar van die kleine rondjes / vlekjes / stipjes moeten
 we wel een beetje weghalen want die maken het wel een beetje lelijk
+
+Taddeus: Ik brainstorm hier een beetje...:
+
+Small amounts of noise will probably be suppressed by usage of a Gaussian
+filter. A real problem occurs in very dirty licence plates, where branches and
+dirt over a letter could radically change the local binary pattern. A question
+we can ask ourselves here, is whether we want to concentrate ourselves on
+these exceptional cases. By law, license plates have to be readable.
+Therefore, we will first direct our attention at getting a higher score in the
+'regular' test set before addressing these cases.
 
 \subsection{Extracting a letter}
 
