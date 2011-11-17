@@ -45,7 +45,7 @@ def features(image):
     for y, x in domain_iterator(features.shape):
         p = image[y, x]
 
-        # Walk around the pixel in counter-clokwise order, shifting 1 but less
+        # Walk around the pixel in counter-clokwise order, shifting 1 bit less
         # at each neighbour starting at 7 in the top-left corner. This gives a
         # 8-bitmap
         features[y, x] = byte(cmp_pixels(y - 1, x - 1, p)) << 7 \
