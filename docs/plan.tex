@@ -53,7 +53,7 @@ In short our program must be able to do the following:
 
 \section{Solution}
 
-Now that we know the problem we can start with stating our solution. This will
+Now that the problem is defined, the next step is stating a solution. This will
 come in a few steps as well.
 
 \subsection{Transformation}
@@ -80,7 +80,11 @@ very robust when dealing with noisy images.
 
 Because we are already given the locations of the characters, we only need to
 transform those locations using the same perspective transformation used to
-create a front facing license plate.
+create a front facing license plate. The next step is to transform the
+characters to a normalized manner. The size of the letter W is used as a
+standard to normalize the width of all the characters, because W is the widest
+character of the alphabet. We plan to also normalize the height of characters,
+the best manner for this is still to be determined.
 
 \begin{enumerate}
     \item Crop the image in such a way that the character precisely fits the
@@ -102,7 +106,7 @@ which describes the distribution of line directions in the image. Since letters
 on a license plate are mainly build up of straight lines and simple curves, it
 should theoretically be possible to identify these using Local Binary Patterns.
 
-This will actually be the first thing we implement, since it is not known if it
+This will actually be the first thing to implement, since it is not known if it
 will give the desired results. Our first goal is therefore a proof of concept
 that using LBP's is a good way to determine which character we are dealing
 with.
