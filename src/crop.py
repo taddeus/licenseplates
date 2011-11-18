@@ -1,36 +1,45 @@
 from PIL import Image
-from Pylab import *
-from LBP import domain_iterator
+from pylab import *
 
-THRESHOLD = 0.5
+class LetterCropper:
 
-im = Image.open('../.jpg')
-im = Image.convert('L', im)
+    THRESHOLD = 0.5
 
-outer_bounds = get_outer_bounds()
-
-im.crop(outer_bounds)
-
-imshow(im)
-
-show()
-
-def get_outer_bound():
-    min_x = len(im[0])
-    max_x = 0
-    min_y = len(im)
-    max_y = 0
-
-    for y in xrange(len(im)):
-        for x in xrange(len(im[0])):
-            if im[y, x] > THRESHOLD:
-                if x < min_x: min_x = x
-                if y < min_y: min_y = y
-                if x > max_x: max_x = x
-                if y > max_y: max_y = y
-    return (min_x, min_y, max_x, max_y)
-            
+    def __init__(self, image_path):
+        self.set_image(image_path)
         
+    def set_image(self, image_path):
+        self.source_image = imread(image_path)
+                
+    def get_cropped_letter(self):
+        self.convert_image_to_grayscale()
+        self.determine_letter_bounds()
+        self.crop_image()
+        return self.cropped_letter
+
+    def convert_image_to_grayscale(self):
+        self.cropped_letter = self.source_image.sum(axis=2) / 3
+
+    def determine_letter_bounds(self):
+        image_width = len(self.cropped_letter[0])
+        image_height = len(self.cropped_letter)
     
-    
-    
+        min_x = image_width
+        max_x = 0
+        min_y = image_height
+        max_y = 0
+
+        for y in xrange(image_height):
+            for x in xrange(image_width):
+                if self.cropped_letter[y, x] < self.THRESHOLD:
+                    if x < min_x: min_x = x
+                    if y < min_y: min_y = y
+                    if x > max_x: max_x = x
+                    if y > max_y: max_y = y
+        
+        self.letter_bounds = (min_x, min_y, max_x, max_y)
+        
+    def crop_image(self):
+        self.cropped_letter = self.cropped_letter[self.letter_bounds[1] : self.letter_bounds[3], 
+                                                  self.letter_bounds[0] : self.letter_bounds[2]]
+
