@@ -40,6 +40,8 @@ def features(image):
     features = zeros(image.shape, dtype=byte)
 
     def cmp_pixels(y, x, p):
+        """Check if two pixels (y, x) and p are in the image, and if the value
+        at (y, x) is larger than the value at p."""
         return in_image(y, x, image) and image[y, x] > p
 
     for y, x in domain_iterator(features.shape):
