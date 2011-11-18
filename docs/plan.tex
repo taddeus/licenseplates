@@ -22,12 +22,12 @@ Fabi\'en Tesselaar
 
 \section{Problem description}
 
-license plates are used for uniquely identifying motorized vehicles and are 
+License plates are used for uniquely identifying motorized vehicles and are 
 made to be read by humans from great distances and in all kinds of weather 
 conditions.
 
 Reading license plates with a computer is much more difficult. Our dataset
-contains photographs from license plates from all sorts of angles and distance. 
+contains photographs from license plates from all sorts of angles and distances. 
 Meaning that not only do we have to implement a method to read the actual 
 characters, but also have to determine the location of the license plate and its
 transformation due to different angles.
@@ -50,7 +50,7 @@ In short our program must be able to do the following:
 
 \section{Solution}
 
-Now that we know the problem we can start with stating our solution. This will
+Now that the problem is defined, the next step is stating a solution. This will
 come in a few steps as well.
 
 \subsection{Transformation}
@@ -68,14 +68,16 @@ we can ask ourselves here, is whether we want to concentrate ourselves on
 these exceptional cases. By law, license plates have to be readable. Therefore, 
 we will first direct our attention at getting a higher score in the 'regular' 
 test set before addressing these cases. Looking at how LBP work, there is a good 
-change that our features are, to a certain degree, indifferent to noise on the 
-plates.
+change that our features are indifferent to noise to a certain degree on the 
+licence plates.
 
 \subsection{Extracting a letter}
 
-Because we are already given the locations of the characters, we only need to 
-transform those locations using the same perspective transform used to to
-create a front facing license plate.
+Because the locations of the characters are already given, the next step is to
+transform the characters to a normalized manner. The letter W is used as a
+fixing point to normalize the width of all the characters, because W is the
+broadest character of the alphabet. Also the height of the characters are 
+normalized but its depending on a trial and error fase. 
 
 \begin{enumerate}
 \item Crop the image in such a way that the character precisely fits the image.
@@ -84,12 +86,12 @@ create a front facing license plate.
 \end{enumerate}
 
 The resulting image will always have the same size, the character contained will
-always be of the same height, and the character will alway be positioned at 
+always be of the same height, and the character will always be positioned at 
 either the left of right side of the image.
 
 \subsection{Local binary patterns}
 
-Once we have separate digits and characters, we intend to use Local Binary 
+Once separate digits and characters are found, we intend to use Local Binary 
 Patterns to determine what character or digit we are dealing with. Local Binary 
 Patters are a way to classify a texture, because it can create a histogram which
 describes the distribution of line directions in the image. Since letters on a 
@@ -111,7 +113,7 @@ the image.
 
 \subsection{Matching the database}
 
-In order to determine what character we are dealing with, we use a SVM, as said 
+In order to determine what characters we are dealing with, we use a SVM, as said 
 before. To prevent us from having to teach this SVM each time we start the 
 program, we are going to save the SVM to a pickle object, which packs an object 
 in Python to a certain data format, so it can be unpacked somewhere else, or, in 
