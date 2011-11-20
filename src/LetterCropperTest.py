@@ -1,11 +1,10 @@
-from pylab import *
 from LetterCropper import LetterCropper
+from GrayscaleImage import GrayscaleImage
 
-letter_cropper = LetterCropper("../images/test.png")
-cropped_letter = letter_cropper.get_cropped_letter()
+image = GrayscaleImage("../images/test.png")
 
-imshow(cropped_letter, cmap="gray")
+cropper = LetterCropper(image)
 
-show()
+cropped_letter = cropper.get_cropped_letter()
 
-
+cropped_letter.show()

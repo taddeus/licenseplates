@@ -1,44 +1,41 @@
-from pylab import *
+from Rectangle import Rectangle
 
 class LetterCropper:
 
-    THRESHOLD = 0.5
-
-    def __init__(self, image_path):
-        self.set_image(image_path)
+    def __init__(self, image, threshold = 0.9):
+        self.set_image(image)
+        self.set_threshold(threshold)
         
-    def set_image(self, image_path):
-        self.source_image = imread(image_path)
+    def set_image(self, image):
+        self.image = image
+        
+    def set_threshold(self, threshold):
+        self.threshold = threshold
                 
     def get_cropped_letter(self):
-        self.convert_image_to_grayscale()
         self.determine_letter_bounds()
-        self.crop_image()
-        return self.cropped_letter
-
-    def convert_image_to_grayscale(self):
-        self.cropped_letter = self.source_image.sum(axis=2) / 3
+        self.image.crop(self.letter_bounds)
+        return self.image
 
     def determine_letter_bounds(self):
-        image_width = len(self.cropped_letter[0])
-        image_height = len(self.cropped_letter)
     
-        min_x = image_width
+        min_x = self.image.width
         max_x = 0
-        min_y = image_height
+        min_y = self.image.height
         max_y = 0
 
-        for y in xrange(image_height):
-            for x in xrange(image_width):
-                if self.cropped_letter[y, x] < self.THRESHOLD:
+        for y in xrange(self.image.height):
+            for x in xrange(self.image.width):
+                if self.image[y, x] < self.threshold:
                     if x < min_x: min_x = x
                     if y < min_y: min_y = y
                     if x > max_x: max_x = x
                     if y > max_y: max_y = y
         
-        self.letter_bounds = (min_x, min_y, max_x, max_y)
-        
-    def crop_image(self):
-        self.cropped_letter = self.cropped_letter[self.letter_bounds[1] : self.letter_bounds[3], 
-                                                  self.letter_bounds[0] : self.letter_bounds[2]]
+        self.letter_bounds = Rectangle(
+            min_x, 
+            min_y, 
+            max_x - min_x ,
+            max_y - min_y
+        )
 

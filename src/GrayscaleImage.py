@@ -1,4 +1,4 @@
-from pylab import *
+from pylab import imshow, imread, show
 
 class GrayscaleImage:
 
