@@ -24,5 +24,5 @@ class LocalBinaryPatternizer:
 
         return self.features
     
-    def is_pixel_darker(self, x, y, value):
+    def is_pixel_darker(self, y, x, value):
         return self.image.in_bounds(y, x) and self.image[y, x] > value
