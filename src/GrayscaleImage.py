@@ -10,19 +10,19 @@ class GrayscaleImage:
             self.data = data
     
     def __iter__(self):
-        self.i_x = -1
-        self.i_y = 0
+        self.__i_x = -1
+        self.__i_y = 0
         return self
             
     def next(self):
-        self.i_x += 1
-        if self.i_x  == self.width:
-            self.i_x = 0
-            self.i_y += 1
-        elif self.i_y == self.height:
+        self.__i_x += 1
+        if self.__i_x  == self.width:
+            self.__i_x = 0
+            self.__i_y += 1
+        if self.__i_y == self.height:
             raise StopIteration
-        else:
-            return self[self.i_y, self.i_x]
+        
+        return  self.__i_y, self.__i_x, self[self.__i_y, self.__i_x]
             
     def __getitem__(self, position):
         return self.data[position]
@@ -38,12 +38,17 @@ class GrayscaleImage:
         imshow(self.data, cmap="gray")
         show()
     
+    def get_shape(self):
+        return self.data.shape
+    shape = property(get_shape)
+    
     def get_width(self):
-        return len(self.data[0])
+        return self.get_shape()[1]
+    width = property(get_width)
         
     def get_height(self):
-        return len(self.data)
-    
-    width = property(get_width)
+        return self.get_shape()[0]
     height = property(get_height)
-    
+        
+    def in_bounds(self, y, x):
+        return x >= 0 and x < self.width and y >= 0 and y < self.height
