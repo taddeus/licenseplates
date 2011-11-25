@@ -1,4 +1,5 @@
 from pylab import imshow, imread, show
+from scipy.misc import imresize
 
 class GrayscaleImage:
 
@@ -38,6 +39,10 @@ class GrayscaleImage:
         imshow(self.data, cmap="gray")
         show()
     
+    # size is of type float
+    def resize(self, size):
+        self.data = imresize(self.data, size)
+        
     def get_shape(self):
         return self.data.shape
     shape = property(get_shape)

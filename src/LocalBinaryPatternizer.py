@@ -1,7 +1,7 @@
 from numpy import zeros, byte
 
 class LocalBinaryPatternizer:
-        
+
     def __init__(self, image, cell_size = 16):
         self.cell_size = cell_size
         self.image = image
