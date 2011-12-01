@@ -1,5 +1,4 @@
 from GetPlate import getPlateAt
-from pylab import imread, imshow, show, figure
 from GrayscaleImage import GrayscaleImage
 
 # Define the coordinates of the licenseplate
