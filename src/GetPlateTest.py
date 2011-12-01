@@ -3,7 +3,10 @@ from GrayscaleImage import GrayscaleImage
 from Point import Point
 
 # Define the corners of the licenseplate
-points = [Point(None, (310, 383)), Point(None, (382, 381)), Point(None, (382, 396)), Point(None, (310, 398))]
+points = [Point(None, (310, 383)), \
+          Point(None, (382, 381)), \
+          Point(None, (382, 396)), \
+          Point(None, (310, 398))]
 
 # Get the image
 image = GrayscaleImage('../images/test_plate.png')
