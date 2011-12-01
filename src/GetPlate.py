@@ -1,23 +1,36 @@
 from pylab import array, zeros, inv, dot, svd, shape
 from Interpolation import pV
 
-def getPlateAt(image, x1, y1, x2, y2, x3, y3, x4, y4, M, N):
+def getPlateAt(image, points, M, N):
     '''Returns an image of size MxN of the licenseplate (or any rectangular 
-    object) defined by the corner points (x1, y1) to (x4, y4).'''
+    object) defined by 4 corner points.'''
     # Construct the matrix M
     x1_a, y1_a = 0, 0
     x2_a, y2_a = M, 0
     x3_a, y3_a = M, N
     x4_a, y4_a = 0, N
     
-    mat_M = array([[x1, y1, 1, 0,  0,  0, -x1_a * x1, -x1_a * y1, -x1_a], \
-                   [0,  0,  0, x1, y1, 1, -y1_a * x1, -y1_a * y1, -y1_a], \
-                   [x2, y2, 1, 0,  0,  0, -x2_a * x2, -x2_a * y2, -x2_a], \
-                   [0,  0,  0, x2, y2, 1, -y2_a * x2, -y2_a * y2, -y2_a], \
-                   [x3, y3, 1, 0,  0,  0, -x3_a * x3, -x3_a * y3, -x3_a], \
-                   [0,  0,  0, x3, y3, 1, -y3_a * x3, -y3_a * y3, -y3_a], \
-                   [x4, y4, 1, 0,  0,  0, -x4_a * x4, -x4_a * y4, -x4_a], \
-                   [0,  0,  0, x4, y4, 1, -y4_a * x4, -y4_a * y4, -y4_a]])
+    p_i = []
+    
+    for point in points:
+        p_i.append([point.x, point.y])
+    
+    mat_M = array([[p_i[0][0], p_i[0][1], 1, 0,  0,  0, \
+                        -x1_a * p_i[0][0], -x1_a * p_i[0][1], -x1_a], \
+                   [0,  0,  0, p_i[0][0], p_i[0][1], 1, \
+                        -y1_a * p_i[0][0], -y1_a * p_i[0][1], -y1_a], \
+                   [p_i[1][0], p_i[1][1], 1, 0,  0,  0, \
+                        -x2_a * p_i[1][0], -x2_a * p_i[1][1], -x2_a], \
+                   [0,  0,  0, p_i[1][0], p_i[1][1], 1, \
+                        -y2_a * p_i[1][0], -y2_a * p_i[1][1], -y2_a], \
+                   [p_i[2][0], p_i[2][1], 1, 0,  0,  0, \
+                        -x3_a * p_i[2][0], -x3_a * p_i[2][1], -x3_a], \
+                   [0,  0,  0, p_i[2][0], p_i[2][1], 1, \
+                        -y3_a * p_i[2][0], -y3_a * p_i[2][1], -y3_a], \
+                   [p_i[3][0], p_i[3][1], 1, 0,  0,  0, \
+                        -x4_a * p_i[3][0], -x4_a * p_i[3][1], -x4_a], \
+                   [0,  0,  0, p_i[3][0], p_i[3][1], 1, \
+                        -y4_a * p_i[3][0], -y4_a * p_i[3][1], -y4_a]])
     
     # Get the vector p and the values that are in there by taking the SVD. 
     # Since D is diagonal with the eigenvalues sorted from large to small on
