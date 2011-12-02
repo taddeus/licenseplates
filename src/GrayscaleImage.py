@@ -8,7 +8,7 @@ class GrayscaleImage:
         if image_path != None:
             self.data = imread(image_path)
 
-            extension = image_path.split('.',3)[-1]
+            extension = image_path.split('.', 3)[-1]
 
             if extension == "jpg":
               self.data = self.data[::-1]
@@ -50,7 +50,7 @@ class GrayscaleImage:
     def make_histogram(self):
         return hist(self.data)
 
-    def resize(self, size): # size is of type float
+    def resize(self, size):  # size is of type float
         self.data = imresize(self.data, size)
 
     def get_shape(self):

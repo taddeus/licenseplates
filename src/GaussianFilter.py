@@ -8,11 +8,12 @@ class GaussianFilter:
         self.scale = scale
 
     def gaussian(self, x):
-        '''Return the value of a 1D Gaussian function for a given x and scale'''
-        return exp(-(x ** 2 / (2 * self.scale ** 2))) / (sqrt(2 * pi) * self.scale)
+        """Return the value of a 1D Gaussian function for a given x."""
+        return exp(-(x ** 2 / (2 * self.scale ** 2))) \
+               / (sqrt(2 * pi) * self.scale)
 
     def get_1d_gaussian_kernel(self):
-        '''Sample a one-dimensional Gaussian function of scale s'''
+        """Sample a one-dimensional Gaussian function of scale s."""
         radius = int(ceil(3 * self.scale))
         size = 2 * radius + 1
 
@@ -25,7 +26,7 @@ class GaussianFilter:
         return result
 
     def get_filtered_copy(self, image):
-        '''Apply a gaussian blur to an image, to suppress noise.'''
+        """Apply a gaussian blur to an image, to suppress noise."""
         kernel = self.get_1d_gaussian_kernel()
         image = convolve1d(image.data, kernel, axis=0, mode='nearest')
         return GrayscaleImage(None, convolve1d(image, kernel, axis=1, mode='nearest'))
