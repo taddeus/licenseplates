@@ -5,8 +5,11 @@ from GaussianFilter import GaussianFilter
 
 class NormalizedCharacterImage(GrayscaleImage):
     
-    def __init__(self, image, size=(60, 40), blur=1.1, crop_threshold=0.9):
-        GrayscaleImage.__init__(self, data=deepcopy(image.data))
+    def __init__(self, image=None, data=None, size=(60, 40), blur=1.1, crop_threshold=0.9):
+        if image != None:
+            GrayscaleImage.__init__(self, data=deepcopy(image.data))
+        elif data != None:
+            GrayscaleImage.__init__(self, data=deepcopy(data))
         self.blur = blur
         self.crop_threshold = crop_threshold
         self.size = size
