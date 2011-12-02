@@ -31,5 +31,4 @@ from LicensePlate import LicensePlate
 
 plate = LicensePlate("../XML/0000/00991_000000.info") # some xml file from rein
 
-print plate.characters[0].value
-#plate.characters[0].show()
+plate.characters[0].image.show()
