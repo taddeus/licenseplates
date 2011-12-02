@@ -3,7 +3,7 @@ from Rectangle import Rectangle
 
 class LetterCropper:
 
-    def __init__(self, image, threshold = 0.9):
+    def __init__(self, threshold = 0.9):
         self.source_image = image
         self.threshold = threshold
         

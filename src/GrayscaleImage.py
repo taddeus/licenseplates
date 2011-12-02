@@ -1,5 +1,6 @@
 from pylab import imshow, imread, show
 from scipy.misc import imresize
+from matplotlib.pyplot import hist
 
 class GrayscaleImage:
 
@@ -37,10 +38,14 @@ class GrayscaleImage:
                               
     def show(self):
         imshow(self.data, cmap="gray")
-        show()
+        #show()
     
-    # size is of type float
+    def make_histogram(self):
+        return hist(self.data)
+        
+    # size is of type tuple of integers (DEFAULT = (50, 50))
     def resize(self, size):
+        print size
         self.data = imresize(self.data, size)
         
     def get_shape(self):

@@ -30,6 +30,11 @@ class GaussianFilter:
         image = convolve1d(image.data, kernel, axis=0, mode='nearest')
         return GrayscaleImage(None, convolve1d(image, kernel, axis=1, mode='nearest'))
         
+    def filter(self, image):
+        kernel = self.get_1d_gaussian_kernel()
+        image.data = convolve1d(image.data, kernel, axis=0, mode='nearest')
+        image.data = convolve1d(image.data, kernel, axis=1, mode='nearest')
+        
     def get_scale(self):
       return self.scale
       
