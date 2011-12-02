@@ -12,7 +12,7 @@ class NormalizedCharacterImage(GrayscaleImage):
         self.size = size
         self.gausse_filter()
         self.increase_contrast()
-        self.crop()
+        self.crop_to_letter()
         self.resize()
 
     def increase_contrast(self):
@@ -23,9 +23,9 @@ class NormalizedCharacterImage(GrayscaleImage):
         filter = GaussianFilter(1.1)
         filter.filter(self)
         
-    def crop(self):
-        cropper = LetterCropper(self, 0.9)
-        self.data = cropper.get_cropped_letter().data
+    def crop_to_letter(self):
+        cropper = LetterCropper(0.9)
+        cropper.crop_to_letter(self)
 
     def resize(self):
-        self.resize(self.size)
+        GrayscaleImage.resize(self, self.size)

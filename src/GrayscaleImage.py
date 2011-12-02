@@ -6,10 +6,10 @@ from scipy.misc import imresize, imsave
 class GrayscaleImage:
 
     def __init__(self, image_path = None, data = None):
-        if image_path:
+        if image_path != None:
             self.data = imread(image_path)
             self.convert_to_grayscale()
-        elif data:
+        elif data != None:
             self.data = data
     
     def __iter__(self):
@@ -40,7 +40,7 @@ class GrayscaleImage:
                               
     def show(self):
         imshow(self.data, cmap="gray")
-        #show()
+        show()
     
     def make_histogram(self):
         return hist(self.data)
