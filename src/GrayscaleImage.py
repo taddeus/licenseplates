@@ -51,10 +51,6 @@ class GrayscaleImage:
     def make_histogram(self):
         return hist(self.data)
         
-    # size is of type tuple of integers (DEFAULT = (50, 50))
-    def resize(self, size):
-        print size
-        
     def resize(self, size): # size is of type float
         self.data = imresize(self.data, size)
         
