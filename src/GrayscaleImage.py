@@ -8,6 +8,12 @@ class GrayscaleImage:
     def __init__(self, image_path = None, data = None):
         if image_path:
             self.data = imread(image_path)
+            
+            extension = image_path.split('.',3)[-1]
+            
+            if extension == "jpg":
+              self.data = self.data[::-1]
+              
             self.convert_to_grayscale()
         elif data:
             self.data = data
