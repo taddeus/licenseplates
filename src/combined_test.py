@@ -3,6 +3,7 @@ from LocalBinaryPatternizer import LocalBinaryPatternizer
 from LetterCropper import LetterCropper
 from matplotlib.pyplot import imshow, subplot, show, axis
 from NormalizedImage import NormalizedImage
+from GaussianFilter import GaussianFilter
 
 # Comment added by Richard Torenvliet
 # Steps in this test files are
@@ -14,11 +15,15 @@ from NormalizedImage import NormalizedImage
 
 # Image is now an instance of class GrayscaleImage
 # GrayscaleImage has functions like resize, crop etc.
-image = GrayscaleImage("../images/test.png")
+image = GrayscaleImage("../images/test9.png")
+filter = GaussianFilter(1.4)
+
+image = filter.get_filtered_copy(image)
 
 # Crops image; param threshold is optional: LetterCropper(image, threshold=0.9)
 # image: GrayscaleImage, threshold: float
-cropper = LetterCropper(image, 0.9)
+
+cropper = LetterCropper(image, 0.7)
 cropped_letter = cropper.get_cropped_letter()
 
 # Show difference in shape
@@ -29,11 +34,16 @@ print cropped_letter.shape
 norm = NormalizedImage(cropped_letter)
 resized = norm.get_normalized_letter()
 
+print resized.show()
+
+show()
 # Difference is noticable
 print resized.shape
 
 lbp = LocalBinaryPatternizer(resized)
+
 feature_vector = lbp.create_features_vector()
+print feature_vector
 feature_vector /= 255 # Prepare for displaying -> 0 - 255 -> 0 - 1
         
 subplot(141)
