@@ -11,7 +11,7 @@ class Character:
 
     def set_corners(self):
         corners = self.get_children("quadrangle")
-  
+
         self.corners = []
 
         for corner in corners:
@@ -26,3 +26,6 @@ class Character:
 
     def get_children(self, node, dom=None):
         return self.get_node(node, dom).childNodes
+
+    def get_feature_vector(self):
+        pass
