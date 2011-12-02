@@ -10,3 +10,6 @@ class Character:
         from pylab import imshow, show
         imshow(self.data, cmap="gray")
         show()
+
+    def get_feature_vector(self):
+        pass

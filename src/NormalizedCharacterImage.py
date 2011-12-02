@@ -5,14 +5,17 @@ from GaussianFilter import GaussianFilter
 
 class NormalizedCharacterImage(GrayscaleImage):
     
-    def __init__(self, image, size=(60, 40), blur=1.1, crop_threshold=0.9):
-        GrayscaleImage.__init__(self, data=deepcopy(image.data))
+    def __init__(self, image=None, data=None, size=(60, 40), blur=1.1, crop_threshold=0.9):
+        if image != None:
+            GrayscaleImage.__init__(self, data=deepcopy(image.data))
+        elif data != None:
+            GrayscaleImage.__init__(self, data=deepcopy(data))
         self.blur = blur
         self.crop_threshold = crop_threshold
         self.size = size
         self.gausse_filter()
         self.increase_contrast()
-        self.crop()
+        self.crop_to_letter()
         self.resize()
 
     def increase_contrast(self):
@@ -23,9 +26,9 @@ class NormalizedCharacterImage(GrayscaleImage):
         filter = GaussianFilter(1.1)
         filter.filter(self)
         
-    def crop(self):
-        cropper = LetterCropper(self, 0.9)
-        self.data = cropper.get_cropped_letter().data
+    def crop_to_letter(self):
+        cropper = LetterCropper(0.9)
+        cropper.crop_to_letter(self)
 
     def resize(self):
-        self.resize(self.size)
+        GrayscaleImage.resize(self, self.size)
