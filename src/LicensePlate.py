@@ -1,17 +1,16 @@
-from pylab import array, zeros, inv, dot, svd, shape, floor
+from pylab import array, zeros, inv, dot, svd, floor
 from xml.dom.minidom import parse
-from Error import Error
 from Point import Point
 from Character import Character
 from GrayscaleImage import GrayscaleImage
 from NormalizedCharacterImage import NormalizedCharacterImage
 
-'''
-    Creates a license plate object based on an XML file. The image should be
-    placed in a folder 'images' the xml file in a folder 'xml'
+"""
+Creates a license plate object based on an XML file. The image should be
+placed in a folder 'images' the xml file in a folder 'xml'
 
-    TODO: perhaps remove non required XML lookups
-'''
+TODO: perhaps remove non required XML lookups
+"""
 class LicensePlate:
 
     def __init__(self, folder_nr, file_nr):

@@ -1,5 +1,4 @@
 from Histogram import Histogram
-from numpy import zeros, byte
 from math import ceil
 
 class LocalBinaryPatternizer:

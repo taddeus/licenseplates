@@ -1,4 +1,4 @@
-import traceback, os.path
+import traceback
 
 class Error:
     def __init__(self, message=None):
@@ -7,7 +7,7 @@ class Error:
         where_it_went_wrong = stack[1]
 
         if message:
-          print message, "\n"
+            print message, "\n"
 
         print "Error in", origin_of_call[0], "on line", origin_of_call[1]
         print " : ", origin_of_call[3], "\n"
