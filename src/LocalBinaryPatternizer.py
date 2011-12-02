@@ -9,7 +9,6 @@ class LocalBinaryPatternizer:
         self.image = image
         self.setup_histograms()
 
-        
     def setup_histograms(self):
         cells_in_width = int(ceil(self.image.width / float(self.cell_size)))
         cells_in_height = int(ceil(self.image.height / float(self.cell_size)))
@@ -19,7 +18,6 @@ class LocalBinaryPatternizer:
             for j in xrange(cells_in_width):
                 self.features[i].append(Histogram(256,0,256))
 
-                
     def create_features_vector(self):
         ''' Walk around the pixels in clokwise order, shifting 1 bit less
             at each neighbour starting at 7 in the top-left corner. This gives a
@@ -40,14 +38,11 @@ class LocalBinaryPatternizer:
 
         return self.get_features_as_array()
     
-    
     def is_pixel_darker(self, y, x, value):
         return self.image.in_bounds(y, x) and self.image[y, x] > value
         
-        
     def get_cell_index(self, y, x):
         return (y / self.cell_size, x / self.cell_size)
-        
         
     def get_features_as_array(self):
         return [item for sublist in self.features for item in sublist]
