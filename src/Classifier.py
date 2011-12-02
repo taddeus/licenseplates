@@ -39,7 +39,7 @@ class Classifier:
         problem = svm_problem(self.c, features)
         self.model = svm_model(problem, self.param)
 
-        # Add prediction fucntion that returns a numeric class prediction
+        # Add prediction function that returns a numeric class prediction
         self.model.predict = lambda self, x: svm_predict([0], [x], self)[0][0]
 
     def classify(self, character):
