@@ -19,7 +19,7 @@ for i in range(9):
 
 print 'loaded %d chars' % len(chars)
 
-#dump(chars, file('chars', 'w+'))
+dump(chars, file('chars', 'w+'))
 #----------------------------------------------------------------
 chars = load(file('chars', 'r'))
 learned = []
