@@ -5,12 +5,6 @@ from Character import Character
 from GrayscaleImage import GrayscaleImage
 from NormalizedCharacterImage import NormalizedCharacterImage
 
-"""
-Creates a license plate object based on an XML file. The image should be
-placed in a folder 'images' the xml file in a folder 'xml'
-
-TODO: perhaps remove non required XML lookups
-"""
 class LicensePlate:
 
     def __init__(self, folder_nr, file_nr):
@@ -52,7 +46,9 @@ class LicensePlate:
         for i in range(0, M):
             for j in range(0, N):
                 or_coor   = dot(P, ([[i],[j],[1]]))
-                or_coor_h = or_coor[1][0] / or_coor[2][0], or_coor[0][0] / or_coor[2][0]
+                or_coor_h = or_coor[1][0] / or_coor[2][0], 
+                            or_coor[0][0] / or_coor[2][0]
+                
                 data[j][i] = self.pV(or_coor_h[0], or_coor_h[1])
 
         return data
@@ -74,9 +70,7 @@ class LicensePlate:
     def pV(self, x, y):
         image = self.image
 
-        '''Get the value of a point x,y in the given image, where x and y are not
-        necessary integers, so the value is interpolated from its neighbouring
-        pixels.'''
+        #Get the value of a point (interpolated x, y) in the given image
         if image.in_bounds(x, y):
             x_low  = floor(x)
             x_high = floor(x + 1)
