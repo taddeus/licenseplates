@@ -46,8 +46,8 @@ class LicensePlate:
         for i in range(0, M):
             for j in range(0, N):
                 or_coor   = dot(P, ([[i],[j],[1]]))
-                or_coor_h = or_coor[1][0] / or_coor[2][0], 
-                            or_coor[0][0] / or_coor[2][0]
+                or_coor_h = (or_coor[1][0] / or_coor[2][0],
+                             or_coor[0][0] / or_coor[2][0])
                 
                 data[j][i] = self.pV(or_coor_h[0], or_coor_h[1])
 
