@@ -1,5 +1,5 @@
 from GrayscaleImage import GrayscaleImage
-from scipy.ndimage import convolve1d
+from scipy.ndimage import gaussian_filter
 from pylab import ceil, zeros, pi, exp, sqrt, array
 
 class GaussianFilter:
@@ -27,14 +27,11 @@ class GaussianFilter:
 
     def get_filtered_copy(self, image):
         """Apply a gaussian blur to an image, to suppress noise."""
-        kernel = self.get_1d_gaussian_kernel()
-        image = convolve1d(image.data, kernel, axis=0, mode='nearest')
-        return GrayscaleImage(None, convolve1d(image, kernel, axis=1, mode='nearest'))
+        image = gaussian_filter(image.data, self.scale)
+        return GrayscaleImage(None, image)
 
     def filter(self, image):
-        kernel = self.get_1d_gaussian_kernel()
-        image.data = convolve1d(image.data, kernel, axis=0, mode='nearest')
-        image.data = convolve1d(image.data, kernel, axis=1, mode='nearest')
+        image.data = gaussian_filter(image.data, self.scale)
 
     def get_scale(self):
       return self.scale

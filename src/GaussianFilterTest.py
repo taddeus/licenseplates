@@ -1,4 +1,4 @@
-from FilterNoise import GaussianFilter
+from GaussianFilter import GaussianFilter
 from GrayscaleImage import GrayscaleImage
 
 image = GrayscaleImage('../images/plate.png')
