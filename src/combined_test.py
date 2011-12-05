@@ -1,6 +1,5 @@
 from GrayscaleImage import GrayscaleImage
-from NormalizedCharacterImage import NormalizedCharacterImage 
-from LetterCropper import LetterCropper
+from NormalizedCharacterImage import NormalizedCharacterImage
 
 image = GrayscaleImage("../images/test10.png")
 normalized_character_image = NormalizedCharacterImage(image)

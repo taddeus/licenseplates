@@ -1,5 +1,5 @@
 from svmutil import svm_train, svm_problem, svm_parameter, svm_predict, \
-        LINEAR, svm_save_model, svm_load_model
+        svm_save_model, svm_load_model
 from cPickle import dump, load
 
 
@@ -13,7 +13,7 @@ class Classifier:
             f.close()
         else:
             self.param = svm_parameter()
-            self.param.kernel_type = LINEAR
+            self.param.kernel_type = 2
             self.param.C = c
             self.character_map = {}
             self.model = None

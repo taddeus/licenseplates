@@ -1,12 +1,10 @@
-from copy import deepcopy
 from Rectangle import Rectangle
-from GrayscaleImage import GrayscaleImage
 
 class LetterCropper:
 
     def __init__(self, threshold = 0.9):
         self.threshold = threshold
-        
+
     def crop_to_letter(self, image):
         self.image = image
         self.determine_letter_bounds()
@@ -24,10 +22,10 @@ class LetterCropper:
                 if y < min_y: min_y = y
                 if x > max_x: max_x = x
                 if y > max_y: max_y = y
-        
+
         self.letter_bounds = Rectangle(
-            min_x, 
-            min_y, 
+            min_x,
+            min_y,
             max_x - min_x ,
             max_y - min_y
         )

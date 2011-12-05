@@ -4,7 +4,7 @@ from LetterCropper import LetterCropper
 from GaussianFilter import GaussianFilter
 
 class NormalizedCharacterImage(GrayscaleImage):
-    
+
     def __init__(self, image=None, data=None, size=(60, 40), blur=1.1, crop_threshold=0.9):
         if image != None:
             GrayscaleImage.__init__(self, data=deepcopy(image.data))
@@ -22,10 +22,10 @@ class NormalizedCharacterImage(GrayscaleImage):
         self.data -= self.data.min()
         self.data /= self.data.max()
 
-    def gausse_filter(self):    
+    def gausse_filter(self):
         filter = GaussianFilter(1.1)
         filter.filter(self)
-        
+
     def crop_to_letter(self):
         cropper = LetterCropper(0.9)
         cropper.crop_to_letter(self)
