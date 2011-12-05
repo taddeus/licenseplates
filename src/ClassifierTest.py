@@ -3,23 +3,23 @@ from LicensePlate import LicensePlate
 from Classifier import Classifier
 from cPickle import dump, load
 
-#chars = []
-#
-#for i in range(9):
-#    for j in range(100):
-#        try:
-#            filename = '%04d/00991_%04d%02d.info' % (i, i, j)
-#            print 'loading file "%s"' % filename
-#            plate = LicensePlate(i, j)
-#
-#            if hasattr(plate, 'characters'):
-#                chars.extend(plate.characters)
-#        except:
-#            print 'epic fail'
-#
-#print 'loaded %d chars' % len(chars)
-#
-#dump(chars, file('chars', 'w+'))
+chars = []
+
+for i in range(9):
+    for j in range(100):
+        try:
+            filename = '%04d/00991_%04d%02d.info' % (i, i, j)
+            print 'loading file "%s"' % filename
+            plate = LicensePlate(i, j)
+
+            if hasattr(plate, 'characters'):
+                chars.extend(plate.characters)
+        except:
+            print 'epic fail'
+
+print 'loaded %d chars' % len(chars)
+
+dump(chars, file('chars', 'w+'))
 #----------------------------------------------------------------
 chars = load(file('chars', 'r'))[:500]
 learned = []
