@@ -5,7 +5,7 @@ from svmutil import svm_train, svm_problem, svm_parameter, svm_predict, \
 class Classifier:
     def __init__(self, c=None, filename=None):
         if filename:
-            # If a filename is given, load a model from the fiven filename
+            # If a filename is given, load a model from the given filename
             self.model = svm_load_model(filename)
         else:
             self.param = svm_parameter()
@@ -26,7 +26,7 @@ class Classifier:
 
         for i, char in enumerate(learning_set):
             print 'Training "%s"  --  %d of %d (%d%% done)' \
-                    % (char.value, i + 1, l, int(100 * (i + 1) / l))
+                  % (char.value, i + 1, l, int(100 * (i + 1) / l))
             classes.append(float(ord(char.value)))
             features.append(char.get_feature_vector())
 
