@@ -1,12 +1,11 @@
 from svmutil import svm_train, svm_problem, svm_parameter, svm_predict, \
         svm_save_model, svm_load_model
-from cPickle import dump, load
 
 
 class Classifier:
     def __init__(self, c=None, filename=None):
         if filename:
-            # If a filename is given, load a modl from the fiven filename
+            # If a filename is given, load a model from the fiven filename
             self.model = svm_load_model(filename)
         else:
             self.param = svm_parameter()
