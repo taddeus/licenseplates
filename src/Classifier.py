@@ -9,7 +9,7 @@ class Classifier:
             self.model = svm_load_model(filename)
         else:
             self.param = svm_parameter()
-            self.param.kernel_type = 2
+            self.param.kernel_type = 2  # Radial kernel type
             self.param.C = c
             self.model = None
 
@@ -34,7 +34,7 @@ class Classifier:
         self.model = svm_train(problem, self.param)
 
     def classify(self, character):
-        """Classify a character object and assign its value."""
+        """Classify a character object, return its value."""
         predict = lambda x: svm_predict([0], [x], self.model)[0][0]
         prediction_class = predict(character.get_feature_vector())
 
