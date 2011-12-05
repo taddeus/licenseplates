@@ -21,18 +21,20 @@ print 'loaded %d chars' % len(chars)
 
 dump(chars, file('chars', 'w+'))
 #----------------------------------------------------------------
-chars = load(file('chars', 'r'))
+chars = load(file('chars', 'r'))[:500]
 learned = []
 learning_set = []
 test_set = []
 
 for char in chars:
-    if learned.count(char.value) > 80:
+    if learned.count(char.value) > 12:
         test_set.append(char)
     else:
         learning_set.append(char)
         learned.append(char.value)
 
+#print 'Learning set:', [c.value for c in learning_set]
+#print 'Test set:', [c.value for c in test_set]
 dump(learning_set, file('learning_set', 'w+'))
 dump(test_set, file('test_set', 'w+'))
 #----------------------------------------------------------------
@@ -52,7 +54,7 @@ for i, char in enumerate(test_set):
     prediction = classifier.classify(char)
 
     if char.value == prediction:
-        print ':) ------> Successfully recognized "%s"' % char.value,
+        print ':-----> Successfully recognized "%s"' % char.value,
         matches += 1
     else:
         print ':( Expected character "%s", got "%s"' \
