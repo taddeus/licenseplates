@@ -30,7 +30,7 @@ class LicensePlate:
         return x0 < x1 and y1 < y2 and x2 > x3 and y3 > y0
         
     def sort_corners(corners):
-        '''Sort the corners clockwise, starting in the left-top corner.'''
+        '''Sort the corners clockwise, starting in the left-top corner. '''
         tuples = []
         output = []
         
