@@ -18,7 +18,70 @@ class LicensePlate:
         self.height = int(properties['height'])
 
         self.read_xml()
-
+    
+    def corner_sorted(corners):
+        ''' Check if points are sorted clockwise, starting in the left-top
+         corner.'''
+        x0, y0 = corners[0].to_tuple()
+        x1, y1 = corners[1].to_tuple()
+        x2, y2 = corners[2].to_tuple()
+        x3, y3 = corners[3].to_tuple()
+        
+        return x0 < x1 and y1 < y2 and x2 > x3 and y3 > y0
+        
+    def sort_corners(corners):
+        '''Sort the corners clockwise, starting in the left-top corner.'''
+        tuples = []
+        output = []
+        
+        for point in corners:
+            tuples.append(point.to_tuple())
+        
+        bot1 = (0, 0)
+        bot2 = (0, 0)
+        top1 = None
+        top2 = None
+        
+        # Get bottom points (where the y value is the largest). The top points
+        # are the points that are not a bottom point.
+        for tup in tuples:
+            if tup[1] > bot1[1] or tup[1] > bot2[1]:
+                if top1 == None:
+                    top1 = bot2
+                else:
+                    top2 = bot2
+                    
+                if tup[1] > bot1[1]:
+                    bot2 = bot1
+                    bot1 = tup
+                else:
+                    bot2 = tup
+            else:
+                if top1 == None:
+                    top1 = tup
+                else:
+                    top2 = tup
+        
+        # First point is the smallest x-value top point, second is the other
+        # top point
+        if top1[0] < top2[0]:
+            output.append(Point(top1[0], top1[1]))
+            output.append(Point(top2[0], top2[1]))
+        else:
+            output.append(Point(top2[0], top2[1]))
+            output.append(Point(top1[0], top1[1]))
+            
+        # Third point is the bottom point with the largest x-value, fourth is
+        # the other bottom point
+        if bot1[0] > bot2[0]:
+            output.append(Point(bot1[0], bot1[1]))
+            output.append(Point(bot2[0], bot2[1]))
+        else:
+            output.append(Point(bot2[0], bot2[1]))
+            output.append(Point(bot1[0], bot1[1]))
+            
+        return output
+    
     # sets the entire license plate of an image
     def retrieve_data(self, corners):
         x0, y0 = corners[0].to_tuple()

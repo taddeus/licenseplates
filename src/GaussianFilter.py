@@ -1,6 +1,5 @@
 from GrayscaleImage import GrayscaleImage
 from scipy.ndimage import gaussian_filter
-from pylab import ceil, zeros, pi, exp, sqrt, array
 
 class GaussianFilter:
 
