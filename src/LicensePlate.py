@@ -19,7 +19,7 @@ class LicensePlate:
 
         self.read_xml()
     
-    def corner_sorted(corners):
+    def are_corners_sorted(corners):
         ''' Check if points are sorted clockwise, starting in the left-top
          corner.'''
         x0, y0 = corners[0].to_tuple()
@@ -27,7 +27,7 @@ class LicensePlate:
         x2, y2 = corners[2].to_tuple()
         x3, y3 = corners[3].to_tuple()
         
-        return x0 < x1 and y1 < y2 and x2 > x3 and y3 > y0
+        return x0 < x1 and y1 <= y2 and x2 >= x3 and y3 > y0
         
     def sort_corners(corners):
         '''Sort the corners clockwise, starting in the left-top corner. '''
