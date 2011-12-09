@@ -1,8 +1,9 @@
 from Rectangle import Rectangle
+import sys
 
 class LetterCropper:
 
-    def __init__(self, threshold = 0.9):
+    def __init__(self, threshold = 0.5):
         self.threshold = threshold
 
     def crop_to_letter(self, image):
@@ -17,7 +18,7 @@ class LetterCropper:
         max_y = 0
 
         for y, x, value in self.image:
-            if value < self.threshold:
+            if value > self.threshold:
                 if x < min_x: min_x = x
                 if y < min_y: min_y = y
                 if x > max_x: max_x = x
@@ -26,6 +27,6 @@ class LetterCropper:
         self.letter_bounds = Rectangle(
             min_x,
             min_y,
-            max_x - min_x ,
-            max_y - min_y
+            max_x - min_x + 1,
+            max_y - min_y + 1
         )

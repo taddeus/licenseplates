@@ -3,11 +3,12 @@ from xml.dom.minidom import parse
 from Point import Point
 from Character import Character
 from GrayscaleImage import GrayscaleImage
-from NormalizedCharacterImage import NormalizedCharacterImage
+from CharacterImageNormalizer import CharacterImageNormalizer
 
 class LicensePlate:
 
     def __init__(self, folder_nr, file_nr):
+        self.character_normalizer = CharacterImageNormalizer(size=(60, 40), blur=1.1, crop_threshold=125)
         filename = '%04d/00991_%04d%02d' % (folder_nr, folder_nr, file_nr)
 
         self.dom = parse('../images/Infos/%s.info' % filename)
@@ -88,6 +89,17 @@ class LicensePlate:
         x1, y1 = corners[1].to_tuple()
         x2, y2 = corners[2].to_tuple()
         x3, y3 = corners[3].to_tuple()
+        
+        extra_space = 3
+        
+        x0 -= extra_space
+        y0 -= extra_space
+        x1 += extra_space
+        y1 -= extra_space
+        x2 += extra_space
+        y2 += extra_space
+        x3 -= extra_space
+        y3 += extra_space
 
         M = max(x0, x1, x2, x3) - min(x0, x1, x2, x3)
         N = max(y0, y1, y2, y3) - min(y0, y1, y2, y3)
@@ -193,7 +205,9 @@ class LicensePlate:
                     value   = self.get_node("char", character).firstChild.data
                     corners = self.get_corners(character)
                     data    = self.retrieve_data(corners)
-                    image   = NormalizedCharacterImage(data=data)
+                    
+                    image   = GrayscaleImage(data=data)
+                    self.character_normalizer.normalize(image)
 
                     self.characters.append(Character(value, corners, image))
             else:

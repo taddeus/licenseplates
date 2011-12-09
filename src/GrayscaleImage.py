@@ -16,7 +16,7 @@ class GrayscaleImage:
             self.convert_to_grayscale()
         elif data != None:
             self.data = data
-
+            
     def __iter__(self):
         self.__i_x = -1
         self.__i_y = 0
