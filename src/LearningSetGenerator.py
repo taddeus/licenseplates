@@ -1,11 +1,12 @@
-from pylab import array, zeros, inv, dot, svd, floor
+from os import mkdir
+from os.path import exists
+from math import acos
+from pylab import imsave, array, zeros, inv, dot, norm, svd, floor
 from xml.dom.minidom import parse
 from Point import Point
-from Character import Character
 from GrayscaleImage import GrayscaleImage
-from NormalizedCharacterImage import NormalizedCharacterImage
 
-class LicensePlate:
+class LearningSetGenerator:
 
     def __init__(self, folder_nr, file_nr):
         filename = '%04d/00991_%04d%02d' % (folder_nr, folder_nr, file_nr)
@@ -20,9 +21,9 @@ class LicensePlate:
         x2, y2 = corners[2].to_tuple()
         x3, y3 = corners[3].to_tuple()
 
-        M = max(x0, x1, x2, x3) - min(x0, x1, x2, x3)
+        M = int(1.2 * (max(x0, x1, x2, x3) - min(x0, x1, x2, x3)))
         N = max(y0, y1, y2, y3) - min(y0, y1, y2, y3)
-
+        
         matrix = array([
           [x0, y0, 1,  0,  0, 0,       0,       0,  0],
           [ 0,  0, 0, x0, y0, 1,       0,       0,  0],
@@ -94,9 +95,7 @@ class LicensePlate:
         for i in info:
             if version == i.getElementsByTagName("version")[0].firstChild.data:
 
-                self.country = i.getElementsByTagName("identification-letters")[0].firstChild.data
-                
-                
+                self.country = i.getElementsByTagName("identification-letters")[0].firstChild.data                                  
                 temp = i.getElementsByTagName("characters")
                 
                 if len(temp):
@@ -105,7 +104,7 @@ class LicensePlate:
                   self.characters = []
                   break
                 
-                for character in characters:
+                for i, character in enumerate(characters):
                     if character.nodeName == "character":
                         value   = character.getElementsByTagName("char")[0].firstChild.data
                         corners = self.get_corners(character)
@@ -113,10 +112,18 @@ class LicensePlate:
                         if not len(corners) == 4:
                           break
                         
-                        data    = self.retrieve_data(corners)
-                        image   = NormalizedCharacterImage(data=data)
+                        image = GrayscaleImage(data = self.retrieve_data(corners))
 
-                        self.characters.append(Character(value, corners, image, filename))
+                        print value
+                        
+                        path = "../images/LearningSet/%s" % value
+                        image_path = "%s/%d_%s.jpg" % (path, i, filename.split('/')[-1])
+                        
+                        if not exists(path):
+                          mkdir(path)
+
+                        if not exists(image_path):
+                          image.save(image_path)
                 
                 break
 
@@ -129,3 +136,13 @@ class LicensePlate:
           corners.append(Point(node))
 
       return corners
+      
+
+for i in range(1):
+    for j in range(1):
+        try:
+            filename = '%04d/00991_%04d%02d.info' % (i, i, j)
+            print 'loading file "%s"' % filename
+            plate = LearningSetGenerator(i, j)
+        except:
+            print "failure"
