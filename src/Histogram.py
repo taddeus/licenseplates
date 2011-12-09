@@ -16,3 +16,15 @@ class Histogram:
     def get_bin_index(self, number):
         return (number - self.min) / ((self.max - self.min) / len(self.bins))
 
+    def intersect(self, other):
+        h1 = self.bins
+        h2 = other.bins
+
+        match = 0
+
+        # Add the minimum of each bin to the result
+        for b in xrange(len(self.bins)):
+            match += min(h1[b], h2[b])
+
+        # Normalize by dividing by the number of pixels
+        return float(match) / sum(h2)
