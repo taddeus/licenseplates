@@ -10,77 +10,8 @@ class LicensePlate:
     def __init__(self, folder_nr, file_nr):
         filename = '%04d/00991_%04d%02d' % (folder_nr, folder_nr, file_nr)
 
-        self.dom = parse('../images/Infos/%s.info' % filename)
-        properties = self.get_properties()
-
         self.image = GrayscaleImage('../images/Images/%s.jpg' % filename)
-        self.width = int(properties['width'])
-        self.height = int(properties['height'])
-
-        self.read_xml()
-
-    def are_corners_sorted(corners):
-        '''Check if points are sorted clockwise, starting in the left-top
-        corner.'''
-        x0, y0 = corners[0].to_tuple()
-        x1, y1 = corners[1].to_tuple()
-        x2, y2 = corners[2].to_tuple()
-        x3, y3 = corners[3].to_tuple()
-
-        return x0 < x1 and y1 <= y2 and x2 >= x3 and y3 > y0
-
-    def sort_corners(corners):
-        '''Sort the corners clockwise, starting in the left-top corner.'''
-        tuples = []
-        output = []
-
-        for point in corners:
-            tuples.append(point.to_tuple())
-
-        bot1 = (0, 0)
-        bot2 = (0, 0)
-        top1 = None
-        top2 = None
-
-        # Get bottom points (where the y value is the largest). The top points
-        # are the points that are not a bottom point.
-        for tup in tuples:
-            if tup[1] > bot1[1] or tup[1] > bot2[1]:
-                if top1 == None:
-                    top1 = bot2
-                else:
-                    top2 = bot2
-
-                if tup[1] > bot1[1]:
-                    bot2 = bot1
-                    bot1 = tup
-                else:
-                    bot2 = tup
-            else:
-                if top1 == None:
-                    top1 = tup
-                else:
-                    top2 = tup
-
-        # First point is the smallest x-value top point, second is the other
-        # top point
-        if top1[0] < top2[0]:
-            output.append(Point(top1[0], top1[1]))
-            output.append(Point(top2[0], top2[1]))
-        else:
-            output.append(Point(top2[0], top2[1]))
-            output.append(Point(top1[0], top1[1]))
-
-        # Third point is the bottom point with the largest x-value, fourth is
-        # the other bottom point
-        if bot1[0] > bot2[0]:
-            output.append(Point(bot1[0], bot1[1]))
-            output.append(Point(bot2[0], bot2[1]))
-        else:
-            output.append(Point(bot2[0], bot2[1]))
-            output.append(Point(bot1[0], bot1[1]))
-
-        return output
+        self.read_xml(filename)
 
     # sets the entire license plate of an image
     def retrieve_data(self, corners):
@@ -153,68 +84,40 @@ class LicensePlate:
 
         return 0
 
-    # Testing purposes
-    def show(self):
-        from pylab import imshow, show
-        imshow(self.data, cmap="gray")
-        show()
+    def read_xml(self, filename):
+        dom = parse('../images/Infos/%s.info' % filename)
+        self.characters = []
+        
+        version = dom.getElementsByTagName("current-version")[0].firstChild.data
+        info    = dom.getElementsByTagName("info")
+        
+        for i in info:
+            if version == i.getElementsByTagName("version")[0].firstChild.data:
 
-    def get_properties(self):
-        children = self.get_children("properties")
+                self.country = i.getElementsByTagName("identification-letters")[0].firstChild.data
+                characters = i.getElementsByTagName("characters")[0].childNodes
+                
+                for character in characters:
+                    if character.nodeName == "character":
+                        value   = character.getElementsByTagName("char")[0].firstChild.data
+                        corners = self.get_corners(character)
+                        
+                        if not len(corners) == 4:
+                          break
+                        
+                        data    = self.retrieve_data(corners)
+                        image   = NormalizedCharacterImage(data=data)
 
-        properties = {}
+                        self.characters.append(Character(value, corners, image, filename))
+                
+                break
 
-        for child in children:
-            if child.nodeType == child.TEXT_NODE:
-                properties[child.nodeName] = child.data
-            elif child.nodeType == child.ELEMENT_NODE:
-                properties[child.nodeName] = child.firstChild.data
-
-        return properties
-
-    # TODO : create function for location / characters as they do the same
-    def read_xml(self):
-        children = self.get_children("plate") # most recent version
-
-        for child in children:
-            if child.nodeName == "regnum":
-              self.license_full = child.firstChild.data
-            elif child.nodeName == "identification-letters":
-              self.country = child.firstChild.data
-            elif child.nodeName == "location":
-                self.corners = self.get_corners(child)
-            elif child.nodeName == "characters":
-                nodes = child.childNodes
-
-                self.characters = []
-
-                for character in nodes:
-                  if character.nodeName == "character":
-                    value   = self.get_node("char", character).firstChild.data
-                    corners = self.get_corners(character)
-                    data    = self.retrieve_data(corners)
-                    image   = NormalizedCharacterImage(data=data)
-
-                    self.characters.append(Character(value, corners, image))
-            else:
-                pass
-
-    def get_node(self, node, dom=None):
-        if not dom:
-            dom = self.dom
-
-        return dom.getElementsByTagName(node)[0]
-
-    def get_children(self, node, dom=None):
-        return self.get_node(node, dom).childNodes
-
-    def get_corners(self, child):
-      nodes = self.get_children("quadrangle", child)
+    def get_corners(self, dom):
+      nodes = dom.getElementsByTagName("point")
 
       corners = []
 
-      for corner in nodes:
-        if corner.nodeName == "point":
-            corners.append(Point(corner))
+      for node in nodes:
+          corners.append(Point(node))
 
       return corners
