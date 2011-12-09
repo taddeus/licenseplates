@@ -3,14 +3,17 @@ from svmutil import svm_train, svm_problem, svm_parameter, svm_predict, \
 
 
 class Classifier:
-    def __init__(self, c=None, filename=None):
+    def __init__(self, c=None, gamma=None, filename=None):
         if filename:
             # If a filename is given, load a model from the given filename
             self.model = svm_load_model(filename)
+        elif c == None or gamma == None:
+            raise Exception('Please specify both C and gamma.')
         else:
             self.param = svm_parameter()
             self.param.kernel_type = 2  # Radial kernel type
-            self.param.C = c
+            self.param.C = c  # Soft margin
+            self.param.gamma = gamma  # Parameter for radial kernel
             self.model = None
 
     def save(self, filename):
@@ -32,6 +35,18 @@ class Classifier:
 
         problem = svm_problem(classes, features)
         self.model = svm_train(problem, self.param)
+
+    def test(self, test_set):
+        """Test the classifier with the given test set and return the score."""
+        matches = 0
+
+        for char in test_set:
+            prediction = self.classify(char)
+
+            if char.value == prediction:
+                matches += 1
+
+        return float(matches) / len(test_set)
 
     def classify(self, character):
         """Classify a character object, return its value."""
