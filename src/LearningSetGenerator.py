@@ -23,7 +23,7 @@ class LearningSetGenerator:
 
         M = int(1.2 * (max(x0, x1, x2, x3) - min(x0, x1, x2, x3)))
         N = max(y0, y1, y2, y3) - min(y0, y1, y2, y3)
-        
+
         matrix = array([
           [x0, y0, 1,  0,  0, 0,       0,       0,  0],
           [ 0,  0, 0, x0, y0, 1,       0,       0,  0],
@@ -88,43 +88,43 @@ class LearningSetGenerator:
     def read_xml(self, filename):
         dom = parse('../images/Infos/%s.info' % filename)
         self.characters = []
-        
+
         version = dom.getElementsByTagName("current-version")[0].firstChild.data
         info    = dom.getElementsByTagName("info")
-        
+
         for i in info:
             if version == i.getElementsByTagName("version")[0].firstChild.data:
 
-                self.country = i.getElementsByTagName("identification-letters")[0].firstChild.data                                  
+                self.country = i.getElementsByTagName("identification-letters")[0].firstChild.data
                 temp = i.getElementsByTagName("characters")
-                
+
                 if len(temp):
                   characters = temp[0].childNodes
                 else:
                   self.characters = []
                   break
-                
+
                 for i, character in enumerate(characters):
                     if character.nodeName == "character":
                         value   = character.getElementsByTagName("char")[0].firstChild.data
                         corners = self.get_corners(character)
-                        
+
                         if not len(corners) == 4:
                           break
-                        
+
                         image = GrayscaleImage(data = self.retrieve_data(corners))
 
                         print value
-                        
+
                         path = "../images/LearningSet/%s" % value
                         image_path = "%s/%d_%s.jpg" % (path, i, filename.split('/')[-1])
-                        
+
                         if not exists(path):
                           mkdir(path)
 
                         if not exists(image_path):
                           image.save(image_path)
-                
+
                 break
 
     def get_corners(self, dom):
@@ -136,10 +136,10 @@ class LearningSetGenerator:
           corners.append(Point(node))
 
       return corners
-      
 
-for i in range(1):
-    for j in range(1):
+
+for i in range(9):
+    for j in range(100):
         try:
             filename = '%04d/00991_%04d%02d.info' % (i, i, j)
             print 'loading file "%s"' % filename
