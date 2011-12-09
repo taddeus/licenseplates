@@ -95,7 +95,15 @@ class LicensePlate:
             if version == i.getElementsByTagName("version")[0].firstChild.data:
 
                 self.country = i.getElementsByTagName("identification-letters")[0].firstChild.data
-                characters = i.getElementsByTagName("characters")[0].childNodes
+                
+                
+                temp = i.getElementsByTagName("characters")
+                
+                if len(temp):
+                  characters = temp[0].childNodes
+                else:
+                  self.characters = []
+                  break
                 
                 for character in characters:
                     if character.nodeName == "character":
@@ -108,7 +116,7 @@ class LicensePlate:
                         data    = self.retrieve_data(corners)
                         image   = NormalizedCharacterImage(data=data)
 
-                        self.characters.append(Character(value, corners, image, filename))
+                        self.characters.append(Character(value, corners, image))
                 
                 break
 
