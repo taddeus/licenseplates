@@ -153,35 +153,37 @@ rectangle.
 
 \subsection*{Noise reduction}
 
-The image contains a lot of noise, both from camera errors due to dark noise etc.,
-as from dirt on the license plate. In this case, noise therefor means any unwanted
-difference in color from the surrounding pixels.
+The image contains a lot of noise, both from camera errors due to dark noise 
+etc., as from dirt on the license plate. In this case, noise therefore means 
+any unwanted difference in color from the surrounding pixels.
 
 \paragraph*{Camera noise and small amounts of dirt}
 
-The dirt on the licenseplate can be of different sizes. We can reduce the smaller
-amounts of dirt in the same way as we reduce normal noise, by applying a gaussian
-blur to the image. This is the next step in our program.\\
+The dirt on the licenseplate can be of different sizes. We can reduce the 
+smaller amounts of dirt in the same way as we reduce normal noise, by applying
+a gaussian blur to the image. This is the next step in our program.\\
 \\
 The gaussian filter we use comes from the \texttt{scipy.ndimage} module. We use
 this function instead of our own function, because the standard functions are
-most likely more optimized then our own implementation, and speed is an important
-factor in this application.
+most likely more optimized then our own implementation, and speed is an
+important factor in this application.
 
 \paragraph*{Larger amounts of dirt}
 
 Larger amounts of dirt are not going to be resolved by using a Gaussian filter.
-We rely on one of the characteristics of the Local Binary Pattern, only looking at
-the difference between two pixels, to take care of these problems.\\
-Because there will probably always be a difference between the characters and the 
-dirt, and the fact that the characters are very black, the shape of the characters
-will still be conserved in the LBP, even if there is dirt surrounding the character.
+We rely on one of the characteristics of the Local Binary Pattern, only looking
+at the difference between two pixels, to take care of these problems.\\
+Because there will probably always be a difference between the characters and
+the dirt, and the fact that the characters are very black, the shape of the
+characters will still be conserved in the LBP, even if there is dirt
+surrounding the character.
 
 \subsection*{Character retrieval}
 
 The retrieval of the character is done the same as the retrieval of the license
-plate, by using a perspective transformation. The location of the characters on the
-licenseplate is also available in de XML file, so this is parsed from that as well.
+plate, by using a perspective transformation. The location of the characters on
+the licenseplate is also available in de XML file, so this is parsed from that
+as well.
 
 \subsection*{Creating Local Binary Patterns and feature vector}
 
@@ -194,15 +196,16 @@ licenseplate is also available in de XML file, so this is parsed from that as we
 \section{Finding parameters}
 
 Now that we have a functioning system, we need to tune it to work properly for
-license plates. This means we need to find the parameters. Throughout the program
-we have a number of parameters for which no standard choice is available. These
-parameters are:\\
+license plates. This means we need to find the parameters. Throughout the 
+program we have a number of parameters for which no standard choice is
+available. These parameters are:\\
 \\
 \begin{tabular}{l|l}
 	Parameter 			& Description\\
 	\hline
 	$\sigma$  			& The size of the gaussian blur.\\
-	\emph{cell size}	& The size of a cell for which a histogram of LBPs will be generated.
+	\emph{cell size}	& The size of a cell for which a histogram of LBPs will
+	                      be generated.
 
 \end{tabular}
 
