@@ -1,0 +1,164 @@
+\documentclass[a4paper]{article}
+
+\usepackage{hyperref}
+
+\title{Using local binary patterns to read license plates in photographs}
+
+% Paragraph indentation
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1ex plus 0.5ex minus 0.2ex}
+
+\begin{document}
+\maketitle
+
+\section*{Project members}
+Gijs van der Voort\\
+Richard Torenvliet\\
+Jayke Meijer\\
+Tadde\"us Kroes\\
+Fabi\'en Tesselaar
+
+\tableofcontents
+\setcounter{secnumdepth}{1}
+
+\section{Problem description}
+
+License plates are used for uniquely identifying motorized vehicles and are
+made to be read by humans from great distances and in all kinds of weather
+conditions.
+
+Reading license plates with a computer is much more difficult. Our dataset
+contains photographs of license plates from various angles and distances. This
+means that not only do we have to implement a method to read the actual
+characters, but also have to determine the location of the license plate and
+its transformation due to different angles.
+
+We will focus our research on reading the transformed characters on the
+license plate, of which we know where the letters are located. This is because
+Microsoft recently published a new and effective method to find the location of
+text in an image.
+
+Determining what character we are looking at will be done by using Local Binary
+Patterns. The main goal of our research is finding out how effective LBPs are in
+classifying characters on a licenseplate.
+
+In short our program must be able to do the following:
+
+\begin{enumerate}
+    \item Use perspective transformation to obtain an upfront view of license
+          plate.
+    \item Reduce noise where possible.
+    \item Extract each character using the location points in the info file.
+    \item Transform character to a normal form.
+    \item Create a local binary pattern histogram vector.
+    \item Match the found vector with a learning set.
+\end{enumerate}
+
+\section{Solutions}
+
+Now that the problem is defined, the next step is stating our basic solutions. This will
+come in a few steps as well.
+
+\subsection{Transformation}
+
+A simple perspective transformation will be sufficient to transform and resize
+the plate to a normalized format. The corner positions of license plates in the
+dataset are supplied together with the dataset.
+
+\subsection{Reducing noise}
+
+Small amounts of noise will probably be suppressed by usage of a Gaussian
+filter. A real problem occurs in very dirty license plates, where branches and
+dirt over a letter could radically change the local binary pattern. A question
+we can ask ourselves here, is whether we want to concentrate ourselves on these
+exceptional cases. By law, license plates have to be readable. Therefore, we
+will first direct our attention at getting a higher score in the 'regular' test
+set before addressing these cases. Considered the fact that the LBP algorithm
+divides a letter into a lot of cells, there is a good change that a great
+number of cells will still match the learning set, and thus still return the
+correct character as a best match. Therefore, we expect the algorithm to be
+very robust when dealing with noisy images.
+
+\subsection{Extracting a letter}
+
+Because we are already given the locations of the characters, we only need to
+transform those locations using the same perspective transformation used to
+create a front facing license plate. The next step is to transform the
+characters to a normalized manner. The size of the letter W is used as a
+standard to normalize the width of all the characters, because W is the widest
+character of the alphabet. We plan to also normalize the height of characters,
+the best manner for this is still to be determined.
+
+\begin{enumerate}
+    \item Crop the image in such a way that the character precisely fits the
+          image.
+    \item Scale the image to a standard height.
+    \item Extend the image on either the left or right side to a certain width.
+\end{enumerate}
+
+The resulting image will always have the same size, the character contained
+will always be of the same height, and the character will alway be positioned
+at either the left of right side of the image.
+
+\subsection{Local binary patterns}
+
+Once we have separate digits and characters, we intent to use Local Binary
+Patterns to determine what character or digit we are dealing with. Local Binary
+Patters are a way to classify a texture based on the distribution of edge
+directions in the image. Since letters on a license plate consist mainly of
+straight lines and simple curves, LBP should be suited to identify these.
+
+To our knowledge, LBP has yet not been used in this manner before. Therefore,
+it will be the first thing to implement, to see if it lives up to the
+expectations. When the proof of concept is there, it can be used in the final
+program.
+
+Important to note is that due to the normalization of characters before
+applying LBP. Therefore, no further normalization is needed on the histograms.
+
+Given the LBP of a character, a Support Vector Machine can be used to classify
+the character to a character in a learning set. The SVM uses
+
+\subsection{Matching the database}
+
+Given the LBP of a character, a Support Vector Machine can be used to classify
+the character to a character in a learning set. The SVM uses the collection of
+histograms of an image as a feature vector.  The SVM can be trained with a
+subsection of the given dataset called the ''Learning set''. Once trained, the
+entire classifier can be saved as a Pickle object\footnote{See
+\url{http://docs.python.org/library/pickle.html}} for later usage.
+
+\section{Implementation}
+
+In this section we will describe our implementations in more detail, explaining
+choices we made.
+
+\subsection*{Licenseplate retrieval}
+
+
+
+\subsection*{Noise reduction}
+
+
+
+\subsection*{Character retrieval}
+
+
+
+\subsection*{Creating Local Binary Patterns and feature vector}
+
+
+
+\subsection*{Classification}
+
+
+
+\section{Finding parameters}
+
+
+
+\section{Conclusion}
+
+
+
+\end{document}
