@@ -39,8 +39,8 @@ Microsoft recently published a new and effective method to find the location of
 text in an image.
 
 Determining what character we are looking at will be done by using Local Binary
-Patterns. The main goal of our research is finding out how effective LBPs are in
-classifying characters on a licenseplate.
+Patterns. The main goal of our research is finding out how effective LBPs are
+in classifying characters on a licenseplate.
 
 In short our program must be able to do the following:
 
@@ -56,8 +56,8 @@ In short our program must be able to do the following:
 
 \section{Solutions}
 
-Now that the problem is defined, the next step is stating our basic solutions. This will
-come in a few steps as well.
+Now that the problem is defined, the next step is stating our basic solutions.
+This will come in a few steps as well.
 
 \subsection{Transformation}
 
@@ -133,78 +133,155 @@ entire classifier can be saved as a Pickle object\footnote{See
 In this section we will describe our implementations in more detail, explaining
 choices we made.
 
-\subsection*{Licenseplate retrieval}
+\subsection{Licenseplate retrieval}
 
-In order to retrieve the license plate from the entire image, we need to perform
-a perspective transformation. However, to do this, we need to know the 
+In order to retrieve the license plate from the entire image, we need to
+perform a perspective transformation. However, to do this, we need to know the 
 coordinates of the four corners of the licenseplate. For our dataset, this is
-stored in XML files. So, the first step is to read these XML files.
-
+stored in XML files. So, the first step is to read these XML files.\\
+\\
 \paragraph*{XML reader}
 
 
 
 \paragraph*{Perspective transformation}
-
 Once we retrieved the cornerpoints of the licenseplate, we feed those to a
 module that extracts the (warped) licenseplate from the original image, and
 creates a new image where the licenseplate is cut out, and is transformed to a
 rectangle.
 
-\subsection*{Noise reduction}
+\subsection{Noise reduction}
 
-The image contains a lot of noise, both from camera errors due to dark noise etc.,
-as from dirt on the license plate. In this case, noise therefor means any unwanted
-difference in color from the surrounding pixels.
+The image contains a lot of noise, both from camera errors due to dark noise 
+etc., as from dirt on the license plate. In this case, noise therefore means 
+any unwanted difference in color from the surrounding pixels.
 
 \paragraph*{Camera noise and small amounts of dirt}
-
-The dirt on the licenseplate can be of different sizes. We can reduce the smaller
-amounts of dirt in the same way as we reduce normal noise, by applying a gaussian
-blur to the image. This is the next step in our program.\\
+The dirt on the licenseplate can be of different sizes. We can reduce the 
+smaller amounts of dirt in the same way as we reduce normal noise, by applying
+a gaussian blur to the image. This is the next step in our program.\\
 \\
 The gaussian filter we use comes from the \texttt{scipy.ndimage} module. We use
 this function instead of our own function, because the standard functions are
-most likely more optimized then our own implementation, and speed is an important
-factor in this application.
+most likely more optimized then our own implementation, and speed is an
+important factor in this application.
 
 \paragraph*{Larger amounts of dirt}
-
 Larger amounts of dirt are not going to be resolved by using a Gaussian filter.
-We rely on one of the characteristics of the Local Binary Pattern, only looking at
-the difference between two pixels, to take care of these problems.\\
-Because there will probably always be a difference between the characters and the 
-dirt, and the fact that the characters are very black, the shape of the characters
-will still be conserved in the LBP, even if there is dirt surrounding the character.
+We rely on one of the characteristics of the Local Binary Pattern, only looking
+at the difference between two pixels, to take care of these problems.\\
+Because there will probably always be a difference between the characters and
+the dirt, and the fact that the characters are very black, the shape of the
+characters will still be conserved in the LBP, even if there is dirt
+surrounding the character.
 
-\subsection*{Character retrieval}
+\subsection{Character retrieval}
 
 The retrieval of the character is done the same as the retrieval of the license
-plate, by using a perspective transformation. The location of the characters on the
-licenseplate is also available in de XML file, so this is parsed from that as well.
+plate, by using a perspective transformation. The location of the characters on
+the licenseplate is also available in de XML file, so this is parsed from that
+as well.
 
-\subsection*{Creating Local Binary Patterns and feature vector}
+\subsection{Creating Local Binary Patterns and feature vector}
 
 
 
-\subsection*{Classification}
+\subsection{Classification}
 
 
 
 \section{Finding parameters}
 
 Now that we have a functioning system, we need to tune it to work properly for
-license plates. This means we need to find the parameters. Throughout the program
-we have a number of parameters for which no standard choice is available. These
-parameters are:\\
+license plates. This means we need to find the parameters. Throughout the 
+program we have a number of parameters for which no standard choice is
+available. These parameters are:\\
 \\
 \begin{tabular}{l|l}
 	Parameter 			& Description\\
 	\hline
 	$\sigma$  			& The size of the gaussian blur.\\
-	\emph{cell size}	& The size of a cell for which a histogram of LBPs will be generated.
+	\emph{cell size}	& The size of a cell for which a histogram of LBPs will
+	                      be generated.\\
+	$\gamma$			& Parameter for the Radial kernel used in the SVM.\\
+	$c$					& The soft margin of the SVM. Allows how much training
+						  errors are excepted.
+\end{tabular}\\
+\\
+For each of these parameters, we will describe how we searched for a good
+value, and what value we decided on.
 
-\end{tabular}
+\subsection{Parameter $\sigma$}
+
+The first parameter to decide on, is the $\sigma$ used in the Gaussian blur. To
+find this parameter, we tested a few values, by checking visually what value
+removed most noise out of the image, while keeping the edges sharp enough to
+work with. By checking in the neighbourhood of the value that performed best,
+we where able to 'zoom in' on what we thought was the best value. It turned out
+that this was $\sigma = ?$.
+
+\subsection{Parameter \emph{cell size}}
+
+The cell size of the Local Binary Patterns determines over what region a
+histogram is made. The trade-off here is that a bigger cell size makes the
+classification less affected by relative movement of a character compared to
+those in the learningset, since the important structure will be more likely to
+remain in the same cell. However, if the cell size is too big, there will not
+be enough cells to properly describe the different areas of the character, and
+the featurevectors will not have enough elements.\\
+\\
+In order to find this parameter, we used a trial-and-error technique on a few
+basic cell sizes, being ?, 16, ?. We found that the best result was reached by
+using ??.
+
+\subsection{Parameters $\gamma$ \& $c$}
+
+The parameters $\gamma$ and $c$ are used for the SVM. $c$ is a standard
+parameter for each type of SVM, called the 'soft margin'. This indicates how
+exact each element in the learning set should be taken. A large soft margin
+means that an element in the learning set that accidentally has a completely
+different feature vector than expected, due to noise for example, is not taken
+into account. If the soft margin is very small, then almost all vectors will be
+taken into account, unless they differ extreme amounts.\\
+$\gamma$ is a variable that determines the size of the radial kernel, and as
+such blablabla.\\
+\\
+Since these parameters both influence the SVM, we need to find the best
+combination of values. To do this, we perform a so-called grid-search. A
+grid-search takes exponentially growing sequences for each parameter, and
+checks for each combination of values what the score is. The combination with
+the highest score is then used as our parameters, and the entire SVM will be
+trained using those parameters.\\
+\\
+We found that the best values for these parameters are $c=?$ and $\gamma =?$.
+
+\section{Results}
+
+The wanted to find out two things with this research: The speed of the
+classification and the accuracy. In this section we will show our findings.
+
+\subsection{Speed}
+
+Recognizing license plates is something that has to be done with good speed,
+since there can be a lot of cars passing a camera, especially on a highway.
+Therefore, we measured how well our program performed in terms of speed. We
+measure the time used to classify a license plate, not the trainign of the
+dataset, since that can be done offline, and speed is not a primary necessity
+there.\\
+\\
+The speed of a classification turned out to be blablabla.
+
+\subsection{Accuracy}
+
+Of course, it is vital that the recognition of a license plate is correct,
+almost correct is not good enough here. Therefore, we have to get the highest
+accuracy score we possibly can. According to Wikipedia
+\footnote{
+\url{http://en.wikipedia.org/wiki/Automatic_number_plate_recognition}},
+commercial license plate recognition software score about $90\%$ to $94\%$,
+under optimal conditions and with modern equipment.\\
+\\
+Our program scores an average of blablabla.
 
 \section{Conclusion}
 
