@@ -41,7 +41,7 @@ dump(test_set, file('test_set', 'w+'))
 learning_set = load(file('learning_set', 'r'))
 
 # Train the classifier with the learning set
-classifier = Classifier(c=30)
+classifier = Classifier(c=30, gamma=1)
 classifier.train(learning_set)
 classifier.save('classifier')
 #----------------------------------------------------------------
