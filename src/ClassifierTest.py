@@ -1,5 +1,5 @@
 #!/usr/bin/python
-from LicensePlate import LicensePlate
+from xml_helper_functions import xml_to_LicensePlate
 from Classifier import Classifier
 from cPickle import dump, load
 
@@ -8,9 +8,11 @@ chars = []
 for i in range(9):
     for j in range(100):
         try:
-            filename = '%04d/00991_%04d%02d.info' % (i, i, j)
+            filename = '%04d/00991_%04d%02d' % (i, i, j)
             print 'loading file "%s"' % filename
-            plate = LicensePlate(i, j)
+
+            # is nog steeds een licensePlate object, maar die is nu heel anders :P
+            plate = xml_to_LicensePlate(filename) 
 
             if hasattr(plate, 'characters'):
                 chars.extend(plate.characters)

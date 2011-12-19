@@ -1,11 +1,7 @@
 class Point:
-    def __init__(self, x_or_corner=None, y=None):
-        if y != None:
-            self.x = x_or_corner
-            self.y = y
-        else:
-            self.x = int(x_or_corner.getAttribute("x"))
-            self.y = int(x_or_corner.getAttribute("y"))
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
 
     def to_tuple(self):
         return self.x, self.y
