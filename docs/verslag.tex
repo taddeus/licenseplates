@@ -19,6 +19,7 @@ Tadde\"us Kroes\\
 Fabi\'en Tesselaar
 
 \tableofcontents
+
 \setcounter{secnumdepth}{1}
 
 \section{Problem description}
@@ -30,13 +31,9 @@ conditions.
 Reading license plates with a computer is much more difficult. Our dataset
 contains photographs of license plates from various angles and distances. This
 means that not only do we have to implement a method to read the actual
-characters, but also have to determine the location of the license plate and
-its transformation due to different angles.
-
-We will focus our research on reading the transformed characters on the
-license plate, of which we know where the letters are located. This is because
-Microsoft recently published a new and effective method to find the location of
-text in an image.
+characters, but given the location of the license plate and each individual
+character, we must make sure we transform each character to a standard form. 
+This has to be done or else the local binary patterns will never match!
 
 Determining what character we are looking at will be done by using Local Binary
 Patterns. The main goal of our research is finding out how effective LBP's are
@@ -45,19 +42,31 @@ in classifying characters on a license plate.
 In short our program must be able to do the following:
 
 \begin{enumerate}
-    \item Use perspective transformation to obtain an upfront view of license
+    \item Use a perspective transformation to obtain an upfront view of license
           plate.
-    \item Reduce noise where possible.
-    \item Extract each character using the location points in the info file.
-    \item Transform character to a normal form.
-    \item Create a local binary pattern histogram vector.
-    \item Match the found vector with a learning set.
+    \item Reduce noise where possible to ensure maximum readability.
+    \item Extracting characters using the location points in the xml file.
+    \item Transforming a character to a normal form.
+    \item Creating a local binary pattern histogram vector.
+    \item Matching the found vector with a learning set.
+    \item And finally it has to check results with a real data set.
 \end{enumerate}
 
-\section{Solutions}
+\section{Language of choice}
 
-Now that the problem is defined, the next step is stating our basic solutions.
-This will come in a few steps as well.
+The actual purpose of this project is to check if LBP is capable of recognizing
+license plate characters. We knew the LBP implementation would be pretty simple. 
+Thus an advantage had to be its speed compared with other license plate 
+recognition implementations, but the uncertainity of whether we could get some
+results made us pick Python. We felt Python would not restrict us as much in 
+assigning tasks to each member of the group. In addition, when using the correct
+modules to handle images, Python can be decent in speed.
+
+\section{Implementation}
+
+Now we know what our program has to be capable of, we can start with the
+implementations.
+
 
 \subsection{Transformation}
 
@@ -283,8 +292,36 @@ commercial license plate recognition software score about $90\%$ to $94\%$,
 under optimal conditions and with modern equipment. Our program scores an
 average of blablabla.
 
+\section{Workload distribution}
+
+The first two weeks were team based. Basically the LBP algorithm could be
+implemented in the first hour, while some talked and someone did the typing.
+Some additional 'basics' where created in similar fashion. This ensured that
+every team member was up-to-date and could start figuring out which part of the
+implementation was most suited to be done by one individually or in a pair.
+
+\subsection{Who did what}
+Gijs created the basic classes we could use and helped the rest everyone by 
+keeping track of what required to be finished and whom was working on what. 
+Tadde\"us and Jayke were mostly working on the SVM and all kinds of tests
+whether the histograms were mathing and alike. Fabi\"en created the functions
+to read and parse the given xml files with information about the license plates.
+Upon completion all kinds of learning and data sets could be created.
+
+%Richard je moet even toevoegen wat je hebt gedaan :P:P
+%maar miss is dit hele ding wel overbodig. Ik dacht dat Rein het zei tijdens gesprek van ik wil weten
+%hoe het ging enzo
+
+\subsection{How it went}
+
+Sometimes one cannot hear the alarm bell and wake up properly. This however was
+not a big problem as no one was affraid of staying at Science Park a bit longer
+to help out. Further communication usually went through e-mails and replies
+were instantaneous! A crew to remember.
+
 \section{Conclusion}
 
+Awesome
 
 
 \end{document}
