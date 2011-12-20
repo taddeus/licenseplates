@@ -30,7 +30,7 @@ for c in C:
         results.append(result)
         i += 1
         print '%d of %d, c = %f, gamma = %f, result = %d%%' \
-              % (i, len(C) * len(Y), c, y, int(result * 100))
+              % (i, len(C) * len(Y), c, y, int(round(result * 100)))
 
 i = 0
 
@@ -44,7 +44,7 @@ for c in C:
     print ' %7s' % c,
 
     for y in Y:
-        print '| %8d' % int(results[i] * 100),
+        print '| %8d' % int(round(results[i] * 100)),
         i += 1
 
     print
