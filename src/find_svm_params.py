@@ -102,7 +102,7 @@ i = 0
 s = '     c\y'
 
 for y in Y:
-    s += '| %f' % y
+    s += ' | %f' % y
 
 s += '\n'
 
@@ -110,12 +110,13 @@ for c in C:
     s += ' %7s' % c
 
     for y in Y:
-        s +=  '| %8d' % int(round(results[i] * 100))
+        s +=  ' | %8d' % int(round(results[i] * 100))
         i += 1
 
     s += '\n'
 
-s += '\nBest result: %.3f%% for C = %f and gamma = %f' % best[:3]
+s += '\nBest result: %.3f%% for C = %f and gamma = %f' \
+        % ((best[0] * 100,) + best[1:3])
 
 print 'Saving results...'
 f = open(results_file, 'w+')
