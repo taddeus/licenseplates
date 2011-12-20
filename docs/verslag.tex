@@ -124,7 +124,13 @@ straight lines and simple curves, LBP should be suited to identify these.
 \subsubsection{LBP Algorithm}
 The LBP algorithm that we implemented is a square variant of LBP, the same
 that is introduced by Ojala et al (1994). Wikipedia presents a different
-form where the pattern is circular. 
+form where the pattern is circular, this form is convenient because with
+interpolation you can choose the size of the circle \textbf{and} to how many
+neighbours the circle has. That means how many times the center pixel
+has to be evaluated against a neighbour.
+
+In the literature there are lots of examples where LBP is used for surface
+recognition, facial recognition, human face emotion recoqnition ((Pietik\"ainen, Hadid, Zhao \& Ahonen (2011))) 
 \begin{itemize}
 \item Determine the size of the square where the local patterns are being
 registered. For explanation purposes let the square be 3 x 3. \\
@@ -135,7 +141,7 @@ than the threshold it will be become a one else a zero.
 \begin{figure}[h!]
 \center
 \includegraphics[scale=0.5]{lbp.png}
-\caption{LBP 3 x 3 (Pietik\"ainen, Hadid, Zhao \& Ahonen (2011))}
+\caption{LBP 3 x 3 (Pietik\"ainen et all (2011))}
 \end{figure}
 
 Notice that the pattern will be come of the form 01001110. This is done when a
@@ -169,7 +175,7 @@ order. Starting with dividing the pattern in to cells of size 16.
 \begin{figure}[h!]
 \center
 \includegraphics[scale=0.7]{cells.png}
-\caption{Divide in cells(Pietik\"ainen et all (2011))}
+\caption{Divide in cells(Pietik\"ainen et al. (2011))}
 \end{figure}
 
 \item Consider every histogram as a vector element and concatenate these. The
@@ -199,6 +205,8 @@ histograms of an image as a feature vector.  The SVM can be trained with a
 subsection of the given dataset called the ''Learning set''. Once trained, the
 entire classifier can be saved as a Pickle object\footnote{See
 \url{http://docs.python.org/library/pickle.html}} for later usage.
+
+
 
 \section{Implementation}
 
@@ -314,9 +322,8 @@ dividing the \textbf{pattern} in to cells and create a histogram of that. So mul
 cells are related to one histogram. All the histograms are concatenated and
 feeded to the SVM that will be discussed in the next section, Classification.
 
-
 \subsection{Classification}
-
+The SVM used in our project is a Gaussian radial based function. Where the kernel is 
 
 
 \section{Finding parameters}
@@ -473,6 +480,16 @@ were instantaneous! A crew to remember.
 \section{Conclusion}
 
 Awesome
+
+\begin{thebibliography}{9}
+\bibitem{lbp1}
+  Matti Pietik\"ainen, Guoyin Zhao, Abdenour hadid,
+  Timo Ahonen.
+  \emph{Computational Imaging and Vision}.
+  Springer-Verlag, London,
+  1nd Edition,
+  2011.
+\end{thebibliography}
 
 
 \end{document}
