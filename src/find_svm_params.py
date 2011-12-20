@@ -119,7 +119,7 @@ s += '\nBest result: %.3f%% for C = %f and gamma = %f' % best[:3]
 
 print 'Saving results...'
 f = open(results_file, 'w+')
-f.write(s)
+f.write(s + '\n')
 f.close()
 
 print 'Saving best classifier...'
