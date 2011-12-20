@@ -113,7 +113,7 @@ part of the license plate remains readable.
 Once we have separate digits and characters, we intent to use Local Binary
 Patterns (Ojala, Pietikäinen \& Harwood, 1994) to determine what character
 or digit we are dealing with. Local Binary
-Patters are a way to classify a texture based on the distribution of edge
+Patterns are a way to classify a texture based on the distribution of edge
 directions in the image. Since letters on a license plate consist mainly of
 straight lines and simple curves, LBP should be suited to identify these.
 
@@ -139,15 +139,16 @@ the value of the evaluated pixel is greater than the threshold, shift the bit
 by the n(with i=i$_{th}$ pixel evaluated, starting with $i=0$).
 
 This results in a mathematical expression:
+
 Let I($x_i, y_i$) an Image with grayscale values and $g_n$ the grayscale value
-of the pixel $(x_i, y_i)$. Also let $s(g_i - g_c)$ with $g_c$ = grayscale value
-of the center pixel.
+of the pixel $(x_i, y_i)$. Also let $s(g_i, g_c)$ (see below) with $g_c$ = grayscale value
+of the center pixel and $g_i$ the grayscale value of the pixel to be evaluated.
 
 $$
-  s(v, g_c) = \left\{
+  s(g_i, g_c) = \left\{
   \begin{array}{l l}
-    1 & \quad \text{if v $\geq$ $g_c$}\\
-    0 & \quad \text{if v $<$ $g_c$}\\
+    1 & \quad \text{if $g_i$ $\geq$ $g_c$}\\
+    0 & \quad \text{if $g_i$ $<$ $g_c$}\\
   \end{array} \right.
 $$
 
@@ -171,7 +172,7 @@ order. Starting with dividing the pattern in to cells of size 16.
 result is a feature vector of the image.
 
 \item Feed these vectors to a support vector machine. This will ''learn'' which
-vectors indicate what letter. 
+vector indicates what vector is which character. 
 
 \end{itemize}
 
@@ -271,8 +272,27 @@ characters will still be conserved in the LBP, even if there is dirt
 surrounding the character.
 
 \subsection{Creating Local Binary Patterns and feature vector}
+Every pixel is a center pixel and it is also a value to evaluate but not at the 
+same time. Every pixel is evaluated as shown in the explanation
+of the LBP algorithm. The 8 neighbours around that pixel are evaluated, of course
+this area can be bigger, but looking at the closes neighbours can give us more
+information about the patterns of a character than looking at neighbours
+further away. This form is the generic form of LBP, no interpolation is needed 
+the pixels adressed as neighbours are indeed pixels.
 
-
+Take an example where the 
+full square can be evaluated, there are cases where the neighbours are out of 
+bounds. The first to be checked is the pixel in the left 
+bottom corner in the square 3 x 3, with coordinate $(x - 1, y - 1)$ with $g_c$ 
+as center pixel that has coordinates $(x, y)$. If the grayscale value of the
+neighbour in the left corner is greater than the grayscale
+value of the center pixel than return true. Bitshift the first bit with 7. The
+outcome is now 1000000. The second neighbour will be bitshifted with 6, and so 
+on. Until we are at 0. The result is a binary pattern of the local point just
+evaluated.
+Now only the edge pixels are a problem, but a simpel check if the location of
+the neighbour is still in the image can resolve this. We simply return false if
+it is.
 
 \subsection{Classification}
 
@@ -419,8 +439,8 @@ to read and parse the given xml files with information about the license
 plates. Upon completion all kinds of learning and data sets could be created.
 
 %Richard je moet even toevoegen wat je hebt gedaan :P:P
-%maar miss is dit hele ding wel overbodig. Ik dacht dat Rein het zei tijdens
-%gesprek van ik wil weten hoe het ging enzo
+%maar miss is dit hele ding wel overbodig Ik dacht dat Rein het zei tijdens
+%gesprek van ik wil weten hoe het ging enzo.
 
 \subsection{How it went}
 
