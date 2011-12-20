@@ -314,7 +314,14 @@ increasing our performance, so we only have one histogram to feed to the SVM.
 
 \subsection{Classification}
 
-
+For the classification, we use a standard Python Support Vector Machine,
+\texttt{libsvm}. This is a often used SVM, and should allow us to simply feed
+the data from the LBP and Feature Vector steps into the SVM and receive results.\\
+\\
+Using a SVM has two steps. First you have to train the SVM, and then you can
+use it to classify data. The training step takes a lot of time, so luckily
+\texttt{libsvm} offers us an opportunity to save a trained SVM. This means,
+you do not have to train the SVM every time.
 
 \section{Finding parameters}
 
