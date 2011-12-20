@@ -302,6 +302,15 @@ Now only the edge pixels are a problem, but a simpel check if the location of
 the neighbour is still in the image can resolve this. We simply return false if
 it is.
 
+\paragraph*{Histogram and Feature Vector}
+After all the Local Binary Patterns are created for every pixel. This pattern
+is divided in to cells. The feature vector is the vector of concatenated
+histograms. These histograms are created for cells. These cells are created by
+dividing the \textbf{pattern} in to cells and create a histogram of that. So multiple
+cells are related to one histogram. All the histograms are concatenated and
+feeded to the SVM that will be discussed in the next section, Classification.
+
+
 \subsection{Classification}
 
 
