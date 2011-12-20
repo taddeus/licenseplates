@@ -1,3 +1,4 @@
+#!/usr/bin/python
 from GrayscaleImage import GrayscaleImage
 from NormalizedCharacterImage import NormalizedCharacterImage
 

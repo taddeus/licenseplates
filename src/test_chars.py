@@ -3,7 +3,7 @@ from pylab import subplot, show, imshow, axis
 from cPickle import load
 
 x, y = 25, 25
-chars = load(file('chars', 'r'))[:(x * y)]
+chars = load(file('characters.dat', 'r'))[:(x * y)]
 
 for i in range(x):
     for j in range(y):

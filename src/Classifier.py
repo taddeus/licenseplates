@@ -1,9 +1,11 @@
 from svmutil import svm_train, svm_problem, svm_parameter, svm_predict, \
-        svm_save_model, svm_load_model
+        svm_save_model, svm_load_model, RBF
 
 
 class Classifier:
-    def __init__(self, c=None, gamma=None, filename=None):
+    def __init__(self, c=None, gamma=None, filename=None, cell_size=12):
+        self.cell_size = cell_size
+
         if filename:
             # If a filename is given, load a model from the given filename
             self.model = svm_load_model(filename)
@@ -11,8 +13,8 @@ class Classifier:
             raise Exception('Please specify both C and gamma.')
         else:
             self.param = svm_parameter()
-            self.param.kernel_type = 2  # Radial kernel type
             self.param.C = c  # Soft margin
+            self.param.kernel_type = RBF  # Radial kernel type
             self.param.gamma = gamma  # Parameter for radial kernel
             self.model = None
 
@@ -28,10 +30,12 @@ class Classifier:
         l = len(learning_set)
 
         for i, char in enumerate(learning_set):
-            print 'Training "%s"  --  %d of %d (%d%% done)' \
+            print 'Found "%s"  --  %d of %d (%d%% done)' \
                   % (char.value, i + 1, l, int(100 * (i + 1) / l))
             classes.append(float(ord(char.value)))
-            features.append(char.get_feature_vector())
+            #features.append(char.get_feature_vector())
+            char.get_single_cell_feature_vector()
+            features.append(char.feature)
 
         problem = svm_problem(classes, features)
         self.model = svm_train(problem, self.param)
@@ -48,9 +52,12 @@ class Classifier:
 
         return float(matches) / len(test_set)
 
-    def classify(self, character):
+    def classify(self, character, true_value=None):
         """Classify a character object, return its value."""
-        predict = lambda x: svm_predict([0], [x], self.model)[0][0]
-        prediction_class = predict(character.get_feature_vector())
+        true_value = 0 if true_value == None else ord(true_value)
+        #x = character.get_feature_vector(self.cell_size)
+        character.get_single_cell_feature_vector()
+        p = svm_predict([true_value], [character.feature], self.model)
+        prediction_class = int(p[0][0])
 
-        return chr(int(prediction_class))
+        return chr(prediction_class)

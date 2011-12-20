@@ -5,31 +5,38 @@ from GrayscaleImage import GrayscaleImage
 from cPickle import load
 from numpy import zeros, resize
 
-chars = load(file('chars', 'r'))[::2]
+chars = load(file('characters.dat', 'r'))[::2]
 left = None
 right = None
 
-for c in chars:
-    if c.value == '8':
-        if left == None:
-            left = c.image
-        elif right == None:
-            right = c.image
-        else:
-            break
+s = {}
 
-size = 16
+for char in chars:
+    if char.value not in s:
+        s[char.value] = [char]
+    else:
+        s[char.value].append(char)
+
+left = s['F'][2].image
+right = s['A'][0].image
+
+size = 12
 
 d = (left.size[0] * 4, left.size[1] * 4)
 #GrayscaleImage.resize(left, d)
 #GrayscaleImage.resize(right, d)
 
 p1 = LocalBinaryPatternizer(left, size)
+h1 = p1.get_single_histogram()
 p1.create_features_vector()
 p1 = p1.features
+
 p2 = LocalBinaryPatternizer(right, size)
+h2 = p2.get_single_histogram()
 p2.create_features_vector()
 p2 = p2.features
+
+total_intersect = h1.intersect(h2)
 
 s = (len(p1), len(p1[0]))
 match = zeros(left.shape)
@@ -52,6 +59,7 @@ for y in range(s[0]):
         m += intersect
 
 print 'Match: %d%%' % int(m / (s[0] * s[1]) * 100)
+print 'Single histogram instersection: %d%%' % int(total_intersect * 100)
 
 subplot(311)
 imshow(left.data, cmap='gray')
