@@ -21,4 +21,4 @@ for char in sorted(listdir('../images/LearningSet')):
         c.append(character)
         print char
 
-dump(c, open('characters2', 'w+'))
+dump(c, open('characters.dat', 'w+'))
