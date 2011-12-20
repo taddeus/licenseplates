@@ -1,3 +1,4 @@
+#!/usr/bin/python
 from GaussianFilter import GaussianFilter
 from GrayscaleImage import GrayscaleImage
 

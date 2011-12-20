@@ -16,6 +16,12 @@ class Histogram:
     def get_bin_index(self, number):
         return (number - self.min) / ((self.max - self.min) / len(self.bins))
 
+    def normalize(self):
+        minimum = min(self.bins)
+        self.bins = map(lambda b: b - minimum, self.bins)
+        maximum = float(max(self.bins))
+        self.bins = map(lambda b: b / maximum, self.bins)
+
     def intersect(self, other):
         h1 = self.bins
         h2 = other.bins

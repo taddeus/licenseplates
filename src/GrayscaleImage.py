@@ -18,19 +18,23 @@ class GrayscaleImage:
             self.data = data
 
     def __iter__(self):
-        self.__i_x = -1
-        self.__i_y = 0
-        return self
+        for y in xrange(self.data.shape[0]):
+            for x in xrange(self.data.shape[1]):
+                yield y, x, self.data[y, x]
 
-    def next(self):
-        self.__i_x += 1
-        if self.__i_x  == self.width:
-            self.__i_x = 0
-            self.__i_y += 1
-        if self.__i_y == self.height:
-            raise StopIteration
+        #self.__i_x = -1
+        #self.__i_y = 0
+        #return self
 
-        return  self.__i_y, self.__i_x, self[self.__i_y, self.__i_x]
+    #def next(self):
+    #    self.__i_x += 1
+    #    if self.__i_x  == self.width:
+    #        self.__i_x = 0
+    #        self.__i_y += 1
+    #    if self.__i_y == self.height:
+    #        raise StopIteration
+
+    #    return  self.__i_y, self.__i_x, self[self.__i_y, self.__i_x]
 
     def __getitem__(self, position):
         return self.data[position]
