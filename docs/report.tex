@@ -45,10 +45,8 @@ in classifying characters on a license plate.
 In short our program must be able to do the following:
 
 \begin{enumerate}
-    \item Use a perspective transformation to obtain an upfront view of license
-          plate.
-    \item Reduce noise where possible to ensure maximum readability.
     \item Extracting characters using the location points in the xml file.
+    \item Reduce noise where possible to ensure maximum readability.
     \item Transforming a character to a normal form.
     \item Creating a local binary pattern histogram vector.
     \item Matching the found vector with a learning set.
@@ -60,7 +58,7 @@ In short our program must be able to do the following:
 The actual purpose of this project is to check if LBP is capable of recognizing
 license plate characters. We knew the LBP implementation would be pretty
 simple. Thus an advantage had to be its speed compared with other license plate 
-recognition implementations, but the uncertainity of whether we could get some
+recognition implementations, but the uncertainty of whether we could get some
 results made us pick Python. We felt Python would not restrict us as much in 
 assigning tasks to each member of the group. In addition, when using the
 correct modules to handle images, Python can be decent in speed.
@@ -70,34 +68,34 @@ correct modules to handle images, Python can be decent in speed.
 Now we know what our program has to be capable of, we can start with the
 implementations.
 
+\subsection{Extracting a letter}
+
+Rewrite this section once we have implemented this properly.
+%NO LONGER VALID!
+%Because we are already given the locations of the characters, we only need to
+%transform those locations using the same perspective transformation used to
+%create a front facing license plate. The next step is to transform the
+%characters to a normalized manner. The size of the letter W is used as a
+%standard to normalize the width of all the characters, because W is the widest
+%character of the alphabet. We plan to also normalize the height of characters,
+%the best manner for this is still to be determined.
+
+%\begin{enumerate}
+%    \item Crop the image in such a way that the character precisely fits the
+%          image.
+%    \item Scale the image to a standard height.
+%    \item Extend the image on either the left or right side to a certain width.
+%\end{enumerate}
+
+%The resulting image will always have the same size, the character contained
+%will always be of the same height, and the character will always be positioned
+%at either the left of right side of the image.
 
 \subsection{Transformation}
 
 A simple perspective transformation will be sufficient to transform and resize
-the plate to a normalized format. The corner positions of license plates in the
+the characters to a normalized format. The corner positions of characters in the
 dataset are supplied together with the dataset.
-
-\subsection{Extracting a letter}
-
-NO LONGER VALID!
-Because we are already given the locations of the characters, we only need to
-transform those locations using the same perspective transformation used to
-create a front facing license plate. The next step is to transform the
-characters to a normalized manner. The size of the letter W is used as a
-standard to normalize the width of all the characters, because W is the widest
-character of the alphabet. We plan to also normalize the height of characters,
-the best manner for this is still to be determined.
-
-\begin{enumerate}
-    \item Crop the image in such a way that the character precisely fits the
-          image.
-    \item Scale the image to a standard height.
-    \item Extend the image on either the left or right side to a certain width.
-\end{enumerate}
-
-The resulting image will always have the same size, the character contained
-will always be of the same height, and the character will alway be positioned
-at either the left of right side of the image.
 
 \subsection{Reducing noise}
 
@@ -105,13 +103,11 @@ Small amounts of noise will probably be suppressed by usage of a Gaussian
 filter. A real problem occurs in very dirty license plates, where branches and
 dirt over a letter could radically change the local binary pattern. A question
 we can ask ourselves here, is whether we want to concentrate ourselves on these
-exceptional cases. By law, license plates have to be readable. Therefore, we
-will first direct our attention at getting a higher score in the 'regular' test
-set before addressing these cases. Considered the fact that the LBP algorithm
-divides a letter into a lot of cells, there is a good change that a great
-number of cells will still match the learning set, and thus still return the
-correct character as a best match. Therefore, we expect the algorithm to be
-very robust when dealing with noisy images.
+exceptional cases. By law, license plates have to be readable. However, the
+provided dataset showed that this does not means they always are. We will have
+to see how the algorithm performs on these plates, however we have good hopes
+that our method will get a good score on dirty plates, as long as a big enough
+part of the license plate remains readable.
 
 \subsection{Local binary patterns}
 Once we have separate digits and characters, we intent to use Local Binary
@@ -128,9 +124,9 @@ form where the pattern is circular.
 \begin{itemize}
 \item Determine the size of the square where the local patterns are being
 registered. For explanation purposes let the square be 3 x 3. \\
-\item The grayscale value of the middle pixel is used a threshold. Every value
-of the pixel around the middle pixel is evaluated. If it's value is greater
-than the threshold it will be become a one else a zero.
+\item The grayscale value of the middle pixel is used as threshold. Every
+value of the pixel around the middle pixel is evaluated. If it's value is
+greater than the threshold it will be become a one else a zero.
 
 \begin{figure}[h!]
 \center
@@ -175,27 +171,25 @@ order. Starting with dividing the pattern in to cells of size 16.
 result is a feature vector of the image.
 
 \item Feed these vectors to a support vector machine. This will ''learn'' which
-vector indicate what letter. 
+vectors indicate what letter. 
 
 \end{itemize}
 
 To our knowledge, LBP has yet not been used in this manner before. Therefore,
 it will be the first thing to implement, to see if it lives up to the
-expectations. When the proof of concept is there, it can be used in the final
+expectations. When the proof of concept is there, it can be used in a final
 program.
 
-Important to note is that due to the normalization of characters before
-applying LBP. Therefore, no further normalization is needed on the histograms.
-
-Given the LBP of a character, a Support Vector Machine can be used to classify
-the character to a character in a learning set. The SVM uses
+Later we will show that taking a histogram over the entire image (basically
+working with just one cell) gives us the best results.
 
 \subsection{Matching the database}
 
 Given the LBP of a character, a Support Vector Machine can be used to classify
-the character to a character in a learning set. The SVM uses the collection of
-histograms of an image as a feature vector.  The SVM can be trained with a
-subsection of the given dataset called the ''Learning set''. Once trained, the
+the character to a character in a learning set. The SVM uses a concatenation
+of each cell in an image as a feature vector (in the case we check the entire
+image no concatenation has to be done of course. The SVM can be trained with a
+subset of the given dataset called the ''Learning set''. Once trained, the
 entire classifier can be saved as a Pickle object\footnote{See
 \url{http://docs.python.org/library/pickle.html}} for later usage.
 
@@ -204,11 +198,11 @@ entire classifier can be saved as a Pickle object\footnote{See
 In this section we will describe our implementations in more detail, explaining
 choices we made.
 
-\subsection{Licenseplate retrieval}
+\subsection{Character retrieval}
 
-In order to retrieve the license plate from the entire image, we need to
+In order to retrieve the characters from the entire image, we need to
 perform a perspective transformation. However, to do this, we need to know the 
-coordinates of the four corners of the licenseplate. For our dataset, this is
+coordinates of the four corners of each character. For our dataset, this is
 stored in XML files. So, the first step is to read these XML files.
 
 \paragraph*{XML reader}
@@ -246,9 +240,9 @@ NormalizedImage. When these actions have been completed for each character the
 license plate is usable in the rest of the code.
 
 \paragraph*{Perspective transformation}
-Once we retrieved the cornerpoints of the license plate, we feed those to a
-module that extracts the (warped) license plate from the original image, and
-creates a new image where the license plate is cut out, and is transformed to a
+Once we retrieved the cornerpoints of the character, we feed those to a
+module that extracts the (warped) character from the original image, and
+creates a new image where the character is cut out, and is transformed to a
 rectangle.
 
 \subsection{Noise reduction}
@@ -275,13 +269,6 @@ Because there will probably always be a difference between the characters and
 the dirt, and the fact that the characters are very black, the shape of the
 characters will still be conserved in the LBP, even if there is dirt
 surrounding the character.
-
-\subsection{Character retrieval}
-
-The retrieval of the character is done the same as the retrieval of the license
-plate, by using a perspective transformation. The location of the characters on
-the license plate is also available in de XML file, so this is parsed from that
-as well.
 
 \subsection{Creating Local Binary Patterns and feature vector}
 
@@ -317,9 +304,7 @@ value, and what value we decided on.
 The first parameter to decide on, is the $\sigma$ used in the Gaussian blur. To
 find this parameter, we tested a few values, by checking visually what value
 removed most noise out of the image, while keeping the edges sharp enough to
-work with. By checking in the neighbourhood of the value that performed best,
-we where able to 'zoom in' on what we thought was the best value. It turned out
-that this was $\sigma = ?$.
+work with. It turned out the best value is $\sigma = 0.5$.
 
 \subsection{Parameter \emph{cell size}}
 
@@ -332,8 +317,9 @@ be enough cells to properly describe the different areas of the character, and
 the feature vectors will not have enough elements.\\
 \\
 In order to find this parameter, we used a trial-and-error technique on a few
-basic cell sizes, being ?, 16, ?. We found that the best result was reached by
-using ??.
+cell sizes. During this testing, we discovered that a lot better score was
+reached when we take the histogram over the entire image, so with a single
+cell. therefor, we decided to work without cells.
 
 \subsection{Parameters $\gamma$ \& $c$}
 
@@ -354,7 +340,8 @@ checks for each combination of values what the score is. The combination with
 the highest score is then used as our parameters, and the entire SVM will be
 trained using those parameters.\\
 \\
-We found that the best values for these parameters are $c=?$ and $\gamma =?$.
+We found that the best values for these parameters are $c = ?$ and
+$\gamma = ?$.
 
 \section{Results}
 
