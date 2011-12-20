@@ -1,3 +1,4 @@
+#!/usr/bin/python
 from Histogram import Histogram
 
 his = Histogram(10, 10, 110)
