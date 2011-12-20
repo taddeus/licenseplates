@@ -3,57 +3,56 @@ from xml_helper_functions import xml_to_LicensePlate
 from Classifier import Classifier
 from cPickle import dump, load
 
-chars = []
-
-for i in range(9):
-    for j in range(100):
-        try:
-            filename = '%04d/00991_%04d%02d' % (i, i, j)
-            print 'loading file "%s"' % filename
-
-            # is nog steeds een licensePlate object, maar die is nu heel anders :P
-            plate = xml_to_LicensePlate(filename) 
-
-            if hasattr(plate, 'characters'):
-                chars.extend(plate.characters)
-        except:
-            print 'epic fail'
-
-print 'loaded %d chars' % len(chars)
-
-dump(chars, file('chars', 'w+'))
-#----------------------------------------------------------------
-chars = load(file('chars', 'r'))[:500]
-learned = []
+chars = load(file('characters2', 'r'))
 learning_set = []
 test_set = []
 
+#s = {}
+#
+#for char in chars:
+#    if char.value not in s:
+#        s[char.value] = [char]
+#    else:
+#        s[char.value].append(char)
+#
+#for value, chars in s.iteritems():
+#    learning_set += chars[::2]
+#    test_set += chars[1::2]
+
+learned = []
+
 for char in chars:
-    if learned.count(char.value) > 12:
+    if learned.count(char.value) == 70:
         test_set.append(char)
     else:
         learning_set.append(char)
         learned.append(char.value)
 
-#print 'Learning set:', [c.value for c in learning_set]
-#print 'Test set:', [c.value for c in test_set]
+print 'Learning set:', [c.value for c in learning_set]
+print 'Test set:', [c.value for c in test_set]
+print 'Saving learning set...'
 dump(learning_set, file('learning_set', 'w+'))
+print 'Saving test set...'
 dump(test_set, file('test_set', 'w+'))
 #----------------------------------------------------------------
+print 'Loading learning set'
 learning_set = load(file('learning_set', 'r'))
 
 # Train the classifier with the learning set
-classifier = Classifier(c=30, gamma=1)
+classifier = Classifier(c=512, gamma=.125, cell_size=12)
 classifier.train(learning_set)
-classifier.save('classifier')
+#classifier.save('classifier')
+#print 'Saved classifier'
 #----------------------------------------------------------------
-classifier = Classifier(filename='classifier')
+#print 'Loading classifier'
+#classifier = Classifier(filename='classifier')
+print 'Loading test set'
 test_set = load(file('test_set', 'r'))
 l = len(test_set)
 matches = 0
 
 for i, char in enumerate(test_set):
-    prediction = classifier.classify(char)
+    prediction = classifier.classify(char, char.value)
 
     if char.value == prediction:
         print ':-----> Successfully recognized "%s"' % char.value,
