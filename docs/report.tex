@@ -63,10 +63,10 @@ results made us pick Python. We felt Python would not restrict us as much in
 assigning tasks to each member of the group. In addition, when using the
 correct modules to handle images, Python can be decent in speed.
 
-\section{Implementation}
+\section{Theory}
 
 Now we know what our program has to be capable of, we can start with the
-implementations.
+defining what problems we have and how we want to solve these.
 
 \subsection{Extracting a letter}
 
@@ -294,11 +294,11 @@ bounds. The first to be checked is the pixel in the left
 bottom corner in the square 3 x 3, with coordinate $(x - 1, y - 1)$ with $g_c$ 
 as center pixel that has coordinates $(x, y)$. If the grayscale value of the
 neighbour in the left corner is greater than the grayscale
-value of the center pixel than return true. Bitshift the first bit with 7. The
-outcome is now 1000000. The second neighbour will be bitshifted with 6, and so 
+value of the center pixel than return true. Bit-shift the first bit with 7. The
+outcome is now 1000000. The second neighbour will be bit-shifted with 6, and so 
 on. Until we are at 0. The result is a binary pattern of the local point just
 evaluated.
-Now only the edge pixels are a problem, but a simpel check if the location of
+Now only the edge pixels are a problem, but a simple check if the location of
 the neighbour is still in the image can resolve this. We simply return false if
 it is.
 
@@ -306,10 +306,11 @@ it is.
 After all the Local Binary Patterns are created for every pixel. This pattern
 is divided in to cells. The feature vector is the vector of concatenated
 histograms. These histograms are created for cells. These cells are created by
-dividing the \textbf{pattern} in to cells and create a histogram of that. So multiple
-cells are related to one histogram. All the histograms are concatenated and
-feeded to the SVM that will be discussed in the next section, Classification.
-
+dividing the \textbf{pattern} in to cells and create a histogram of that. So
+multiple cells are related to one histogram. All the histograms are
+concatenated and fed to the SVM that will be discussed in the next section,
+Classification. We did however find out that the use of several cells was not
+increasing our performance, so we only have one histogram to feed to the SVM.
 
 \subsection{Classification}
 
@@ -326,8 +327,8 @@ available. These parameters are:\\
 	Parameter 			& Description\\
 	\hline
 	$\sigma$  			& The size of the Gaussian blur.\\
-	\emph{cell size}	& The size of a cell for which a histogram of LBPs will
-	                      be generated.\\
+	\emph{cell size}	& The size of a cell for which a histogram of LBP's
+	                      will be generated.\\
 	\emph{Neighbourhood}& The neighbourhood to use for creating the LBP.\\
 	$\gamma$			& Parameter for the Radial kernel used in the SVM.\\
 	$c$					& The soft margin of the SVM. Allows how much training
@@ -357,7 +358,14 @@ the feature vectors will not have enough elements.\\
 In order to find this parameter, we used a trial-and-error technique on a few
 cell sizes. During this testing, we discovered that a lot better score was
 reached when we take the histogram over the entire image, so with a single
-cell. Therefore, we decided to work without cells.
+cell. Therefore, we decided to work without cells.\\
+\\
+The reason that using one cell works best is probably because the size of a
+single character on a license plate in the provided dataset is very small.
+That means that when dividing it into cells, these cells become simply too
+small to have a really representative histogram. Therefore, the
+concatenated histograms are then a list of only very small numbers, which
+are not significant enough to allow for reliable classification.
 
 \subsection{Parameter \emph{Neighbourhood}}
 
@@ -402,7 +410,7 @@ measure the time used to classify a license plate, not the training of the
 dataset, since that can be done offline, and speed is not a primary necessity
 there.\\
 \\
-The speed of a classification turned out to be blablabla.
+The speed of a classification turned out to be ???.
 
 \subsection{Accuracy}
 
@@ -414,15 +422,25 @@ accuracy score we possibly can.\\
 \url{http://en.wikipedia.org/wiki/Automatic_number_plate_recognition}},
 commercial license plate recognition software score about $90\%$ to $94\%$,
 under optimal conditions and with modern equipment. Our program scores an
-average of blablabla.
+average of ???.
 
-\section{Difficulties}
+\section{Conclusion}
+
+In the end it turns out that using Local Binary Patterns is a promising
+technique for License Plate Recognition. It seems to be relatively unfased by
+dirty licenseplates and different fonts on these plates.\\
+\\
+The performance speedwise is ???
+
+\section{Reflection}
+
+\subsection{Difficulties}
 
 During the implementation and testing of the program, we did encounter a
 number of difficulties. In this section we will state what these difficulties
 were and whether we were able to find a proper solution for them.
 
-\subsection*{Dataset}
+\subsubsection*{Dataset}
 
 We did experience a number of problems with the provided dataset. A number of
 these are problems to be expected in a real world problem, but which make
@@ -440,14 +458,14 @@ are not properly classified. This is of course very problematic, both for
 training the SVM as for checking the performance. This meant we had to check
 each character whether its description was correct.
 
-\subsection*{SVM}
+\subsubsection*{SVM}
 
 We also had trouble with the SVM for Python. The standard Python SVM, libsvm,
 had a poor documentation. There was no explanation what so ever on which
 parameter had to be what. This made it a lot harder for us to see what went
 wrong in the program.
 
-\section{Workload distribution}
+\subsection{Workload distribution}
 
 The first two weeks were team based. Basically the LBP algorithm could be
 implemented in the first hour, while some talked and someone did the typing.
@@ -455,7 +473,7 @@ Some additional 'basics' where created in similar fashion. This ensured that
 every team member was up-to-date and could start figuring out which part of the
 implementation was most suited to be done by one individually or in a pair.
 
-\subsection{Who did what}
+\subsubsection*{Who did what}
 Gijs created the basic classes we could use and helped the rest everyone by 
 keeping track of what required to be finished and whom was working on what. 
 Tadde\"us and Jayke were mostly working on the SVM and all kinds of tests
@@ -467,16 +485,11 @@ plates. Upon completion all kinds of learning and data sets could be created.
 %maar miss is dit hele ding wel overbodig Ik dacht dat Rein het zei tijdens
 %gesprek van ik wil weten hoe het ging enzo.
 
-\subsection{How it went}
+\subsubsection*{How it went}
 
 Sometimes one cannot hear the alarm bell and wake up properly. This however was
 not a big problem as no one was afraid of staying at Science Park a bit longer
 to help out. Further communication usually went through e-mails and replies
 were instantaneous! A crew to remember.
-
-\section{Conclusion}
-
-Awesome
-
 
 \end{document}
