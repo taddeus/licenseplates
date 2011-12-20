@@ -285,7 +285,27 @@ the license plate is also available in de XML file, so this is parsed from that
 as well.
 
 \subsection{Creating Local Binary Patterns and feature vector}
+Every pixel is a center pixel and it is also a value to evaluate but not at the 
+same time. Every pixel is evaluated as shown in the explanation
+of the LBP algorithm. The 8 neighbours around that pixel are evaluated, of course
+this area can be bigger, but looking at the closes neighbours can give us more
+information about the patterns of a character than looking at neighbours
+further away. This form is the generic form of LBP, no interpolation is needed 
+the pixels adressed as neighbours are indeed pixels.
 
+Take an example where the 
+full square can be evaluated, there are cases where the neighbours are out of 
+bounds. The first to be checked is the pixel in the left 
+bottom corner in the square 3 x 3, with coordinate $(x - 1, y - 1)$ with $g_c$ 
+as center pixel that has coordinates $(x, y)$. If the grayscale value of the
+neighbour in the left corner is greater than the grayscale
+value of the center pixel than return true. Bitshift the first bit with 7. The
+outcome is now 1000000. The second neighbour will be bitshifted with 6, and so 
+on. Until we are at 0. The result is a binary pattern of the local point just
+evaluated.
+Now only the edge pixels are a problem, but a simpel check if the location of
+the neighbour is still in the image can resolve this. We simply return false if
+it is.
 
 \subsection{Classification}
 
