@@ -115,7 +115,7 @@ at either the left of right side of the image.
 Once we have separate digits and characters, we intent to use Local Binary
 Patterns (Ojala, Pietikäinen \& Harwood, 1994) to determine what character
 or digit we are dealing with. Local Binary
-Patters are a way to classify a texture based on the distribution of edge
+Patterns are a way to classify a texture based on the distribution of edge
 directions in the image. Since letters on a license plate consist mainly of
 straight lines and simple curves, LBP should be suited to identify these.
 
@@ -142,7 +142,7 @@ evaluated, starting with $i=0$).
 
 This results in a mathematical expression:
 Let I($x_i, y_i$) an Image with grayscale values and $g_n$ the grayscale value of the pixel $(x_i, y_i)$. 
-Also let $s(g_i - g_c)$ with $g_c$ = grayscale value of the center pixel.
+Also let $s(g_i, g_c)$ with $g_c$ = grayscale value of the center pixel.
 
 $$
   s(v, g_c) = \left\{
