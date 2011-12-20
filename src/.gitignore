@@ -1,8 +1,2 @@
-chars
-learning_set
-test_set
-classifier
-classifier-model
-classifier-characters
-characters
-best_classifier
+*.dat
+results.txt

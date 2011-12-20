@@ -5,7 +5,7 @@ from GrayscaleImage import GrayscaleImage
 from cPickle import load
 from numpy import zeros, resize
 
-chars = load(file('characters', 'r'))[::2]
+chars = load(file('characters.dat', 'r'))[::2]
 left = None
 right = None
 

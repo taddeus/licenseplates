@@ -3,7 +3,7 @@ from xml_helper_functions import xml_to_LicensePlate
 from Classifier import Classifier
 from cPickle import dump, load
 
-chars = load(file('characters2', 'r'))
+chars = load(file('characters.dat', 'r'))
 learning_set = []
 test_set = []
 
@@ -31,12 +31,12 @@ for char in chars:
 print 'Learning set:', [c.value for c in learning_set]
 print 'Test set:', [c.value for c in test_set]
 print 'Saving learning set...'
-dump(learning_set, file('learning_set', 'w+'))
+dump(learning_set, file('learning_set.dat', 'w+'))
 print 'Saving test set...'
-dump(test_set, file('test_set', 'w+'))
+dump(test_set, file('test_set.dat', 'w+'))
 #----------------------------------------------------------------
 print 'Loading learning set'
-learning_set = load(file('learning_set', 'r'))
+learning_set = load(file('learning_set.dat', 'r'))
 
 # Train the classifier with the learning set
 classifier = Classifier(c=512, gamma=.125, cell_size=12)
@@ -47,7 +47,7 @@ classifier.train(learning_set)
 #print 'Loading classifier'
 #classifier = Classifier(filename='classifier')
 print 'Loading test set'
-test_set = load(file('test_set', 'r'))
+test_set = load(file('test_set.dat', 'r'))
 l = len(test_set)
 matches = 0
 

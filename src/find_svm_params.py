@@ -9,10 +9,10 @@ Y = [float(2 ** p) for p in xrange(-13, 4, 2)]
 best_classifier = None
 
 print 'Loading learning set...'
-learning_set = load(file('learning_set', 'r'))
+learning_set = load(file('learning_set.dat', 'r'))
 print 'Learning set:', [c.value for c in learning_set]
 print 'Loading test set...'
-test_set = load(file('test_set', 'r'))
+test_set = load(file('test_set.dat', 'r'))
 print 'Test set:', [c.value for c in test_set]
 
 # Perform a grid-search on different combinations of soft margin and gamma
@@ -54,4 +54,4 @@ for c in C:
 
 print '\nmax:', maximum
 
-best_classifier.save('best_classifier')
+best_classifier.save('best_classifier.dat')
