@@ -3,9 +3,13 @@ from math import ceil
 
 class LocalBinaryPatternizer:
 
-    def __init__(self, image, cell_size=16):
+    def __init__(self, image, cell_size=16, neighbours=3):
         self.cell_size = cell_size
         self.image = image
+        self.pattern_callback, self.bins = {
+                    3: (self.pattern_3x3, 256),
+                    5: (self.pattern_5x5, 4096)
+                }[neighbours]
 
     def setup_histograms(self):
         cells_in_width = int(ceil(self.image.width / float(self.cell_size)))
@@ -16,9 +20,9 @@ class LocalBinaryPatternizer:
             self.histograms.append([])
 
             for j in xrange(cells_in_width):
-                self.histograms[i].append(Histogram(256, 0, 256))
+                self.histograms[i].append(Histogram(self.bins, 0, self.bins))
 
-    def local_binary_pattern(self, y, x, value):
+    def pattern_3x3(self, y, x, value):
         return (self.is_pixel_darker(y - 1, x - 1, value) << 7) \
              | (self.is_pixel_darker(y - 1, x    , value) << 6) \
              | (self.is_pixel_darker(y - 1, x + 1, value) << 5) \
@@ -26,7 +30,21 @@ class LocalBinaryPatternizer:
              | (self.is_pixel_darker(y + 1, x + 1, value) << 3) \
              | (self.is_pixel_darker(y + 1, x    , value) << 2) \
              | (self.is_pixel_darker(y + 1, x - 1, value) << 1) \
-             | (self.is_pixel_darker(y    , x - 1, value) << 0)
+             | (self.is_pixel_darker(y    , x - 1, value))
+
+    def pattern_5x5(self, y, x, value):
+        return (self.is_pixel_darker(y - 1, x - 2, value) << 11) \
+             | (self.is_pixel_darker(y    , x - 2, value) << 10) \
+             | (self.is_pixel_darker(y + 1, x - 2, value) << 9) \
+             | (self.is_pixel_darker(y + 2, x - 1, value) << 8) \
+             | (self.is_pixel_darker(y + 2, x    , value) << 7) \
+             | (self.is_pixel_darker(y + 2, x + 1, value) << 6) \
+             | (self.is_pixel_darker(y + 1, x + 2, value) << 5) \
+             | (self.is_pixel_darker(y    , x + 2, value) << 4) \
+             | (self.is_pixel_darker(y - 1, x + 2, value) << 3) \
+             | (self.is_pixel_darker(y - 2, x + 1, value) << 2) \
+             | (self.is_pixel_darker(y - 2, x    , value) << 1) \
+             | (self.is_pixel_darker(y - 2, x - 1, value))
 
     def create_features_vector(self):
         '''Walk around the pixels in clokwise order, shifting 1 bit less at
@@ -36,7 +54,7 @@ class LocalBinaryPatternizer:
 
         for y, x, value in self.image:
             cy, cx = self.get_cell_index(y, x)
-            self.histograms[cy][cx].add(self.local_binary_pattern(y, x, value))
+            self.histograms[cy][cx].add(self.pattern_callback(y, x, value))
 
         return self.get_features_as_array()
 
@@ -55,15 +73,14 @@ class LocalBinaryPatternizer:
                 f.extend(hist.bins)
 
         return f
-        #return [h.bins for h in [h for sub in self.histograms for h in sub]][0]
 
     def get_single_histogram(self):
         """Create a single histogram of the local binary patterns in the
         image."""
-        h = Histogram(256, 0, 256)
+        h = Histogram(self.bins, 0, self.bins)
 
         for y, x, value in self.image:
-            h.add(self.local_binary_pattern(y, x, value))
+            h.add(self.pattern_callback(y, x, value))
 
         h.normalize()
 

@@ -7,11 +7,12 @@ class Character:
         self.image   = image
         self.filename = filename
 
-    def get_single_cell_feature_vector(self):
+    def get_single_cell_feature_vector(self, neighbours=5):
         if hasattr(self, 'feature'):
             return
 
-        self.feature = LBP(self.image).single_cell_features_vector()
+        pattern = LBP(self.image, neighbours=neighbours)
+        self.feature = pattern.single_cell_features_vector()
 
     def get_feature_vector(self, cell_size=None):
         pattern = LBP(self.image) if cell_size == None \
