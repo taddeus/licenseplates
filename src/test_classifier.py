@@ -41,11 +41,11 @@ learning_set = load(file('learning_set.dat', 'r'))
 # Train the classifier with the learning set
 classifier = Classifier(c=512, gamma=.125, cell_size=12)
 classifier.train(learning_set)
-#classifier.save('classifier')
-#print 'Saved classifier'
+classifier.save('classifier.dat')
+print 'Saved classifier'
 #----------------------------------------------------------------
-#print 'Loading classifier'
-#classifier = Classifier(filename='classifier')
+print 'Loading classifier'
+classifier = Classifier(filename='classifier.dat')
 print 'Loading test set'
 test_set = load(file('test_set.dat', 'r'))
 l = len(test_set)
