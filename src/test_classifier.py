@@ -1,53 +1,23 @@
 #!/usr/bin/python
-from xml_helper_functions import xml_to_LicensePlate
-from Classifier import Classifier
 from cPickle import dump, load
 
-chars = load(file('characters.dat', 'r'))
-learning_set = []
-test_set = []
+from Classifier import Classifier
 
-#s = {}
-#
-#for char in chars:
-#    if char.value not in s:
-#        s[char.value] = [char]
-#    else:
-#        s[char.value].append(char)
-#
-#for value, chars in s.iteritems():
-#    learning_set += chars[::2]
-#    test_set += chars[1::2]
+if len(argv) < 5:
+    print 'Usage: python %s FILE_SUFFIX C GAMMA NEIGHBOURS' % argv[0]
+    exit(1)
 
-learned = []
-
-for char in chars:
-    if learned.count(char.value) == 70:
-        test_set.append(char)
-    else:
-        learning_set.append(char)
-        learned.append(char.value)
-
-print 'Learning set:', [c.value for c in learning_set]
-print 'Test set:', [c.value for c in test_set]
-print 'Saving learning set...'
-dump(learning_set, file('learning_set.dat', 'w+'))
-print 'Saving test set...'
-dump(test_set, file('test_set.dat', 'w+'))
-#----------------------------------------------------------------
 print 'Loading learning set'
-learning_set = load(file('learning_set.dat', 'r'))
+learning_set = load(file('learning_set%s.dat' % argv[1], 'r'))
 
 # Train the classifier with the learning set
-classifier = Classifier(c=512, gamma=.125, cell_size=12)
+classifier = Classifier(c=float(argv[1]), \
+                        gamma=float(argv[2]), \
+                        neighbours=int(argv[3]))
 classifier.train(learning_set)
-classifier.save('classifier.dat')
-print 'Saved classifier'
-#----------------------------------------------------------------
-print 'Loading classifier'
-classifier = Classifier(filename='classifier.dat')
+
 print 'Loading test set'
-test_set = load(file('test_set.dat', 'r'))
+test_set = load(file('test_set%s.dat' % argv[1], 'r'))
 l = len(test_set)
 matches = 0
 

@@ -3,8 +3,8 @@ from svmutil import svm_train, svm_problem, svm_parameter, svm_predict, \
 
 
 class Classifier:
-    def __init__(self, c=None, gamma=None, filename=None, cell_size=12):
-        self.cell_size = cell_size
+    def __init__(self, c=None, gamma=None, filename=None, neighbours=3):
+        self.neighbours = neighbours
 
         if filename:
             # If a filename is given, load a model from the given filename
@@ -34,7 +34,7 @@ class Classifier:
                   % (char.value, i + 1, l, int(100 * (i + 1) / l))
             classes.append(float(ord(char.value)))
             #features.append(char.get_feature_vector())
-            char.get_single_cell_feature_vector()
+            char.get_single_cell_feature_vector(self.neighbours)
             features.append(char.feature)
 
         problem = svm_problem(classes, features)
@@ -56,7 +56,7 @@ class Classifier:
         """Classify a character object, return its value."""
         true_value = 0 if true_value == None else ord(true_value)
         #x = character.get_feature_vector(self.cell_size)
-        character.get_single_cell_feature_vector()
+        character.get_single_cell_feature_vector(self.neighbours)
         p = svm_predict([true_value], [character.feature], self.model)
         prediction_class = int(p[0][0])
 
