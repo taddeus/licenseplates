@@ -22,7 +22,7 @@ chars = []
 i = 0
 br = False
 
-for value in sorted(listdir()):
+for value in sorted(listdir(IMAGES_FOLDER)):
     for image in sorted(listdir(IMAGES_FOLDER + value)):
         f = IMAGES_FOLDER + value + '/' + image
         image = GrayscaleImage(f)
@@ -37,15 +37,20 @@ for value in sorted(listdir()):
     if br:
         break
 
-# Load classifier
+# Load classifier (run create_classifier.py first)
 classifier = load_classifier(neighbours, blur_scale, verbose=1)
 
 # Measure the time it takes to recognize <count> characters
 start = time()
 
 for char in chars:
+    # Normalize the character image
     char.image = NormalizedCharacterImage(image, blur=blur_scale, height=42)
+
+    # Create the image's feature vector
     char.get_single_cell_feature_vector(neighbours)
+
+    # Feed the feature vector to the classifier
     classifier.classify(char)
 
 elapsed = time() - start

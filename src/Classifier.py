@@ -4,8 +4,14 @@ from svmutil import svm_train, svm_problem, svm_parameter, svm_predict, \
 class Classifier:
     def __init__(self, c=None, gamma=None, filename=None, neighbours=3, \
             verbose=0):
+        self.neighbours = neighbours
+        self.verbose = verbose
+
         if filename:
             # If a filename is given, load a model from the given filename
+            if verbose:
+                print 'Loading classifier from "%s"...' % filename
+
             self.model = svm_load_model(filename)
         elif c == None or gamma == None:
             raise Exception('Please specify both C and gamma.')
@@ -16,11 +22,11 @@ class Classifier:
             self.param.gamma = gamma  # Parameter for radial kernel
             self.model = None
 
-        self.neighbours = neighbours
-        self.verbose = verbose
-
     def save(self, filename):
         """Save the SVM model in the given filename."""
+        if self.verbose:
+            print 'Saving classifier in "%s"...' % filename
+
         svm_save_model(filename, self.model)
 
     def train(self, learning_set):

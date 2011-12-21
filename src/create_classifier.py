@@ -5,14 +5,15 @@ from data import exists, DATA_FOLDER
 
 
 def load_classifier(neighbours, blur_scale, c=None, gamma=None, verbose=0):
-    classifier_file = DATA_FOLDER + 'classifier_%s_%s.dat' \
+    classifier_file = 'classifier_%s_%s.dat' \
             % (blur_scale, neighbours)
+    classifier_path = DATA_FOLDER + classifier_file
 
     if exists(classifier_file):
         if verbose:
             print 'Loading classifier...'
 
-        classifier = Classifier(filename=classifier_file, \
+        classifier = Classifier(filename=classifier_path, \
                 neighbours=neighbours, verbose=verbose)
     elif c != None and gamma != None:
         if verbose:
@@ -23,6 +24,7 @@ def load_classifier(neighbours, blur_scale, c=None, gamma=None, verbose=0):
         learning_set = load_learning_set(neighbours, blur_scale, \
                 verbose=verbose)
         classifier.train(learning_set)
+        classifier.save(classifier_path)
     else:
         raise Exception('No soft margin and gamma specified.')
 
