@@ -20,10 +20,15 @@ classifier_file = 'classifier%s.dat' % suffix
 print 'Loading characters...'
 chars = load(open(chars_file, 'r'))[:count]
 count = len(chars)
+
+for char in chars:
+    del char.feature
+
 print 'Read %d characters' % count
 
 print 'Loading classifier...'
 classifier = Classifier(filename=classifier_file)
+classifier.neighbours = neighbours
 
 start = time()
 
