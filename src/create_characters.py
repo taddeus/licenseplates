@@ -56,7 +56,10 @@ def load_learning_set(neighbours, blur_scale, verbose=0):
         if verbose:
             print 'Learning set:', [c.value for c in learning_set]
     else:
-        return generate_sets(neighbours, blur_scale, verbose=verbose)[0]
+        learning_set = generate_sets(neighbours, blur_scale, \
+                verbose=verbose)[0]
+
+    return learning_set
 
 
 def load_test_set(neighbours, blur_scale, verbose=0):
@@ -71,7 +74,9 @@ def load_test_set(neighbours, blur_scale, verbose=0):
         if verbose:
             print 'Test set:', [c.value for c in test_set]
     else:
-        return generate_sets(neighbours, blur_scale, verbose=verbose)[1]
+        test_set = generate_sets(neighbours, blur_scale, verbose=verbose)[1]
+
+    return test_set
 
 
 def generate_sets(neighbours, blur_scale, verbose=0):
