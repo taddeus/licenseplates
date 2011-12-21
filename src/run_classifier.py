@@ -1,5 +1,5 @@
 #!/usr/bin/python
-from cPickle import dump, load
+from cPickle import load
 from sys import argv, exit
 from pylab import imsave
 import os

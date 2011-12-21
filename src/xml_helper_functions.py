@@ -1,7 +1,6 @@
 from os import mkdir
 from os.path import exists
-from math import acos
-from pylab import imsave, array, zeros, inv, dot, norm, svd, floor
+from pylab import array, zeros, inv, dot, svd, floor
 from xml.dom.minidom import parse
 from Point import Point
 from Character import Character
@@ -110,7 +109,7 @@ def xml_to_LicensePlate(filename, save_character=None):
                     character_image = NormalizedCharacterImage(data=character_data)
 
                     result_characters.append(Character(value, corners, character_image, filename))
-                
+
                     if save_character:
                         single_character = GrayscaleImage(data=character_data)
 
@@ -133,22 +132,22 @@ def get_corners(dom):
   margin_x = 2
 
   corners.append(
-    Point(get_coord(nodes[0], "x") - margin_x, 
+    Point(get_coord(nodes[0], "x") - margin_x,
           get_coord(nodes[0], "y") - margin_y)
   )
 
   corners.append(
-    Point(get_coord(nodes[1], "x") + margin_x, 
+    Point(get_coord(nodes[1], "x") + margin_x,
           get_coord(nodes[1], "y") - margin_y)
   )
 
   corners.append(
-    Point(get_coord(nodes[2], "x") + margin_x, 
+    Point(get_coord(nodes[2], "x") + margin_x,
           get_coord(nodes[2], "y") + margin_y)
   )
 
   corners.append(
-    Point(get_coord(nodes[3], "x") - margin_x, 
+    Point(get_coord(nodes[3], "x") - margin_x,
           get_coord(nodes[3], "y") + margin_y)
   )
 
