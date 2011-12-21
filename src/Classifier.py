@@ -1,7 +1,6 @@
 from svmutil import svm_train, svm_problem, svm_parameter, svm_predict, \
         svm_save_model, svm_load_model, RBF
 
-
 class Classifier:
     def __init__(self, c=None, gamma=None, filename=None, neighbours=3, \
             verbose=0):

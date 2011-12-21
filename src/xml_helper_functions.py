@@ -125,33 +125,33 @@ def xml_to_LicensePlate(filename, save_character=None):
     return LicensePlate(country, result_characters)
 
 def get_corners(dom):
-  nodes = dom.getElementsByTagName("point")
-  corners = []
+    nodes = dom.getElementsByTagName("point")
+    corners = []
 
-  margin_y = 3
-  margin_x = 2
+    margin_y = 3
+    margin_x = 2
 
-  corners.append(
+    corners.append(
     Point(get_coord(nodes[0], "x") - margin_x,
           get_coord(nodes[0], "y") - margin_y)
-  )
+    )
 
-  corners.append(
+    corners.append(
     Point(get_coord(nodes[1], "x") + margin_x,
           get_coord(nodes[1], "y") - margin_y)
-  )
+    )
 
-  corners.append(
+    corners.append(
     Point(get_coord(nodes[2], "x") + margin_x,
           get_coord(nodes[2], "y") + margin_y)
-  )
+    )
 
-  corners.append(
+    corners.append(
     Point(get_coord(nodes[3], "x") - margin_x,
           get_coord(nodes[3], "y") + margin_y)
-  )
+    )
 
-  return corners
+    return corners
 
 def get_coord(node, attribute):
-  return int(node.getAttribute(attribute))
+    return int(node.getAttribute(attribute))
