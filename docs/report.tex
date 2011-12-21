@@ -480,9 +480,7 @@ classification and the accuracy. In this section we will show our findings.
 Of course, it is vital that the recognition of a license plate is correct,
 almost correct is not good enough here. Therefore, we have to get the highest
 accuracy score we possibly can.\\
-\\ According to Wikipedia
-\footnote{
-\url{http://en.wikipedia.org/wiki/Automatic_number_plate_recognition}},
+\\ According to Wikipedia \cite{wikiplate}
 commercial license plate recognition software score about $90\%$ to $94\%$,
 under optimal conditions and with modern equipment.\\
 \\
@@ -601,6 +599,33 @@ to help out. Further communication usually went through e-mails and replies
 were instantaneous! A crew to remember.
 
 \section{Discussion}
+We had some good results but of course there are more things to explore.
+For instance we did a research on three different patterns. There are more patterns
+to try. For instane we only tried (8,3)-, (8,5)- and (12,5). The interesting to 
+do is to test which pattern gives the best result. This is also done by grid-
+searching, changing the size of circle and the amount of neighbours. 
+
+One important feature of our framework is that the LBP class can be changed by
+an other technique. This may be a different algorithm than LBP. Also the classifier
+can be changed in an other classifier. By applying these kind of changes we can
+find the best way to recognize licence plates. 
+
+We don't do assumption when a letter is recognized. For instance dutch licence plates
+exist of three blocks, two digits or two characters. Or for the new licence plates
+there are three blocks, two digits followed by three characters, followed by one or
+two digits. The assumption we can do is when there is have a case when one digit
+is moste likely to follow by a second digit and not a character. Maybe these assumption
+can help in future research to achieve a higher accuracy rate.
+
+ 
+\appendix
+\section{Faulty Classifications}
+\begin{figure}[H]
+\center
+\includegraphics[scale=0.5]{faulty.png}
+\caption{Faulty classifications of characters}
+\end{figure}
+\end{document}
 
 
 \begin{thebibliography}{9}
@@ -617,12 +642,3 @@ were instantaneous! A crew to remember.
   Retrieved from http://en.wikipedia.org/wiki/Automatic\_number\_plate\_recognition
 \end{thebibliography}
 
-
-\appendix
-\section{Faulty Classifications}
-\begin{figure}[H]
-\center
-\includegraphics[scale=0.5]{faulty.png}
-\caption{Faulty classifications of characters}
-\end{figure}
-\end{document}
