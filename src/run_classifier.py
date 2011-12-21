@@ -55,9 +55,9 @@ folder = '../images/faulty/'
 if not os.path.exists(folder):
     os.mkdir(folder)
 
-for filename, l in classified.iteritems():
-    if len(l) == 1:
+for filename, chars in classified.iteritems():
+    if len(chars) == 1:
         imsave('%s%s' % (folder, filename), char.image.data, cmap='gray')
     else:
-        for i, char in enumerate(l):
+        for i, char in enumerate(chars):
             imsave('%s%s_%d' % (folder, filename, i), char.image.data, cmap='gray')
