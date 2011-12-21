@@ -45,39 +45,38 @@ in classifying characters on a license plate.
 In short our program must be able to do the following:
 
 \begin{enumerate}
-    \item Extract characters using the location points in the xml file.
+    \item Extracting characters using the location points in the xml file.
     \item Reduce noise where possible to ensure maximum readability.
-    \item Transform a character to a normal form.
-    \item Create a local binary pattern histogram vector.
-    \item Recognize the character value of a vector using a classifier.
-    \item Determine the performance of the classifier with a given test set.
+    \item Transforming a character to a normal form.
+    \item Creating a local binary pattern histogram vector.
+    \item Matching the found vector with a learning set.
+    \item And finally it has to check results with a real data set.
 \end{enumerate}
 
 \section{Language of choice}
 
 The actual purpose of this project is to check if LBP is capable of recognizing
-license plate characters. Since the LBP algorithm is fairly simple to
-implement, it should have a good performance in comparison to other license
-plate recognition implementations if implemented in C. However, we decided to
-focus on functionality rather than speed. Therefore, we picked Python. We felt
-Python would not restrict us as much in assigning tasks to each member of the
-group. In addition, when using the correct modules to handle images, Python can
-be decent in speed.
+license plate characters. We knew the LBP implementation would be pretty
+simple. Thus an advantage had to be its speed compared with other license plate
+recognition implementations, but the uncertainty of whether we could get some
+results made us pick Python. We felt Python would not restrict us as much in
+assigning tasks to each member of the group. In addition, when using the
+correct modules to handle images, Python can be decent in speed.
 
 \section{Theory}
 
 Now we know what our program has to be capable of, we can start with the
-defining the problems we have and how we are planning to solve these.
+defining what problems we have and how we want to solve these.
 
 \subsection{Extracting a letter and resizing it}
 
-% TODO: Rewrite this section once we have implemented this properly.
+Rewrite this section once we have implemented this properly.
 
 \subsection{Transformation}
 
 A simple perspective transformation will be sufficient to transform and resize
 the characters to a normalized format. The corner positions of characters in
-the dataset are provided together with the dataset.
+the dataset are supplied together with the dataset.
 
 \subsection{Reducing noise}
 
@@ -93,80 +92,76 @@ part of the license plate remains readable.
 
 \subsection{Local binary patterns}
 Once we have separate digits and characters, we intent to use Local Binary
-Patterns (Ojala, Pietikäinen \& Harwood, 1994) to determine what character or
-digit we are dealing with. Local Binary Patterns are a way to classify a
-texture based on the distribution of edge directions in the image. Since
-letters on a license plate consist mainly of straight lines and simple curves,
-LBP should be suited to identify these.
+Patterns (Ojala, Pietikäinen \& Harwood, 1994) to determine what character
+or digit we are dealing with. Local Binary
+Patterns are a way to classify a texture based on the distribution of edge
+directions in the image. Since letters on a license plate consist mainly of
+straight lines and simple curves, LBP should be suited to identify these.
 
 \subsubsection{LBP Algorithm}
 The LBP algorithm that we implemented can use a variety of neighbourhoods,
-including the same square pattern that is introduced by Ojala et al (1994), and
-a circular form as presented by Wikipedia.
-
-\begin{enumerate}
-
+including the same square pattern that is introduced by Ojala et al (1994),
+and a circular form as presented by Wikipedia.
+\begin{itemize}
 \item Determine the size of the square where the local patterns are being
 registered. For explanation purposes let the square be 3 x 3. \\
-
-\item The grayscale value of the center pixel is used as threshold. Every value
-of the pixel around the center pixel is evaluated. If it's value is greater
-than the threshold it will be become a one, otherwise it will be a zero.
+\item The grayscale value of the middle pixel is used as threshold. Every
+value of the pixel around the middle pixel is evaluated. If it's value is
+greater than the threshold it will be become a one else a zero.
 
 \begin{figure}[H]
-    \center
-    \includegraphics[scale=0.5]{lbp.png}
-    \caption{LBP 3 x 3 (Pietik\"ainen, Hadid, Zhao \& Ahonen (2011))}
+\center
+\includegraphics[scale=0.5]{lbp.png}
+\caption{LBP 3 x 3 (Pietik\"ainen, Hadid, Zhao \& Ahonen (2011))}
 \end{figure}
 
-The pattern will be an 8-bit integer. This is accomplished by shifting the
-boolean value of each comparison one to seven places to the left.
+Notice that the pattern will be come of the form 01001110. This is done when a
+the value of the evaluated pixel is greater than the threshold, shift the bit
+by the n(with i=i$_{th}$ pixel evaluated, starting with $i=0$).
 
 This results in a mathematical expression:
 
-Let I($x_i, y_i$) be a grayscale Image and $g_n$ the value of the pixel $(x_i,
-y_i)$. Also let $s(g_i, g_c)$ (see below) with $g_c$ being the value of the
-center pixel and $g_i$ the grayscale value of the pixel to be evaluated.
+Let I($x_i, y_i$) an Image with grayscale values and $g_n$ the grayscale value
+of the pixel $(x_i, y_i)$. Also let $s(g_i, g_c)$ (see below) with $g_c$ =
+grayscale value of the center pixel and $g_i$ the grayscale value of the pixel
+to be evaluated.
 
 $$
-    s(g_i, g_c) = \left \{
-    \begin{array}{l l}
-        1 & \quad \text{if $g_i$ $\geq$ $g_c$}\\
-        0 & \quad \text{if $g_i$ $<$ $g_c$}\\
-    \end{array} \right.
+  s(g_i, g_c) = \left\{
+  \begin{array}{l l}
+    1 & \quad \text{if $g_i$ $\geq$ $g_c$}\\
+    0 & \quad \text{if $g_i$ $<$ $g_c$}\\
+  \end{array} \right.
 $$
 
-$$LBP_{n, g_c = (x_c, y_c)} = \sum\limits_{i=0}^{n-1} s(g_i, g_c) \cdot 2^i$$
+$$LBP_{n, g_c = (x_c, y_c)} = \sum\limits_{i=0}^{n-1} s(g_i, g_c)^{2i} $$
 
-The outcome of this operations will be a binary pattern. Note that the
-mathematical expression has the same effect as the bit shifting operation that
-we defined earlier.
+The outcome of this operations will be a binary pattern.
 
-\item Given this pattern, the next step is to divide the pattern into cells.
-The amount of cells depends on the quality of the result, which we plan to
-determine by trial and error. We will start by dividing the pattern into cells
-of size 16, which is a common value according to Wikipedia.
+\item Given this pattern, the next step is to divide the pattern in cells. The
+amount of cells depends on the quality of the result, so trial and error is in
+order. Starting with dividing the pattern in to cells of size 16.
 
 \item Compute a histogram for each cell.
 
 \begin{figure}[H]
-    \center
-    \includegraphics[scale=0.7]{cells.png}
-    \caption{Divide into cells (Pietik\"ainen et all (2011))}
+\center
+\includegraphics[scale=0.7]{cells.png}
+\caption{Divide in cells(Pietik\"ainen et all (2011))}
 \end{figure}
 
 \item Consider every histogram as a vector element and concatenate these. The
 result is a feature vector of the image.
 
-\item Feed these vectors to a support vector machine. The SVM will ``learn''
-which vectors to associate with a character.
+\item Feed these vectors to a support vector machine. This will ''learn'' which
+vector indicates what vector is which character.
 
-\end{enumerate}
+\end{itemize}
 
 To our knowledge, LBP has yet not been used in this manner before. Therefore,
 it will be the first thing to implement, to see if it lives up to the
-expectations. When the proof of concept is there, it can be used in a final,
-more efficient program.
+expectations. When the proof of concept is there, it can be used in a final
+program.
 
 Later we will show that taking a histogram over the entire image (basically
 working with just one cell) gives us the best results.
@@ -174,19 +169,19 @@ working with just one cell) gives us the best results.
 \subsection{Matching the database}
 
 Given the LBP of a character, a Support Vector Machine can be used to classify
-the character to a character in a learning set. The SVM uses the concatenation
-of the histograms of all cells in an image as a feature vector (in the case we
-check the entire image no concatenation has to be done of course. The SVM can
-be trained with a subset of the given dataset called the ``learning set''. Once
-trained, the entire classifier can be saved as a Pickle object\footnote{See
+the character to a character in a learning set. The SVM uses a concatenation
+of each cell in an image as a feature vector (in the case we check the entire
+image no concatenation has to be done of course. The SVM can be trained with a
+subset of the given dataset called the ''Learning set''. Once trained, the
+entire classifier can be saved as a Pickle object\footnote{See
 \url{http://docs.python.org/library/pickle.html}} for later usage.
 In our case the support vector machine uses a radial gauss kernel function. The
  SVM finds a seperating hyperplane with minimum margins.
 
 \section{Implementation}
 
-In this section we will describe our implementation in more detail, explaining
-the choices we made in the process.
+In this section we will describe our implementations in more detail, explaining
+choices we made.
 
 \subsection{Character retrieval}
 
@@ -614,9 +609,14 @@ were instantaneous! A crew to remember.
   Timo Ahonen.
   \emph{Computational Imaging and Vision}.
   Springer-Verlag, London,
-  1nd Edition,
+  1st Edition,
   2011.
+\bibitem{wikiplate}
+  \emph{Automatic number-plate recognition}. (2011, December 17).\\
+  Wikipedia.
+  Retrieved from http://en.wikipedia.org/wiki/Automatic\_number\_plate\_recognition
 \end{thebibliography}
+
 
 \appendix
 \section{Faulty Classifications}
