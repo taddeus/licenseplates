@@ -3,7 +3,8 @@ from svmutil import svm_train, svm_problem, svm_parameter, svm_predict, \
 
 
 class Classifier:
-    def __init__(self, c=None, gamma=None, filename=None, neighbours=3):
+    def __init__(self, c=None, gamma=None, filename=None, neighbours=3, \
+            verbose=0):
         self.neighbours = neighbours
 
         if filename:
@@ -18,6 +19,8 @@ class Classifier:
             self.param.gamma = gamma  # Parameter for radial kernel
             self.model = None
 
+        self.verbose = verbose
+
     def save(self, filename):
         """Save the SVM model in the given filename."""
         svm_save_model(filename, self.model)
@@ -30,8 +33,9 @@ class Classifier:
         l = len(learning_set)
 
         for i, char in enumerate(learning_set):
-            print 'Found "%s"  --  %d of %d (%d%% done)' \
-                  % (char.value, i + 1, l, int(100 * (i + 1) / l))
+            if self.verbose:
+                print 'Found "%s"  --  %d of %d (%d%% done)' \
+                    % (char.value, i + 1, l, round(100 * (i + 1) / l))
             classes.append(float(ord(char.value)))
             #features.append(char.get_feature_vector())
             char.get_single_cell_feature_vector(self.neighbours)
