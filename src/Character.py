@@ -8,6 +8,8 @@ class Character:
         self.filename = filename
 
     def get_single_cell_feature_vector(self, neighbours=5):
+        """Get the histogram of Local Binary Patterns over this entire
+        image."""
         if hasattr(self, 'feature'):
             return
 
@@ -15,6 +17,7 @@ class Character:
         self.feature = pattern.single_cell_features_vector()
 
     def get_feature_vector(self, cell_size=None):
+        """Get the concatenated histograms of Local Binary Patterns. """
         pattern = LBP(self.image) if cell_size == None \
                   else LBP(self.image, cell_size)
 
