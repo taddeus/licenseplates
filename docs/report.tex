@@ -68,9 +68,29 @@ correct modules to handle images, Python can be decent in speed.
 Now we know what our program has to be capable of, we can start with the
 defining what problems we have and how we want to solve these.
 
-\subsection{Extracting a letter and resizing it}
+\subsection{Extracting a character and resizing it}
 
-Rewrite this section once we have implemented this properly.
+We need to extract a character from a photo made of a car. We do not have to
+find where in this image the characters are, since this is provided in an XML
+file with our dataset.
+
+Once we have extracted the points from this XML file, we need to get this
+character from the image. For the nature of the Local Binary Pattern algorithm,
+we want a margin around the character. However, the points stored in the XML
+file are chosen in such a fashion, that the character would be cut out exactly.
+Therefore, we choose to take points that are slightly outside of the given
+points.
+
+When we have the points we want, we use a perspective transformation to get
+an exact image of the character.
+
+The final step is to resize this image in such a fashion, that the stroke
+of the character is more or less equal in each image. We do this by setting
+the height to a standard size, since each character has the same height on a
+license plate. We retain the height-width ratio, so we do not end up with
+characters that are different than other examples of the same character,
+because the image got stretched, which would of course be a bad thing for
+the classification.
 
 \subsection{Transformation}
 
