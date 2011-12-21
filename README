@@ -1,0 +1,31 @@
+Summary of project:
+    This code is an implementation of a classifier for License Plate
+    Recognition, using Local Binary Patterns as features for a Support Vector
+    Machine.
+    
+    A number of scripts are provided to execute tests with this code, and to
+    see how well the code performs, both when considering accuracy and speed.
+    There is also a script that automises the search for proper parameters for
+    the SVM.
+    
+    In the docs folder, a report can be found with a more extensive description
+    of the theory, the implementation and the results.
+    
+    The images folder contains a sorted dataset of characters, cut out from
+    real life images of license plates, provided by Parkingware Schiphol.
+
+Authors:
+    Taddeüs Kroes
+    Jayke Meijer
+    Fabiën Tesselaar
+    Richard Torenvliet
+    Gijs van der Voort.
+
+Date:
+    December 2011
+
+Dependencies:
+    matplotlib
+    numpy
+    scipy
+    python-libsvm

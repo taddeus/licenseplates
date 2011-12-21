@@ -1,6 +1,5 @@
 from copy import deepcopy
 from GrayscaleImage import GrayscaleImage
-from LetterCropper import LetterCropper
 from GaussianFilter import GaussianFilter
 
 class NormalizedCharacterImage(GrayscaleImage):
@@ -16,9 +15,6 @@ class NormalizedCharacterImage(GrayscaleImage):
 
         self.increase_contrast()
 
-        #self.crop_threshold = crop_threshold
-        #self.crop_to_letter()
-
         self.height = height
         self.resize()
 
@@ -28,10 +24,6 @@ class NormalizedCharacterImage(GrayscaleImage):
 
     def gaussian_filter(self):
         GaussianFilter(self.blur).filter(self)
-
-    def crop_to_letter(self):
-        cropper = LetterCropper(0.9)
-        cropper.crop_to_letter(self)
 
     def resize(self):
         """Resize the image to a fixed height."""
