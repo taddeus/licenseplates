@@ -285,9 +285,10 @@ of the LBP algorithm. There are several neighbourhoods we can evaluate. We have
 tried the following neighbourhoods:
 
 \begin{figure}[H]
-\center
-\includegraphics[scale=0.5]{neighbourhoods.png}
-\caption{Tested neighbourhoods}
+    \center
+    \includegraphics[scale=0.5]{neighbourhoods.png}
+    \caption{Tested neighbourhoods}
+    \label{fig:tested-neighbourhoods}
 \end{figure}
 
 We name these neighbourhoods respectively (8,3)-, (8,5)- and
@@ -434,37 +435,38 @@ are not significant enough to allow for reliable classification.
 
 \subsection{Parameter \emph{Neighbourhood}}
 
-The neighbourhood to use can only be determined through testing. We did a test
-with each of these neighbourhoods, and we found that the best results were
-reached with the following neighbourhood, which we will call the
-(12,5)-neighbourhood, since it has 12 points in a area with a diameter of 5.
+We tested the classifier with the patterns given in figure
+\ref{fig:tested-neighbourhoods}. We found that the best results were reached
+with the following neighbourhood, which we will call the (12,5)-neighbourhood,
+since it has 12 points in a area with a diameter of 5.
 
 \begin{figure}[H]
-\center
-\includegraphics[scale=0.5]{12-5neighbourhood.png}
-\caption{(12,5)-neighbourhood}
+    \center
+    \includegraphics[scale=0.5]{12-5neighbourhood.png}
+    \caption{(12,5)-neighbourhood}
 \end{figure}
 
 \subsection{Parameters $\gamma$ \& $c$}
 
 The parameters $\gamma$ and $c$ are used for the SVM. $c$ is a standard
-parameter for each type of SVM, called the `soft margin'. This indicates how
-exact each element in the learning set should be taken. A large soft margin
-means that an element in the learning set that accidentally has a completely
-different feature vector than expected, due to noise for example, is not taken
-into account. If the soft margin is very small, then almost all vectors will be
-taken into account, unless they differ extreme amounts. \\
-$\gamma$ is a variable that determines the size of the radial kernel, and as
-such determines how steep the difference between two classes can be.
+parameter for each type of SVM, called the `soft margin'. This determines the
+amount of overlap that is allowed between two SVM-classes (which, in this case,
+are characters). Below, we will illustrate that the optimal value for $c$ is
+32, which means that there is an overlap between classes. This can be explained
+by the fact that some characters are very similar to eachother. For instance, a
+`Z' is similar to a `7' and a `B' is similar to an `R'.
 
-Since these parameters both influence the SVM, we need to find the best
-combination of values. To do this, we perform a so-called grid-search. A
-grid-search takes exponentially growing sequences for each parameter, and
-checks for each combination of values what the score is. The combination with
-the highest score is then used as our parameters, and the entire SVM will be
-trained using those parameters.
+$\gamma$ is a variable that determines the shape of the radial kernel, and as
+such determines how strongly the vector space of the SVM is transformed by the
+kernel function.
 
-The results of this grid-search are shown in the following table. The values
+To find the optimal combination of values for these variables, we have
+performed a so-called grid-search. A grid-search takes exponentially growing
+sequences for each parameter, and tests a classifier for each combination of
+values. The combination with the highest score is the optimal solution, which
+will be used in the final classifier.
+
+The results of our grid-search are displayed in the following table. The values
 in the table are rounded percentages, for better readability.
 
 \begin{tabular}{|r|r r r r r r r r r r|}
@@ -502,23 +504,24 @@ The grid-search shows that the best values for these parameters are $c = 2^5 =
 
 \section{Results}
 
-The goal was to find out two things with this research: The speed of the
-classification and the accuracy. In this section we will show our findings.
-
 \subsection{Accuracy}
 
+The main goal of this project is to find out if LBP is a suitable algorithm to
+classify license plate characters.
+
 Of course, it is vital that the recognition of a license plate is correct,
-almost correct is not good enough here. Therefore, we have to get the highest
-accuracy score we possibly can.\\
-\\ According to Wikipedia \cite{wikiplate}
-accuracy score we possibly can. commercial license plate recognition software
-score about $90\%$ to $94\%$, under optimal conditions and with modern equipment.
+almost correct is not good enough here. Therefore, the highest possible score
+must be reached.
+
+According to Wikipedia \cite{wikiplate}, commercial license plate recognition
+that are currently on the market software score about $90\%$ to $94\%$, under
+optimal conditions and with modern equipment.
 
 Our program scores an average of $93\%$. However, this is for a single
 character. That means that a full license plate should theoretically
 get a score of $0.93^6 = 0.647$, so $64.7\%$. That is not particularly
 good compared to the commercial ones. However, our focus was on getting
-good scores per character, and $93\%$ seems to be a fairly good result.
+good scores per character. For us, $93\%$ is a very satisfying result.
 
 Possibilities for improvement of this score would be more extensive
 grid-searches, finding more exact values for $c$ and $\gamma$, more tests
@@ -530,16 +533,21 @@ neighbourhoods.
 Recognizing license plates is something that has to be done fast, since there
 can be a lot of cars passing a camera in a short time, especially on a highway.
 Therefore, we measured how well our program performed in terms of speed. We
-measure the time used to classify a license plate, not the training of the
-dataset, since that can be done offline, and speed is not a primary necessity
-there.
+measure the time used to normalize a character, create its feature vector and
+classify it using a given classifier. The time needed to train the classifier
+needs not to be measured, because that can be done `offline'.
 
-The speed of a classification turned out to be reasonably good. We time between
-the moment a character has been 'cut out' of the image, so we have a exact
-image of a character, to the moment where the SVM tells us what character it
-is. This time is on average $65ms$. That means that this technique (tested on
-an AMD Phenom II X4 955 CPU running at 3.2 GHz) can identify 15 characters per
-second.
+We ran performance tests for the (8,3)- and (12,5)-patterns, with Gaussian blur
+scales of $1.0$ and $1.4$ respectively on the same set of characters. Because
+$1.5$ times an many pixel comparisons have to be executed (12 vs. 8), we
+suspected an increase of at least $0.5$ times the time for the first test to be
+the outcome of the second test. `At least', because the classification step
+will also be slower due to the increased size of the feature vectors
+($\frac{2^{12}}{2^8} = 2^4 = 16$ times as slow). The tests resulted in $81ms$
+and $137ms$ per character. $\frac{137}{81} = 1.7$, which agrees with our
+expectations. \\
+Note: Both tests were executed using an AMD Phenom II X4 955 CPU processor,
+running at 3.2 GHz.
 
 This is not spectacular considering the amount of calculating power this CPU
 can offer, but it is still fairly reasonable. Of course, this program is
@@ -549,7 +557,7 @@ possible when written in a low-level language.
 Another performance gain is by using one of the other two neighbourhoods.
 Since these have 8 points instead of 12 points, this increases performance
 drastically, but at the cost of accuracy. With the (8,5)-neighbourhood
-we only need 1.6 ms seconds to identify a character. However, the accuracy
+we only need 81ms seconds to identify a character. However, the accuracy
 drops to $89\%$. When using the (8,3)-neighbourhood, the speedwise performance
 remains the same, but accuracy drops even further, so that neighbourhood
 is not advisable to use.
@@ -656,7 +664,7 @@ can help in future research to achieve a higher accuracy rate.
 \section{Faulty Classifications}
 
 \begin{figure}[H]
-    \center
+    \hspace{-2cm}
     \includegraphics[scale=0.5]{faulty.png}
     \caption{Faulty classifications of characters}
 \end{figure}
