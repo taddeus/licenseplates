@@ -12,8 +12,8 @@ def load_classifier(neighbours, blur_scale, c=None, gamma=None, verbose=0):
         if verbose:
             print 'Loading classifier...'
 
-        classifier = Classifier(filename=classifier_file, verbose=verbose)
-        classifier.neighbours = neighbours
+        classifier = Classifier(filename=classifier_file, \
+                neighbours=neighbours, verbose=verbose)
     elif c != None and gamma != None:
         if verbose:
             print 'Training new classifier...'
