@@ -578,7 +578,10 @@ research would be in place.
 
 The expectation is that using a larger diameter pattern, but with the same
 amount of points is worth trying. The theory behind that is that when using a
-gaussian blur to reduce noise, the edges are blurred as well. By
+Gaussian blur to reduce noise, the edges are blurred as well. By taking larger
+radius, you look over a larger distance, so the blurry part of the edge is
+skipped. By not using more points, there is no penalty in the time needed to
+calculate this larger pattern, so there is an accuracy advantage `for free'.
 
 \subsection{Context Information}
 
