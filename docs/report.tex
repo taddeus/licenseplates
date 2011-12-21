@@ -641,23 +641,43 @@ to help out. Further communication usually went through e-mails and replies
 were instantaneous! A crew to remember.
 
 \section{Discussion}
+
+There are a few points open for improvement. These are the following.
+
 We had some good results but of course there are more things to explore.
-For instance we did a research on three different patterns. There are more patterns
-to try. For instane we only tried (8,3)-, (8,5)- and (12,5). The interesting to
-do is to test which pattern gives the best result. This is also done by grid-
-searching, changing the size of circle and the amount of neighbours.
+For instance we did a research on three different patterns. There are more
+patterns to try. For instance we only tried (8,3)-, (8,5)- and
+(12,5)-neighbourhoods. What might be done is to test which pattern gives the
+best result, for a wider range of neighbourhoods. We haven proven that the size
+and number of points do influence the performance of the classifier, so further
+research would be in place.
 
 One important feature of our framework is that the LBP class can be changed by
-an other technique. This may be a different algorithm than LBP. Also the classifier
-can be changed in an other classifier. By applying these kind of changes we can
-find the best way to recognize licence plates.
+an other technique. This may be a different algorithm than LBP. Also the
+classifier can be changed in an other classifier. By applying these kind of
+changes we can find the best way to recognize licence plates.
 
-We don't do assumption when a letter is recognized. For instance dutch licence plates
-exist of three blocks, two digits or two characters. Or for the new licence plates
-there are three blocks, two digits followed by three characters, followed by one or
-two digits. The assumption we can do is when there is have a case when one digit
-is moste likely to follow by a second digit and not a character. Maybe these assumption
-can help in future research to achieve a higher accuracy rate.
+We don't do assumption when a letter is recognized. For instance Dutch licence
+plates exist of three blocks, two digits or two characters. Or for the new
+licence plates there are three blocks, two digits followed by three characters,
+followed by one or two digits. The assumption we can do is when there is have a
+case when one digit is most likely to follow by a second digit and not a
+character. Maybe these assumption can help in future research to achieve a
+higher accuracy rate.
+
+A possibility to improve the performance speedwise would be to separate the
+creation of the Gaussian kernel and the convolution. This way, the kernel can
+be cached, which is a big improvement. At this moment, we calculate this kernel
+every time a blur is applied to a character. This was done so we could use a
+standard Python function, but we realised too late that there is performance
+loss due to this.
+
+Another performance loss was introduced by checking for each pixel if it is
+in the image. This induces a lot of function calls and four conditional checks
+per pixel. A faster method would be to first set a border of black pixels around
+the image, so the inImage function is now done implicitly because it simply
+finds a black pixel if it falls outside the original image borders.
+
 
 \appendix
 
