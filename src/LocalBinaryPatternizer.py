@@ -32,6 +32,16 @@ class LocalBinaryPatternizer:
              | (self.is_pixel_darker(y + 1, x - 1, value) << 1) \
              | (self.is_pixel_darker(y    , x - 1, value))
 
+    def pattern_5x5_hybrid(self, y, x, value):
+        return (self.is_pixel_darker(y - 2, x - 2, value) << 7) \
+             | (self.is_pixel_darker(y - 2, x    , value) << 6) \
+             | (self.is_pixel_darker(y - 2, x + 2, value) << 5) \
+             | (self.is_pixel_darker(y    , x + 2, value) << 4) \
+             | (self.is_pixel_darker(y + 2, x + 2, value) << 3) \
+             | (self.is_pixel_darker(y + 2, x    , value) << 2) \
+             | (self.is_pixel_darker(y + 2, x - 2, value) << 1) \
+             | (self.is_pixel_darker(y    , x - 2, value))
+
     def pattern_5x5(self, y, x, value):
         return (self.is_pixel_darker(y - 1, x - 2, value) << 11) \
              | (self.is_pixel_darker(y    , x - 2, value) << 10) \

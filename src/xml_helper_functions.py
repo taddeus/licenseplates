@@ -1,22 +1,17 @@
 from os import mkdir
 from os.path import exists
-from math import acos
 from pylab import imsave, array, zeros, inv, dot, norm, svd, floor
 from xml.dom.minidom import parse
-from Point import Point
 from Character import Character
 from GrayscaleImage import GrayscaleImage
 from NormalizedCharacterImage import NormalizedCharacterImage
 from LicensePlate import LicensePlate
 
-# sets the entire license plate of an image
-def retrieve_data(image, corners):
-    x0, y0 = corners[0].to_tuple()
-    x1, y1 = corners[1].to_tuple()
-    x2, y2 = corners[2].to_tuple()
-    x3, y3 = corners[3].to_tuple()
+# Gets the character data from a picture with a license plate
+def retrieve_data(plate, corners):
+    x0,y0, x1,y1, x2,y2, x3,y3 = corners
 
-    M = int(1.2 * (max(x0, x1, x2, x3) - min(x0, x1, x2, x3)))
+    M = max(x0, x1, x2, x3) - min(x0, x1, x2, x3)
     N = max(y0, y1, y2, y3) - min(y0, y1, y2, y3)
 
     matrix = array([
@@ -30,7 +25,7 @@ def retrieve_data(image, corners):
       [ 0,  0, 0, x3, y3, 1, -N * x3, -N * y3, -N]
     ])
 
-    P = inv(get_transformation_matrix(matrix))
+    P = get_transformation_matrix(matrix)
     data = array([zeros(M, float)] * N)
 
     for i in range(M):
@@ -39,7 +34,7 @@ def retrieve_data(image, corners):
             or_coor_h = (or_coor[1][0] / or_coor[2][0],
                          or_coor[0][0] / or_coor[2][0])
 
-            data[j][i] = pV(image, or_coor_h[0], or_coor_h[1])
+            data[j][i] = pV(plate, or_coor_h[0], or_coor_h[1])
 
     return data
 
@@ -51,108 +46,92 @@ def get_transformation_matrix(matrix):
     U, D, V = svd(matrix)
     p = V[8][:]
 
-    return array([
-        [ p[0], p[1], p[2] ],
-        [ p[3], p[4], p[5] ],
-        [ p[6], p[7], p[8] ]
-    ])
+    return inv(array([[p[0],p[1],p[2]], [p[3],p[4],p[5]], [p[6],p[7],p[8]]]))
 
 def pV(image, x, y):
     #Get the value of a point (interpolated x, y) in the given image
-    if image.in_bounds(x, y):
-        x_low  = floor(x)
-        x_high = floor(x + 1)
-        y_low  = floor(y)
-        y_high = floor(y + 1)
-        x_y    = (x_high - x_low) * (y_high - y_low)
+    if not image.in_bounds(x, y):
+      return 0
 
-        a = x_high - x
-        b = y_high - y
-        c = x - x_low
-        d = y - y_low
+    x_low, x_high = floor(x), floor(x+1)
+    y_low, y_high = floor(y), floor(y+1)
+    x_y    = (x_high - x_low) * (y_high - y_low)
 
-        return image[x_low,  y_low] / x_y * a * b \
-            + image[x_high,  y_low] / x_y * c * b \
-            + image[x_low , y_high] / x_y * a * d \
-            + image[x_high, y_high] / x_y * c * d
+    a = x_high - x
+    b = y_high - y
+    c = x - x_low
+    d = y - y_low
 
-    return 0
+    return image[x_low,  y_low] / x_y * a * b \
+        + image[x_high,  y_low] / x_y * c * b \
+        + image[x_low , y_high] / x_y * a * d \
+        + image[x_high, y_high] / x_y * c * d
 
 def xml_to_LicensePlate(filename, save_character=None):
-    image = GrayscaleImage('../images/Images/%s.jpg' % filename)
-    dom   = parse('../images/Infos/%s.info' % filename)
-    result_characters = []
+    plate   = GrayscaleImage('../images/Images/%s.jpg' % filename)
+    dom     = parse('../images/Infos/%s.info' % filename)
+    country = ''
+    result  = []
+    version = get_node(dom, "current-version")
+    infos   = by_tag(dom, "info")
 
-    version = dom.getElementsByTagName("current-version")[0].firstChild.data
-    info    = dom.getElementsByTagName("info")
+    for info in infos:
+        if not version == get_node(info, "version"):
+            continue
 
-    for i in info:
-        if version == i.getElementsByTagName("version")[0].firstChild.data:
+        country = get_node(info, "identification-letters")
+        temp    = by_tag(info, "characters")
 
-            country = i.getElementsByTagName("identification-letters")[0].firstChild.data
-            temp = i.getElementsByTagName("characters")
+        if not temp: # no characters where found in the file
+            break
 
-            if len(temp):
-              characters = temp[0].childNodes
-            else:
-              characters = []
-              break
+        characters = temp[0].childNodes
 
-            for i, character in enumerate(characters):
-                if character.nodeName == "character":
-                    value   = character.getElementsByTagName("char")[0].firstChild.data
-                    corners = get_corners(character)
+        for i, char in enumerate(characters):
+            if not char.nodeName == "character":
+              continue
 
-                    if not len(corners) == 4:
-                      break
+            value   = get_node(char, "char")
+            corners = get_corners(char)
 
-                    character_data  = retrieve_data(image, corners)
-                    character_image = NormalizedCharacterImage(data=character_data)
+            if not len(corners) == 8:
+                break
 
-                    result_characters.append(Character(value, corners, character_image, filename))
-                
-                    if save_character:
-                        single_character = GrayscaleImage(data=character_data)
+            data  = retrieve_data(plate, corners)
+            image = NormalizedCharacterImage(data=data)
+            result.append(Character(value, corners, image, filename))
+        
+            if save_character:
+                character_image = GrayscaleImage(data=data)
+                path       = "../images/LearningSet/%s" % value
+                image_path = "%s/%d_%s.jpg" % (path, i, filename.split('/')[-1])
 
-                        path = "../images/LearningSet/%s" % value
-                        image_path = "%s/%d_%s.jpg" % (path, i, filename.split('/')[-1])
+                if not exists(path):
+                  mkdir(path)
 
-                        if not exists(path):
-                          mkdir(path)
+                if not exists(image_path):
+                  character_image.save(image_path)
 
-                        if not exists(image_path):
-                          single_character.save(image_path)
+    return LicensePlate(country, result)
 
-    return LicensePlate(country, result_characters)
+def get_node(node, tag):
+    return by_tag(node, tag)[0].firstChild.data
+
+def by_tag(node, tag):
+    return node.getElementsByTagName(tag)
+
+def get_attr(node, attr):
+  return int(node.getAttribute(attr))
 
 def get_corners(dom):
-  nodes = dom.getElementsByTagName("point")
-  corners = []
+    p = by_tag(dom, "point")
 
-  margin_y = 3
-  margin_x = 2
+    # Extra padding
+    y = 3
+    x = 2
 
-  corners.append(
-    Point(get_coord(nodes[0], "x") - margin_x, 
-          get_coord(nodes[0], "y") - margin_y)
-  )
-
-  corners.append(
-    Point(get_coord(nodes[1], "x") + margin_x, 
-          get_coord(nodes[1], "y") - margin_y)
-  )
-
-  corners.append(
-    Point(get_coord(nodes[2], "x") + margin_x, 
-          get_coord(nodes[2], "y") + margin_y)
-  )
-
-  corners.append(
-    Point(get_coord(nodes[3], "x") - margin_x, 
-          get_coord(nodes[3], "y") + margin_y)
-  )
-
-  return corners
-
-def get_coord(node, attribute):
-  return int(node.getAttribute(attribute))
+    # return 8 values (x0,y0, .., x3,y3)
+    return get_attr(p[0], "x") - x, get_attr(p[0], "y") - y,\
+           get_attr(p[1], "x") + x, get_attr(p[1], "y") - y,\
+           get_attr(p[2], "x") + x, get_attr(p[2], "y") + y,\
+           get_attr(p[3], "x") - x, get_attr(p[3], "y") + y
