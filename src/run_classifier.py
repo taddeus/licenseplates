@@ -7,14 +7,20 @@ from create_characters import load_test_set
 from create_classifier import load_classifier
 
 if len(argv) < 3:
-    print 'Usage: python %s NEIGHBOURS BLUR_SCALE' % argv[0]
+    print 'Usage: python %s NEIGHBOURS BLUR_SCALE [ C GAMMA ]' % argv[0]
     exit(1)
 
 neighbours = int(argv[1])
 blur_scale = float(argv[2])
 
 # Load classifier
-classifier = load_classifier(neighbours, blur_scale, verbose=1)
+if len(argv) > 4:
+    c = float(argv[3])
+    gamma = float(argv[4])
+    classifier = load_classifier(neighbours, blur_scale, c=c, gamma=gamma, \
+            verbose=1)
+else:
+    classifier = load_classifier(neighbours, blur_scale, verbose=1)
 
 # Load test set
 test_set = load_test_set(neighbours, blur_scale, verbose=1)

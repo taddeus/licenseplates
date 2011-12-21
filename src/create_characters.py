@@ -21,6 +21,8 @@ def load_characters(neighbours, blur_scale, verbose=0):
         chars = []
 
         for char in sorted(listdir(IMAGES_FOLDER)):
+            count = 0
+
             for image in sorted(listdir(IMAGES_FOLDER + char)):
                 image = GrayscaleImage(IMAGES_FOLDER + char + '/' + image)
                 norm = NormalizedCharacterImage(image, blur=blur_scale, \
@@ -29,8 +31,10 @@ def load_characters(neighbours, blur_scale, verbose=0):
                 character.get_single_cell_feature_vector(neighbours)
                 chars.append(character)
 
+                count += 1
+
                 if verbose:
-                    print 'Loaded character %s' % char
+                    print 'Loaded character %s %d times' % (char, count)
 
         if verbose:
             print 'Saving characters...'
