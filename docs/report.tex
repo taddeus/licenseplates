@@ -192,7 +192,7 @@ stored in XML files. So, the first step is to read these XML files.
 
 \paragraph*{XML reader}
 
-The XML reader will return a 'license plate' object when given an XML file. The
+The XML reader will return a `license plate' object when given an XML file. The
 licence plate holds a list of, up to six, NormalizedImage characters and from
 which country the plate is from. The reader is currently assuming the XML file
 and image name are corresponding, since this was the case for the given
@@ -302,22 +302,21 @@ increasing our performance, so we only have one histogram to feed to the SVM.
 \subsection{Classification}
 
 For the classification, we use a standard Python Support Vector Machine,
-\texttt{libsvm}. This is a often used SVM, and should allow us to simply feed
-the data from the LBP and Feature Vector steps into the SVM and receive
-results.\\
-\\
-Using a SVM has two steps. First you have to train the SVM, and then you can
-use it to classify data. The training step takes a lot of time, so luckily
-\texttt{libsvm} offers us an opportunity to save a trained SVM. This means,
-you do not have to train the SVM every time.\\
-\\
+\texttt{libsvm}. This is an often used SVM, and should allow us to simply feed
+data from the LBP and Feature Vector steps into the SVM and receive results.
+
+Using a SVM has two steps. First, the SVM has to be trained, and then it can be
+used to classify data. The training step takes a lot of time, but luckily
+\texttt{libsvm} offers us an opportunity to save a trained SVM. This means that
+the SVM only has to be changed once.
+
 We have decided to only include a character in the system if the SVM can be
-trained with at least 70 examples. This is done automatically, by splitting
-the data set in a trainingset and a testset, where the first 70 examples of
-a character are added to the trainingset, and all the following examples are
-added to the testset. Therefore, if there are not enough examples, all
-available examples end up in the trainingset, and non of these characters
-end up in the testset, thus they do not decrease our score. However, if this
+trained with at least 70 examples. This is done automatically, by splitting the
+data set in a learning set and a test set, where the first 70 examples of a
+character are added to the learning set, and all the following examples are
+added to the test set. Therefore, if there are not enough examples, all
+available examples end up in the learning set, and non of these characters end
+up in the test set, thus they do not decrease our score. However, if this
 character later does get offered to the system, the training is as good as
 possible, since it is trained with all available characters.
 
@@ -330,7 +329,7 @@ scripts is named here and a description is given on what the script does.
 
 
 
-\subsection*{\texttt{LearningSetGenerator.py}}
+\subsection*{\texttt{generate\_learning\_set.py}}
 
 
 
@@ -343,6 +342,7 @@ scripts is named here and a description is given on what the script does.
 
 
 \subsection*{\texttt{run\_classifier.py}}
+
 
 
 \section{Finding parameters}
