@@ -1,12 +1,3 @@
-# Gaussian Filter Class for use with License Plate Recognition with
-# Local Binary Patterns.
-#
-# Authors:  Taddeüs Kroes
-#           Jayke Meijer
-#           Fabiën Tesselaar
-#           Richard Torenvliet
-#           Gijs van der Voort
-
 from GrayscaleImage import GrayscaleImage
 from scipy.ndimage import gaussian_filter
 
