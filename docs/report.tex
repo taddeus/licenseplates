@@ -224,10 +224,9 @@ reader will only get results from this version.
 Now we are only interested in the individual characters so we can skip the
 location of the entire license plate. Each character has 
 a single character value, indicating what someone thought what the letter or
-digit was and four coordinates to create a bounding box. To make things not to
-complicated a Character class and Point class are used. They
-act pretty much as associative lists, but it gives extra freedom on using the
-data. If less then four points have been set the character will not be saved.
+digit was and four coordinates to create a bounding box. If less then four points have been set the character will not be saved. Else, to make things not to
+complicated, a Character class is used. It acts as an associative list, but it gives some extra freedom when using the
+data.
 
 When four points have been gathered the data from the actual image is being
 requested. For each corner a small margin is added (around 3 pixels) so that no
