@@ -307,7 +307,17 @@ results.\\
 Using a SVM has two steps. First you have to train the SVM, and then you can
 use it to classify data. The training step takes a lot of time, so luckily
 \texttt{libsvm} offers us an opportunity to save a trained SVM. This means,
-you do not have to train the SVM every time.
+you do not have to train the SVM every time.\\
+\\
+We have decided to only include a character in the system if the SVM can be
+trained with at least 70 examples. This is done automatically, by splitting
+the data set in a trainingset and a testset, where the first 70 examples of
+a character are added to the trainingset, and all the following examples are
+added to the testset. Therefore, if there are not enough examples, all
+available examples end up in the trainingset, and non of these characters
+end up in the testset, thus they do not decrease our score. However, if this
+character later does get offered to the system, the training is as good as
+possible, since it is trained with all available characters.
 
 \subsection{Supporting Scripts}
 
