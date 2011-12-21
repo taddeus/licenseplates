@@ -141,20 +141,19 @@ The outcome of this operations will be a binary pattern. Note that the
 mathematical expression has the same effect as the bit shifting operation that
 we defined earlier.
 
-\item Given this pattern, the next step is to divide the pattern in cells. The
-amount of cells depends on the quality of the result, so trial and error is in
-order. Starting with dividing the pattern in to cells of size 16.
+\item Given this pattern for each pixel, the next step is to divide the image
+into cells.
 
 \item Compute a histogram for each cell.
 
 \begin{figure}[H]
     \center
     \includegraphics[scale=0.7]{cells.png}
-    \caption{Divide in cells(Pietik\"ainen et all (2011))}
+    \caption{Divide into cells (Pietik\"ainen et all (2011))}
 \end{figure}
 
-\item Consider every histogram as a vector element and concatenate these. The
-result is a feature vector of the image.
+\item Consider every histogram a vector element and concatenate all histograms.
+The concatenation is the feature vector of the image.
 
 \item Feed these vectors to a support vector machine. The SVM will ``learn''
 which vectors to associate with a character.
@@ -308,25 +307,28 @@ For the classification, we use a standard Python Support Vector Machine,
 \texttt{libsvm}. This is an often used SVM, and should allow us to simply feed
 data from the LBP and Feature Vector steps into the SVM and receive results.
 
-Using a SVM has two steps. First, the SVM has to be trained, and then it can be
-used to classify data. The training step takes a lot of time, but luckily
-\texttt{libsvm} offers us an opportunity to save a trained SVM. This means that
-the SVM only has to be changed once.
 
-We have decided to only include a character in the system if the SVM can be
-trained with at least 70 examples. This is done automatically, by splitting the
-data set in a learning set and a test set, where the first 70 examples of a
-character are added to the learning set, and all the following examples are
-added to the test set. Therefore, if there are not enough examples, all
-available examples end up in the learning set, and non of these characters end
-up in the test set, thus they do not decrease our score. However, if this
-character later does get offered to the system, the training is as good as
-possible, since it is trained with all available characters.
+
+Usage a SVM can be divided in two steps. First, the SVM has to be trained
+before it can be used to classify data. The training step takes a lot of time,
+but luckily \texttt{libsvm} offers us an opportunity to save a trained SVM.
+This means that the SVM only has to be created once, and can be saved for later
+usage.
+
+We have decided only to include a character in the system if the SVM can be
+trained with 70 examples. This is done automatically, by splitting the data set
+in a learning set and a test set, where the first 70 occurrences of a character
+are added to the learning set, and all the following are added to the test set.
+Therefore, if there are not enough examples, all available occurrences end up
+in the learning set, and non of these characters end up in the test set. Thus,
+they do not decrease our score. If such a character would be offered to the
+system (which it will not be in out own test program), the SVM will recognize
+it as good as possible because all occurrences are in the learning set.
 
 \subsection{Supporting Scripts}
 
-In order to work with the code, we wrote a number of scripts. Each of these
-scripts is named here and a description is given on what the script does.
+To be able to use the code efficiently, we wrote a number of scripts. This
+section describes the purpose and usage of each script.
 
 \subsection*{\texttt{create\_characters.py}}
 
@@ -357,18 +359,18 @@ scripts is named here and a description is given on what the script does.
 Now that we have a functioning system, we need to tune it to work properly for
 license plates. This means we need to find the parameters. Throughout the
 program we have a number of parameters for which no standard choice is
-available. These parameters are:\\
-\\
+available. These parameters are:
+
 \begin{tabular}{l|l}
-	Parameter 			& Description\\
+	Parameter 			& Description \\
 	\hline
-	$\sigma$  			& The size of the Gaussian blur.\\
+	$\sigma$  			& The size of the Gaussian blur. \\
 	\emph{cell size}	& The size of a cell for which a histogram of LBP's
-	                      will be generated.\\
-	\emph{Neighbourhood}& The neighbourhood to use for creating the LBP.\\
-	$\gamma$			& Parameter for the Radial kernel used in the SVM.\\
+	                      will be generated. \\
+	\emph{Neighbourhood}& The neighbourhood to use for creating the LBP. \\
+	$\gamma$			& Parameter for the Radial kernel used in the SVM. \\
 	$c$					& The soft margin of the SVM. Allows how much training
-						  errors are accepted.\\
+						  errors are accepted. \\
 \end{tabular}
 
 For each of these parameters, we will describe how we searched for a good
@@ -425,7 +427,7 @@ reached with the following neighbourhood, which we will call the
 \subsection{Parameters $\gamma$ \& $c$}
 
 The parameters $\gamma$ and $c$ are used for the SVM. $c$ is a standard
-parameter for each type of SVM, called the 'soft margin'. This indicates how
+parameter for each type of SVM, called the `soft margin'. This indicates how
 exact each element in the learning set should be taken. A large soft margin
 means that an element in the learning set that accidentally has a completely
 different feature vector than expected, due to noise for example, is not taken
@@ -442,7 +444,7 @@ the highest score is then used as our parameters, and the entire SVM will be
 trained using those parameters.
 
 The results of this grid-search are shown in the following table. The values
-in the table are rounded percentages, for easy displaying.
+in the table are rounded percentages, for better readability.
 
 \begin{tabular}{|r|r r r r r r r r r r|}
 \hline
@@ -472,10 +474,10 @@ $2^{13}$ &       90 &       92 &       92 &       92 &       92 &
 $2^{15}$ &       92 &       92 &       92 &       92 &       92 &
        92 &       93 &       93 &       86 &       45\\
 \hline
-\end{tabular}
+\end{tabular} \\
 
-We found that the best values for these parameters are $c = 32$ and
-$\gamma = 0.125$.
+The grid-search shows that the best values for these parameters are $c = 2^5 =
+32$ and $\gamma = 2^{-3} = 0.125$.
 
 \section{Results}
 
@@ -516,9 +518,9 @@ there.
 The speed of a classification turned out to be reasonably good. We time between
 the moment a character has been 'cut out' of the image, so we have a exact
 image of a character, to the moment where the SVM tells us what character it
-is. This time is on average $65$ ms. That means that this
-technique (tested on an AMD Phenom II X4 955 CPU running at 3.2 GHz)
-can identify 15 characters per second.
+is. This time is on average $65ms$. That means that this technique (tested on
+an AMD Phenom II X4 955 CPU running at 3.2 GHz) can identify 15 characters per
+second.
 
 This is not spectacular considering the amount of calculating power this CPU
 can offer, but it is still fairly reasonable. Of course, this program is
