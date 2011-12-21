@@ -1,0 +1,3 @@
+- Beste classifier runnen en kijken welke karakters fout gaan
+- code documenteren
+- verslag: conclusies aan paraeters verbinden
