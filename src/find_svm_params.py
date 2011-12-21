@@ -86,7 +86,7 @@ i = 0
 
 for c in C:
     for y in Y:
-        classifier = Classifier(c=c, gamma=y, neighbours=neighbours)
+        classifier = Classifier(c=c, gamma=y, neighbours=neighbours, verbose=1)
         classifier.train(learning_set)
         result = classifier.test(test_set)
 
