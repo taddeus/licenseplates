@@ -69,9 +69,30 @@ be decent in speed.
 Now we know what our program has to be capable of, we can start with the
 defining the problems we have and how we are planning to solve these.
 
-\subsection{Extracting a letter and resizing it}
+\subsection{Extracting a character and resizing it}
 
-% TODO: Rewrite this section once we have implemented this properly.
+We need to extract a character from a photo made of a car. We do not have to
+find where in this image the characters are, since this is provided in an XML
+file with our dataset.
+
+Once we have extracted the points from this XML file, we need to get this
+character from the image. For the nature of the Local Binary Pattern algorithm,
+we want a margin around the character. However, the points stored in the XML
+file are chosen in such a fashion, that the character would be cut out exactly.
+Therefore, we choose to take points that are slightly outside of the given
+points.
+
+When we have the points we want, we use a perspective transformation to get
+an exact image of the character.
+
+The final step is to resize this image in such a fashion, that the stroke
+of the character is more or less equal in each image. We do this by setting
+the height to a standard size, since each character has the same height on a
+license plate. We retain the height-width ratio, so we do not end up with
+characters that are different than other examples of the same character,
+because the image got stretched, which would of course be a bad thing for
+the classification.
+
 
 \subsection{Transformation}
 
@@ -488,12 +509,10 @@ classification and the accuracy. In this section we will show our findings.
 
 Of course, it is vital that the recognition of a license plate is correct,
 almost correct is not good enough here. Therefore, we have to get the highest
-accuracy score we possibly can.
-
-According to Wikipedia\footnote{
-\url{http://en.wikipedia.org/wiki/Automatic_number_plate_recognition}},
-commercial license plate recognition software score about $90\%$ to $94\%$,
-under optimal conditions and with modern equipment.
+accuracy score we possibly can.\\
+\\ According to Wikipedia \cite{wikiplate}
+accuracy score we possibly can. commercial license plate recognition software
+score about $90\%$ to $94\%$, under optimal conditions and with modern equipment.
 
 Our program scores an average of $93\%$. However, this is for a single
 character. That means that a full license plate should theoretically
@@ -614,6 +633,33 @@ to help out. Further communication usually went through e-mails and replies
 were instantaneous! A crew to remember.
 
 \section{Discussion}
+We had some good results but of course there are more things to explore.
+For instance we did a research on three different patterns. There are more patterns
+to try. For instane we only tried (8,3)-, (8,5)- and (12,5). The interesting to 
+do is to test which pattern gives the best result. This is also done by grid-
+searching, changing the size of circle and the amount of neighbours. 
+
+One important feature of our framework is that the LBP class can be changed by
+an other technique. This may be a different algorithm than LBP. Also the classifier
+can be changed in an other classifier. By applying these kind of changes we can
+find the best way to recognize licence plates. 
+
+We don't do assumption when a letter is recognized. For instance dutch licence plates
+exist of three blocks, two digits or two characters. Or for the new licence plates
+there are three blocks, two digits followed by three characters, followed by one or
+two digits. The assumption we can do is when there is have a case when one digit
+is moste likely to follow by a second digit and not a character. Maybe these assumption
+can help in future research to achieve a higher accuracy rate.
+
+ 
+\appendix
+\section{Faulty Classifications}
+\begin{figure}[H]
+\center
+\includegraphics[scale=0.5]{faulty.png}
+\caption{Faulty classifications of characters}
+\end{figure}
+\end{document}
 
 \begin{thebibliography}{9}
 \bibitem{lbp1}
