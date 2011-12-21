@@ -265,6 +265,10 @@ tried the following neighbourhoods:
 \caption{Tested neighbourhoods}
 \end{figure}
 
+We name these neighbourhoods respectively (8,3)-, (8,5)- and
+(12,5)-neighbourhoods, after the number of points we use and the diameter
+of the `circle´ on which these points lay.\\
+\\
 We chose these neighbourhoods to prevent having to use interpolation, which
 would add a computational step, thus making the code execute slower. In the
 next section we will describe what the best neighbourhood was.
@@ -391,7 +395,7 @@ are not significant enough to allow for reliable classification.
 The neighbourhood to use can only be determined through testing. We did a test
 with each of these neighbourhoods, and we found that the best results were
 reached with the following neighbourhood, which we will call the
-(12, 5)-neighbourhood, since it has 12 points in a area with a diameter of 5.
+(12,5)-neighbourhood, since it has 12 points in a area with a diameter of 5.
 
 \begin{figure}[H]
 \center
@@ -459,27 +463,6 @@ $\gamma = 0.125$.
 The goal was to find out two things with this research: The speed of the
 classification and the accuracy. In this section we will show our findings.
 
-\subsection{Speed}
-
-Recognizing license plates is something that has to be done fast, since there
-can be a lot of cars passing a camera in a short time, especially on a highway.
-Therefore, we measured how well our program performed in terms of speed. We
-measure the time used to classify a license plate, not the training of the
-dataset, since that can be done offline, and speed is not a primary necessity
-there.\\
-\\
-The speed of a classification turned out to be reasonably good. We time between
-the moment a character has been 'cut out' of the image, so we have a exact
-image of a character, to the moment where the SVM tells us what character it
-is. This time is on average $65$ ms. That means that this
-technique (tested on an AMD Phenom II X4 955 Quad core CPU running at 3.2 GHz)
-can identify 15 characters per second.\\
-\\
-This is not spectacular considering the amount of calculating power this cpu
-can offer, but it is still fairly reasonable. Of course, this program is
-written in Python, and is therefore not nearly as optimized as would be
-possible when written in a low-level language.
-
 \subsection{Accuracy}
 
 Of course, it is vital that the recognition of a license plate is correct,
@@ -501,6 +484,35 @@ Possibilities for improvement of this score would be more extensive
 grid-searches, finding more exact values for $c$ and $\gamma$, more tests
 for finding $\sigma$ and more experiments on the size and shape of the 
 neighbourhoods.
+
+\subsection{Speed}
+
+Recognizing license plates is something that has to be done fast, since there
+can be a lot of cars passing a camera in a short time, especially on a highway.
+Therefore, we measured how well our program performed in terms of speed. We
+measure the time used to classify a license plate, not the training of the
+dataset, since that can be done offline, and speed is not a primary necessity
+there.\\
+\\
+The speed of a classification turned out to be reasonably good. We time between
+the moment a character has been 'cut out' of the image, so we have a exact
+image of a character, to the moment where the SVM tells us what character it
+is. This time is on average $65$ ms. That means that this
+technique (tested on an AMD Phenom II X4 955 CPU running at 3.2 GHz)
+can identify 15 characters per second.\\
+\\
+This is not spectacular considering the amount of calculating power this CPU
+can offer, but it is still fairly reasonable. Of course, this program is
+written in Python, and is therefore not nearly as optimized as would be
+possible when written in a low-level language.\\
+\\
+Another performance gain is by using one of the other two neighbourhoods.
+Since these have 8 points instead of 12 points, this increases performance
+drastically, but at the cost of accuracy. With the (8,5)-neighbourhood
+we only need 1.6 ms seconds to identify a character. However, the accuracy
+drops to $89\%$. When using the (8,3)-neighbourhood, the speedwise performance
+remains the same, but accuracy drops even further, so that neighbourhood
+is not advisable to use.
 
 \section{Conclusion}
 
