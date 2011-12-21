@@ -2,7 +2,8 @@ from Histogram import Histogram
 from math import ceil
 
 class LocalBinaryPatternizer:
-
+    """This class generates a Local Binary Pattern of a given image."""
+    
     def __init__(self, image, cell_size=16, neighbours=3):
         self.cell_size = cell_size
         self.image = image
@@ -23,6 +24,7 @@ class LocalBinaryPatternizer:
                 self.histograms[i].append(Histogram(self.bins, 0, self.bins))
 
     def pattern_3x3(self, y, x, value):
+        """Create the Local Binary Pattern in the (8,3)-neighbourhood."""
         return (self.is_pixel_darker(y - 1, x - 1, value) << 7) \
              | (self.is_pixel_darker(y - 1, x    , value) << 6) \
              | (self.is_pixel_darker(y - 1, x + 1, value) << 5) \
@@ -33,6 +35,7 @@ class LocalBinaryPatternizer:
              | (self.is_pixel_darker(y    , x - 1, value))
 
     def pattern_5x5_hybrid(self, y, x, value):
+        """Create the Local Binary Pattern in the (8,5)-neighbourhood."""
         return (self.is_pixel_darker(y - 2, x - 2, value) << 7) \
              | (self.is_pixel_darker(y - 2, x    , value) << 6) \
              | (self.is_pixel_darker(y - 2, x + 2, value) << 5) \
@@ -43,6 +46,7 @@ class LocalBinaryPatternizer:
              | (self.is_pixel_darker(y    , x - 2, value))
 
     def pattern_5x5(self, y, x, value):
+        """Create the Local Binary Pattern in the (12,5)-neighbourhood."""
         return (self.is_pixel_darker(y - 1, x - 2, value) << 11) \
              | (self.is_pixel_darker(y    , x - 2, value) << 10) \
              | (self.is_pixel_darker(y + 1, x - 2, value) << 9) \
