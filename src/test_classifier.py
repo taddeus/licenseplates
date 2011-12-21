@@ -1,5 +1,6 @@
 #!/usr/bin/python
 from cPickle import dump, load
+from sys import argv, exit
 
 from Classifier import Classifier
 
@@ -16,7 +17,7 @@ classifier = Classifier(c=float(argv[1]), \
                         neighbours=int(argv[3]))
 classifier.train(learning_set)
 
-print 'Loading test set'
+print 'Loading test set...'
 test_set = load(file('test_set%s.dat' % argv[1], 'r'))
 l = len(test_set)
 matches = 0
@@ -34,5 +35,5 @@ for i, char in enumerate(test_set):
     print '  --  %d of %d (%d%% done)' % (i + 1, l, int(100 * (i + 1) / l))
 
 print '\n%d matches (%d%%), %d fails' % (matches, \
-        int(100 * matches / len(test_set)), \
+        int(100 * matches / l), \
         len(test_set) - matches)

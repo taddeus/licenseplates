@@ -57,6 +57,7 @@ class Classifier:
         true_value = 0 if true_value == None else ord(true_value)
         #x = character.get_feature_vector(self.cell_size)
         character.get_single_cell_feature_vector(self.neighbours)
+        #p = svm_predict([true_value], [character.feature], self.model, '-b 1')
         p = svm_predict([true_value], [character.feature], self.model)
         prediction_class = int(p[0][0])
 
