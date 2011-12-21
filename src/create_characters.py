@@ -80,6 +80,7 @@ def load_test_set(neighbours, blur_scale, verbose=0):
 
 
 def generate_sets(neighbours, blur_scale, verbose=0):
+    """Split the entire dataset into a trainingset and a testset."""
     suffix = '_%s_%s' % (blur_scale, neighbours)
     learning_set_file = 'learning_set%s.dat' % suffix
     test_set_file = 'test_set%s.dat' % suffix
