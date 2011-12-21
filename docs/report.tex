@@ -15,9 +15,9 @@
 \maketitle
 
 \section*{Project members}
-Gijs van der Voort\\
-Richard Torenvliet\\
-Jayke Meijer\\
+Gijs van der Voort \\
+Richard Torenvliet \\
+Jayke Meijer \\
 Tadde\"us Kroes\\
 Fabi\"en Tesselaar
 
@@ -242,8 +242,8 @@ any unwanted difference in color from the surrounding pixels.
 \paragraph*{Camera noise and small amounts of dirt}
 The dirt on the license plate can be of different sizes. We can reduce the
 smaller amounts of dirt in the same way as we reduce normal noise, by applying
-a Gaussian blur to the image. This is the next step in our program.\\
-\\
+a Gaussian blur to the image. This is the next step in our program.
+
 The Gaussian filter we use comes from the \texttt{scipy.ndimage} module. We use
 this function instead of our own function, because the standard functions are
 most likely more optimized then our own implementation, and speed is an
@@ -252,7 +252,7 @@ important factor in this application.
 \paragraph*{Larger amounts of dirt}
 Larger amounts of dirt are not going to be resolved by using a Gaussian filter.
 We rely on one of the characteristics of the Local Binary Pattern, only looking
-at the difference between two pixels, to take care of these problems.\\
+at the difference between two pixels, to take care of these problems. \\
 Because there will probably always be a difference between the characters and
 the dirt, and the fact that the characters are very black, the shape of the
 characters will still be conserved in the LBP, even if there is dirt
@@ -272,8 +272,8 @@ tried the following neighbourhoods:
 
 We name these neighbourhoods respectively (8,3)-, (8,5)- and
 (12,5)-neighbourhoods, after the number of points we use and the diameter
-of the `circle´ on which these points lay.\\
-\\
+of the `circle´ on which these points lay.
+
 We chose these neighbourhoods to prevent having to use interpolation, which
 would add a computational step, thus making the code execute slower. In the
 next section we will describe what the best neighbourhood was.
@@ -369,8 +369,8 @@ available. These parameters are:\\
 	$\gamma$			& Parameter for the Radial kernel used in the SVM.\\
 	$c$					& The soft margin of the SVM. Allows how much training
 						  errors are accepted.\\
-\end{tabular}\\
-\\
+\end{tabular}
+
 For each of these parameters, we will describe how we searched for a good
 value, and what value we decided on.
 
@@ -378,8 +378,8 @@ value, and what value we decided on.
 
 The first parameter to decide on, is the $\sigma$ used in the Gaussian blur. To
 find this parameter, we tested a few values, by trying them and checking the
-results. It turned out that the best value was $\sigma = 1.4$.\\
-\\
+results. It turned out that the best value was $\sigma = 1.4$.
+
 Theoretically, this can be explained as follows. The filter has width of
 $6 * \sigma = 6 * 1.4 = 8.4$ pixels. The width of a `stroke' in a character is,
 after our resize operations, around 8 pixels. This means, our filter `matches'
@@ -395,13 +395,13 @@ classification less affected by relative movement of a character compared to
 those in the learning set, since the important structure will be more likely to
 remain in the same cell. However, if the cell size is too big, there will not
 be enough cells to properly describe the different areas of the character, and
-the feature vectors will not have enough elements.\\
-\\
+the feature vectors will not have enough elements.
+
 In order to find this parameter, we used a trial-and-error technique on a few
 cell sizes. During this testing, we discovered that a lot better score was
 reached when we take the histogram over the entire image, so with a single
-cell. Therefore, we decided to work without cells.\\
-\\
+cell. Therefore, we decided to work without cells.
+
 A reason we can think of why using one cell works best is that the size of a
 single character on a license plate in the provided dataset is very small.
 That means that when dividing it into cells, these cells become simply too
@@ -430,17 +430,17 @@ exact each element in the learning set should be taken. A large soft margin
 means that an element in the learning set that accidentally has a completely
 different feature vector than expected, due to noise for example, is not taken
 into account. If the soft margin is very small, then almost all vectors will be
-taken into account, unless they differ extreme amounts.\\
+taken into account, unless they differ extreme amounts. \\
 $\gamma$ is a variable that determines the size of the radial kernel, and as
-such determines how steep the difference between two classes can be.\\
-\\
+such determines how steep the difference between two classes can be.
+
 Since these parameters both influence the SVM, we need to find the best
 combination of values. To do this, we perform a so-called grid-search. A
 grid-search takes exponentially growing sequences for each parameter, and
 checks for each combination of values what the score is. The combination with
 the highest score is then used as our parameters, and the entire SVM will be
-trained using those parameters.\\
-\\
+trained using those parameters.
+
 The results of this grid-search are shown in the following table. The values
 in the table are rounded percentages, for easy displaying.
 
@@ -486,19 +486,19 @@ classification and the accuracy. In this section we will show our findings.
 
 Of course, it is vital that the recognition of a license plate is correct,
 almost correct is not good enough here. Therefore, we have to get the highest
-accuracy score we possibly can.\\
-\\ According to Wikipedia
-\footnote{
+accuracy score we possibly can.
+
+According to Wikipedia\footnote{
 \url{http://en.wikipedia.org/wiki/Automatic_number_plate_recognition}},
 commercial license plate recognition software score about $90\%$ to $94\%$,
-under optimal conditions and with modern equipment.\\
-\\
+under optimal conditions and with modern equipment.
+
 Our program scores an average of $93\%$. However, this is for a single
 character. That means that a full license plate should theoretically
 get a score of $0.93^6 = 0.647$, so $64.7\%$. That is not particularly
 good compared to the commercial ones. However, our focus was on getting
-good scores per character, and $93\%$ seems to be a fairly good result.\\
-\\
+good scores per character, and $93\%$ seems to be a fairly good result.
+
 Possibilities for improvement of this score would be more extensive
 grid-searches, finding more exact values for $c$ and $\gamma$, more tests
 for finding $\sigma$ and more experiments on the size and shape of the
@@ -511,20 +511,20 @@ can be a lot of cars passing a camera in a short time, especially on a highway.
 Therefore, we measured how well our program performed in terms of speed. We
 measure the time used to classify a license plate, not the training of the
 dataset, since that can be done offline, and speed is not a primary necessity
-there.\\
-\\
+there.
+
 The speed of a classification turned out to be reasonably good. We time between
 the moment a character has been 'cut out' of the image, so we have a exact
 image of a character, to the moment where the SVM tells us what character it
 is. This time is on average $65$ ms. That means that this
 technique (tested on an AMD Phenom II X4 955 CPU running at 3.2 GHz)
-can identify 15 characters per second.\\
-\\
+can identify 15 characters per second.
+
 This is not spectacular considering the amount of calculating power this CPU
 can offer, but it is still fairly reasonable. Of course, this program is
 written in Python, and is therefore not nearly as optimized as would be
-possible when written in a low-level language.\\
-\\
+possible when written in a low-level language.
+
 Another performance gain is by using one of the other two neighbourhoods.
 Since these have 8 points instead of 12 points, this increases performance
 drastically, but at the cost of accuracy. With the (8,5)-neighbourhood
@@ -537,12 +537,12 @@ is not advisable to use.
 
 In the end it turns out that using Local Binary Patterns is a promising
 technique for License Plate Recognition. It seems to be relatively indifferent
-for the amount of dirt on license plates and different fonts on these plates.\\
-\\
+for the amount of dirt on license plates and different fonts on these plates.
+
 The performance speed wise is fairly good, when using a fast machine. However,
 this is written in Python, which means it is not as efficient as it could be
 when using a low-level languages.
-\\
+
 We believe that with further experimentation and development, LBP's can
 absolutely be used as a good license plate recognition method.
 
@@ -558,15 +558,18 @@ were and whether we were able to find a proper solution for them.
 
 We did experience a number of problems with the provided dataset. A number of
 these are problems to be expected in a real world problem, but which make
-development harder. Others are more elemental problems.\\
+development harder. Others are more elemental problems.
+
 The first problem was that the dataset contains a lot of license plates which
 are problematic to read, due to excessive amounts of dirt on them. Of course,
 this is something you would encounter in the real situation, but it made it
-hard for us to see whether there was a coding error or just a bad example.\\
+hard for us to see whether there was a coding error or just a bad example.
+
 Another problem was that there were license plates of several countries in
 the dataset. Each of these countries has it own font, which also makes it
 hard to identify these plates, unless there are a lot of these plates in the
-learning set.\\
+learning set.
+
 A problem that is more elemental is that some of the characters in the dataset
 are not properly classified. This is of course very problematic, both for
 training the SVM as for checking the performance. This meant we had to check
@@ -588,6 +591,7 @@ every team member was up-to-date and could start figuring out which part of the
 implementation was most suited to be done by one individually or in a pair.
 
 \subsubsection*{Who did what}
+
 Gijs created the basic classes we could use and helped everyone by keeping
 track of what was required to be finished and whom was working on what.
 Tadde\"us and Jayke were mostly working on the SVM and all kinds of tests
