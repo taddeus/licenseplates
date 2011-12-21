@@ -6,7 +6,8 @@ from time import time
 from GrayscaleImage import GrayscaleImage
 from NormalizedCharacterImage import NormalizedCharacterImage
 from Character import Character
-from Classifier import Classifier
+from data import IMAGES_FOLDER
+from create_classifier import load_classifier
 
 if len(argv) < 4:
     print 'Usage: python %s NEIGHBOURS BLUR_SCALE COUNT' % argv[0]
@@ -15,28 +16,15 @@ if len(argv) < 4:
 neighbours = int(argv[1])
 blur_scale = float(argv[2])
 count = int(argv[3])
-suffix = '_%s_%s' % (blur_scale, neighbours)
-
-#chars_file = 'characters%s.dat' % suffix
-classifier_file = 'classifier%s.dat' % suffix
-
-#print 'Loading characters...'
-#chars = load(open(chars_file, 'r'))[:count]
-#count = len(chars)
-#
-#for char in chars:
-#    del char.feature
-#
-#print 'Read %d characters' % count
 
 print 'Loading %d characters...' % count
 chars = []
 i = 0
 br = False
 
-for value in sorted(listdir('../images/LearningSet')):
-    for image in sorted(listdir('../images/LearningSet/' + value)):
-        f = '../images/LearningSet/' + value + '/' + image
+for value in sorted(listdir()):
+    for image in sorted(listdir(IMAGES_FOLDER + value)):
+        f = IMAGES_FOLDER + value + '/' + image
         image = GrayscaleImage(f)
         char = Character(value, [], image)
         chars.append(char)
@@ -49,10 +37,10 @@ for value in sorted(listdir('../images/LearningSet')):
     if br:
         break
 
-print 'Loading classifier...'
-classifier = Classifier(filename=classifier_file)
-classifier.neighbours = neighbours
+# Load classifier
+classifier = load_classifier(neighbours, blur_scale, verbose=1)
 
+# Measure the time it takes to recognize <count> characters
 start = time()
 
 for char in chars:

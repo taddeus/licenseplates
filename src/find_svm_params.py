@@ -1,13 +1,10 @@
 #!/usr/bin/python
-from os import listdir
-from os.path import exists
-from cPickle import load, dump
+import os
 from sys import argv, exit
 
-from GrayscaleImage import GrayscaleImage
-from NormalizedCharacterImage import NormalizedCharacterImage
-from Character import Character
 from Classifier import Classifier
+from data import DATA_FOLDER, RESULTS_FOLDER
+from create_characters import load_learning_set, load_test_set
 
 if len(argv) < 3:
     print 'Usage: python %s NEIGHBOURS BLUR_SCALE' % argv[0]
@@ -17,64 +14,15 @@ neighbours = int(argv[1])
 blur_scale = float(argv[2])
 suffix = '_%s_%s' % (blur_scale, neighbours)
 
-chars_file = 'characters%s.dat' % suffix
-learning_set_file = 'learning_set%s.dat' % suffix
-test_set_file = 'test_set%s.dat' % suffix
-classifier_file = 'classifier%s.dat' % suffix
-results_file = 'results%s.txt' % suffix
+if not os.path.exists(RESULTS_FOLDER):
+    os.mkdir(RESULTS_FOLDER)
 
-
-# Load characters
-if exists(chars_file):
-    print 'Loading characters...'
-    chars = load(open(chars_file, 'r'))
-else:
-    print 'Going to generate character objects...'
-    chars = []
-
-    for char in sorted(listdir('../images/LearningSet')):
-        for image in sorted(listdir('../images/LearningSet/' + char)):
-            f = '../images/LearningSet/' + char + '/' + image
-            image = GrayscaleImage(f)
-            norm = NormalizedCharacterImage(image, blur=blur_scale, height=42)
-            #imshow(norm.data, cmap='gray'); show()
-            character = Character(char, [], norm)
-            character.get_single_cell_feature_vector(neighbours)
-            chars.append(character)
-            print char
-
-    print 'Saving characters...'
-    dump(chars, open(chars_file, 'w+'))
-
+classifier_file = DATA_FOLDER + 'classifier%s.dat' % suffix
+results_file = '%sresult%s.txt' % (RESULTS_FOLDER, suffix)
 
 # Load learning set and test set
-if exists(learning_set_file):
-    print 'Loading learning set...'
-    learning_set = load(open(learning_set_file, 'r'))
-    print 'Learning set:', [c.value for c in learning_set]
-    print 'Loading test set...'
-    test_set = load(open(test_set_file, 'r'))
-    print 'Test set:', [c.value for c in test_set]
-else:
-    print 'Going to generate learning set and test set...'
-    learning_set = []
-    test_set = []
-    learned = []
-
-    for char in chars:
-        if learned.count(char.value) == 70:
-            test_set.append(char)
-        else:
-            learning_set.append(char)
-            learned.append(char.value)
-
-    print 'Learning set:', [c.value for c in learning_set]
-    print '\nTest set:', [c.value for c in test_set]
-    print '\nSaving learning set...'
-    dump(learning_set, file(learning_set_file, 'w+'))
-    print 'Saving test set...'
-    dump(test_set, file(test_set_file, 'w+'))
-
+learning_set = load_learning_set(neighbours, blur_scale, verbose=1)
+test_set = load_test_set(neighbours, blur_scale, verbose=1)
 
 # Perform a grid-search to find the optimal values for C and gamma
 C = [float(2 ** p) for p in xrange(-5, 16, 2)]
