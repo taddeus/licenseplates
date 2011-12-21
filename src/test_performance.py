@@ -1,6 +1,5 @@
 #!/usr/bin/python
 from os import listdir
-from cPickle import load
 from sys import argv, exit
 from time import time
 

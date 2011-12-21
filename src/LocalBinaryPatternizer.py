@@ -57,7 +57,7 @@ class LocalBinaryPatternizer:
              | (self.is_pixel_darker(y - 2, x - 1, value))
 
     def create_features_vector(self):
-        '''Walk around the pixels in clokwise order, shifting 1 bit less at
+        '''Walk around the pixels in clockwise order, shifting 1 bit less at
         each neighbour starting at 7 in the top-left corner. This gives a 8-bit
         feature number of a pixel'''
         self.setup_histograms()

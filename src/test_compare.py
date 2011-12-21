@@ -1,9 +1,8 @@
 #!/usr/bin/python
 from matplotlib.pyplot import imshow, subplot, show
 from LocalBinaryPatternizer import LocalBinaryPatternizer
-from GrayscaleImage import GrayscaleImage
 from cPickle import load
-from numpy import zeros, resize
+from numpy import zeros
 
 chars = load(file('characters.dat', 'r'))[::2]
 left = None
