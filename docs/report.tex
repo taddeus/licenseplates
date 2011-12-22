@@ -442,14 +442,14 @@ value, and what value we decided on.
 
 The first parameter to decide on, is the $\sigma$ used in the Gaussian blur. To
 find this parameter, we tested a few values, by trying them and checking the
-results. It turned out that the best value was $\sigma = 1.4$.
+results. It turned out that the best value was $\sigma = 1.9$.
 
 Theoretically, this can be explained as follows. The filter has width of
-$6 * \sigma = 6 * 1.6 = 9.6$ pixels. The width of a `stroke' in a character is,
-after our resize operations, around 8 pixels. This means, our filter `matches'
-the smallest detail size we want to be able to see, so everything that is
-smaller is properly suppressed, yet it retains the details we do want to keep,
-being everything that is part of the character.
+$6 * \sigma = 6 * 1.9 = 11.4$ pixels. The width of a `stroke' in a character is
+after our resize operations around 10 pixels. This means, our filter in
+proportion to the smallest detail size we want to be able to see, so everything
+that is smaller is properly suppressed, yet it retains the details we do want
+to keep, being everything that is part of the character.
 
 \subsection{Parameter \emph{cell size}}
 
@@ -515,33 +515,35 @@ in the table are rounded percentages, for better readability.
 c $\gamma$ & $2^{-15}$ & $2^{-13}$ & $2^{-11}$ & $2^{-9}$ & $2^{-7}$ &
 	$2^{-5}$ & $2^{-3}$ & $2^{-1}$ & $2^{1}$ & $2^{3}$\\
 \hline
-$2^{-5}$ &       61 &       61 &       61 &       61 &       62 &
-       63 &       67 &       74 &       59 &       24\\
-$2^{-3}$ &       61 &       61 &       61 &       61 &       62 &
-       63 &       70 &       78 &       60 &       24\\
-$2^{-1}$ &       61 &       61 &       61 &       61 &       62 &
-       70 &       83 &       88 &       78 &       27\\
- $2^{1}$ &       61 &       61 &       61 &       61 &       70 &
-        84 &       90 &       92 &       86 &       45\\
- $2^{3}$ &       61 &       61 &       61 &       70 &       84 &
-        90 &       93 &       93 &       86 &       45\\
- $2^{5}$ &       61 &       61 &       70 &       84 &       90 &
-        92 &       93 &       93 &       86 &       45\\
- $2^{7}$ &       61 &       70 &       84 &       90 &       92 &
-        93 &       93 &       93 &       86 &       45\\
- $2^{9}$ &       70 &       84 &       90 &       92 &       92 &
-       93 &       93 &       93 &       86 &       45\\
-$2^{11}$ &       84 &       90 &       92 &       92 &       92 &
-       92 &       93 &       93 &       86 &       45\\
-$2^{13}$ &       90 &       92 &       92 &       92 &       92 &
-       92 &       93 &       93 &       86 &       45\\
-$2^{15}$ &       92 &       92 &       92 &       92 &       92 &
-       92 &       93 &       93 &       86 &       45\\
+$2^{-5}$ &       63 &       63 &       63 &       63 &       63 &       65 &
+       68 &       74 &       59 &       20\\
+$2^{-3}$ &       63 &       63 &       63 &       63 &       63 &       65 &
+       70 &       80 &       60 &       20\\
+$2^{-1}$ &       63 &       63 &       63 &       63 &       63 &       71 &
+       84 &       89 &       81 &       23\\
+ $2^{1}$ &       63 &       63 &       63 &       63 &       70 &       85 &
+        91 &       92 &       87 &       45\\
+ $2^{3}$ &       63 &       63 &       63 &       70 &       85 &       91 &
+        93 &       93 &       86 &       45\\
+ $2^{5}$ &       63 &       63 &       70 &       85 &       91 &       93 &
+        94 &       93 &       86 &       45\\
+ $2^{7}$ &       63 &       70 &       85 &       91 &       93 &       93 &
+        93 &       93 &       86 &       45\\
+ $2^{9}$ &       70 &       85 &       91 &       93 &       93 &       93 &
+        93 &       93 &       86 &       45\\
+$2^{11}$ &       85 &       91 &       93 &       93 &       93 &       93 &
+       93 &       93 &       86 &       45\\
+$2^{13}$ &       91 &       93 &       93 &       92 &       93 &       93 &
+       93 &       93 &       86 &       45\\
+$2^{15}$ &       93 &       93 &       92 &       92 &       93 &       93 &
+       93 &       93 &       86 &       45\\
 \hline
 \end{tabular} \\
 
 The grid-search shows that the best values for these parameters are $c = 2^5 =
-32$ and $\gamma = 2^{-3} = 0.125$.
+32$ and $\gamma = 2^{-3} = 0.125$. These values were found for a number of
+different blur sizes, so these are the best values for this neighbourhood and
+this problem.
 
 \section{Results}
 
@@ -558,31 +560,32 @@ According to Wikipedia \cite{wikiplate}, commercial license plate recognition
 that are currently on the market software score about $90\%$ to $94\%$, under
 optimal conditions and with modern equipment.
 
-Our program scores an average of $93.6\%$. However, this is for a single
+Our program scores an average of $94.0\%$. However, this is for a single
 character. That means that a full license plate should theoretically
-get a score of $0.936^6 = 0.672$, so $67.2\%$. That is not particularly
+get a score of $0.940^6 = 0.690$, so $69.0\%$. That is not particularly
 good compared to the commercial ones. However, our focus was on getting
-good scores per character. For us, $93.6\%$ is a very satisfying result.
+good scores per character. For us, $94\%$ is a very satisfying result.
 
 \subsubsection*{Faulty classified characters}
 
 As we do not have a $100\%$ score, it is interesting to see what characters are
 classified wrong. These characters are shown in appendix \ref{fcc}. Most of
-these errors are easily explained. For example, some 0's are classified as
-'D', some 1's are classified as 'T' and some 'F's are classified as 'E'.
+these errors are easily explained. For example, some `0's are classified as
+`D', some `1's are classified as `T' and some `F's are classified as `E'.
 
 Of course, these are not as interesting as some of the weird matches. For
-example, a 'P' is classified as 7. However, if we look more closely, the 'P' is
-standing diagonally, possibly because the datapoints where not very exact in
+example, a `P' is classified as `7'. However, if we look more closely, the `P'
+is standing diagonally, possibly because the datapoints where not very exact in
 the XML file. This creates a large diagonal line in the image, which explains
-why this can be classified as a 7. The same has happened with a 'T', which is
-also marked as 7.
+why this can be classified as a `7'. The same has happened with a `T', which is
+also marked as `7'.
 
-Other strange matches include a 'Z' as a 9, but this character has a lot of
-noise surrounding it, which makes classification harder, and a 3 that is
-classified as 9, where the exact opposite is the case. This plate has no noise,
+Other strange matches include a `Z' as a `9', but this character has a lot of
+noise surrounding it, which makes classification harder, and a `3' that is
+classified as `9', where the exact opposite is the case. This plate has no noise,
 due to which the background is a large area of equal color. This might cause
-the classification to focus more on this than on the actual character.
+the classification to focus more on the background than on the actual
+character. This happens for more characters, for instance a `5' as `P'.
 
 \subsection{Speed}
 
