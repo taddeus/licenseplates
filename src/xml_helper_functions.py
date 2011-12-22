@@ -6,6 +6,8 @@ from Character import Character
 from GrayscaleImage import GrayscaleImage
 from NormalizedCharacterImage import NormalizedCharacterImage
 from LicensePlate import LicensePlate
+from data import IMAGES_FOLDER
+
 
 # Gets the character data from a picture with a license plate
 def retrieve_data(plate, corners):
@@ -38,6 +40,7 @@ def retrieve_data(plate, corners):
 
     return data
 
+
 def get_transformation_matrix(matrix):
     # Get the vector p and the values that are in there by taking the SVD.
     # Since D is diagonal with the eigenvalues sorted from large to small
@@ -47,6 +50,7 @@ def get_transformation_matrix(matrix):
     p = V[8][:]
 
     return inv(array([[p[0],p[1],p[2]], [p[3],p[4],p[5]], [p[6],p[7],p[8]]]))
+
 
 def pV(image, x, y):
     #Get the value of a point (interpolated x, y) in the given image
@@ -66,6 +70,7 @@ def pV(image, x, y):
         + image[x_high,  y_low] / x_y * c * b \
         + image[x_low , y_high] / x_y * a * d \
         + image[x_high, y_high] / x_y * c * d
+
 
 def xml_to_LicensePlate(filename, save_character=None):
     plate   = GrayscaleImage('../images/Images/%s.jpg' % filename)
@@ -100,10 +105,10 @@ def xml_to_LicensePlate(filename, save_character=None):
             data  = retrieve_data(plate, corners)
             image = NormalizedCharacterImage(data=data)
             result.append(Character(value, corners, image, filename))
-        
+
             if save_character:
                 character_image = GrayscaleImage(data=data)
-                path       = "../images/LearningSet/%s" % value
+                path       = IMAGES_FOLDER + value
                 image_path = "%s/%d_%s.jpg" % (path, i, filename.split('/')[-1])
 
                 if not exists(path):
@@ -114,14 +119,18 @@ def xml_to_LicensePlate(filename, save_character=None):
 
     return LicensePlate(country, result)
 
+
 def get_node(node, tag):
     return by_tag(node, tag)[0].firstChild.data
+
 
 def by_tag(node, tag):
     return node.getElementsByTagName(tag)
 
+
 def get_attr(node, attr):
   return int(node.getAttribute(attr))
+
 
 def get_corners(dom):
     p = by_tag(dom, "point")
