@@ -10,19 +10,11 @@ class NormalizedCharacterImage(GrayscaleImage):
         elif data != None:
             GrayscaleImage.__init__(self, data=deepcopy(data))
 
-        self.blur = blur
-        self.gaussian_filter()
-
-        #self.increase_contrast()
-
         self.height = height
         self.resize()
 
-#    def increase_contrast(self):
-#        """Increase the contrast by performing a grayscale mapping from the 
-#        current maximum and minimum to a range between 0 and 1."""
-#        self.data -= self.data.min()
-#        self.data = self.data.astype(float) / self.data.max()
+        self.blur = blur
+        self.gaussian_filter()
 
     def gaussian_filter(self):
         GaussianFilter(self.blur).filter(self)
