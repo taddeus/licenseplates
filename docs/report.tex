@@ -549,19 +549,6 @@ expectations. \\
 Note: Both tests were executed using an AMD Phenom II X4 955 CPU processor,
 running at 3.2 GHz.
 
-This is not spectacular considering the amount of calculating power this CPU
-can offer, but it is still fairly reasonable. Of course, this program is
-written in Python, and is therefore not nearly as optimized as would be
-possible when written in a low-level language.
-
-Another performance gain is by using one of the other two neighbourhoods.
-Since these have 8 points instead of 12 points, this increases performance
-drastically, but at the cost of accuracy. With the (8,5)-neighbourhood
-we only need 81ms seconds to identify a character. However, the accuracy
-drops to $89\%$. When using the (8,3)-neighbourhood, the speedwise performance
-remains the same, but accuracy drops even further, so that neighbourhood
-is not advisable to use.
-
 \section{Discussion}
 
 There are a few points open for improvement. These are the following.
@@ -580,44 +567,56 @@ The expectation is that using a larger diameter pattern, but with the same
 amount of points is worth trying. The theory behind that is that when using a
 gaussian blur to reduce noise, the edges are blurred as well. By
 
-\subsection{Context Information}
+\subsection{Context information}
 
-We don't do assumption when a letter is recognized. For instance Dutch licence
-plates exist of three blocks, two digits or two characters. Or for the new
-licence plates there are three blocks, two digits followed by three characters,
-followed by one or two digits. The assumption we can do is when there is have a
-case when one digit is most likely to follow by a second digit and not a
-character. Maybe these assumption can help in future research to achieve a
-higher accuracy rate.
+Unlike existing commercial license plate recognition software, our
+implementation makes no use of context information. For instance, Dutch early
+license plates consist of three blocks, one of two digits and two of two
+letters. More recent Dutch plates also consist of three blocks, two digits
+followed by three characters, followed by one or two digits. \\
+This information could be used in an extension of our code to increase
+accuracy.
 
-\subsection{Speed up}
+\subsection{Potential speedup}
 
-A possibility to improve the performance speedwise would be to separate the
-creation of the Gaussian kernel and the convolution. This way, the kernel can
-be cached, which is a big improvement. At this moment, we calculate this kernel
-every time a blur is applied to a character. This was done so we could use a
-standard Python function, but we realised too late that there is performance
-loss due to this.
+One way of gaining time-wise performance is making a smart choice of local
+binary pattern. For instance, the (8,3)-neighbourhood has a good performance,
+but low accuracy. The (12,8)-neighbourhood yields a high accuracy, but has a
+relatively poor performance. As an in-between solution, the (8,5)-neighbourhood
+can be used. This has the same time-wise performance as (8,3), but a higher
+accuracy. The challenge is to find a combination of (number of points,
+neighbourhood size) that suits both accuracy and runtime demands.
 
-Another performance loss was introduced by checking for each pixel if it is
-in the image. This induces one function call and four conditional checks
-per pixel, which costs performance. A faster method would be to first set a
-border of black pixels around the image, so the inImage function is now done
-implicitly because it simply finds a black pixel if it falls outside the
-original image borders.
+Another possibility to improve the performance speed-wise would be to separate
+the creation of the Gaussian kernel and the convolution. This way, the kernel
+will not have to be created for each feature vector. This seems to be a trivial
+optimization, but due to lack of time we have not been able to implement it.
+
+Using Python profiling, we learned that a significant percentage of the
+execution time is spent in the functions that create the LBP of a pixel. These
+functions currently call the \texttt{LocalBinaryPatternizer.is\_pixel\_darker}
+function for each comparison, which is expensive in terms of efficiency. The
+functions also call \texttt{inImage}, which (obviously) checks if a pixel is
+inside the image. This can be avoided by adding a border around the image with
+the width of half the neighbourhood size minus one (for example, $\frac{5 -
+1}{2} = 2$ pixels in a $5x5$ neighbourhood). When creating the feature vector,
+this border should not be iterated over.
 
 \section{Conclusion}
 
-In the end it turns out that using Local Binary Patterns is a promising
-technique for License Plate Recognition. It seems to be relatively indifferent
-for the amount of dirt on license plates and different fonts on these plates.
+It turns out that using Local Binary Patterns is a promising technique for
+license plate recognition. It seems to be relatively indifferent of the amount
+of dirt on license plates, which means that it is robust. \\
+Also, different fonts are recognized quite well, which means that it is well
+suited for international use (at country borders, for example).
 
-The performance speed wise is fairly good, when using a fast machine. However,
-this is written in Python, which means it is not as efficient as it could be
-when using a low-level languages.
+Time-wise performance turns out to be better than one would expect from a large
+Python program. This gives high hopes for performance in any future
+implementation written in a C-like language.
 
-We believe that with further experimentation and development, LBP's can
-absolutely be used as a good license plate recognition method.
+Given both of the statements above, we believe that with further
+experimentation and development, LBP's is absolutely a valid method to be used
+in license plate recognition.
 
 \section{Reflection}
 
@@ -630,8 +629,8 @@ were and whether we were able to find a proper solution for them.
 \subsubsection*{Dataset}
 
 We did experience a number of problems with the provided dataset. A number of
-these are problems to be expected in a real world problem, but which make
-development harder. Others are more elemental problems.
+these are problems to be expected in the real world, but which make development
+harder. Others are more elemental problems.
 
 The first problem was that the dataset contains a lot of license plates which
 are problematic to read, due to excessive amounts of dirt on them. Of course,
