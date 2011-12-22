@@ -387,7 +387,7 @@ Performs a grid-search to find the optimal value for \texttt{c} and
 \texttt{gamma}, for the given combination of NEIGHBOURS and BLUR\_SCALE. The
 optimal classifier is saved in
 \emph{data/classifier\_\{BLUR\_SCALE\}\_\{NEIGBOURS\}.dat}, and the accuracy
-scores are saved in in
+scores are saved in
 \emph{results/results\_\{BLUR\_SCALE\}\_\{NEIGBOURS\}.txt}.
 
 Like \texttt{create\_classifier.py}, the script ensures that the required
@@ -675,7 +675,7 @@ function for each comparison, which is expensive in terms of efficiency. The
 functions also call \texttt{inImage}, which (obviously) checks if a pixel is
 inside the image. This can be avoided by adding a border around the image with
 the width of half the neighbourhood size minus one (for example, $\frac{5 -
-1}{2} = 2$ pixels in a $5x5$ neighbourhood). When creating the feature vector,
+1}{2} = 2$ pixels in a 5x5 neighbourhood). When creating the feature vector,
 this border should not be iterated over.
 
 \section{Conclusion}
