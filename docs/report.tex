@@ -352,63 +352,71 @@ it as good as possible because all occurrences are in the learning set.
 
 To be able to use the code efficiently, we wrote a number of scripts. This
 section describes the purpose and usage of each script. For each script it is
-essential that you use the correct folder and subfolder naming scheme. The scheme
-is as follows:
+essential that you use the correct folder and subfolder naming scheme. The
+scheme is as follows:
 
 \begin{enumerate}
-    \item A main folder called `images' placed in the current directory as the
-    src folder.
+    \item A main folder called `images' placed in the root directory.
     \item In the images folder there have to be three folders.  Images, Infos
-    and LearningSet.
-    \item The Images and Infos folder contain subfolders which are numbered
+    characters
+    \item The Images and Infos folder contain subdirectories which are numbered
     ($0001$ to possibly $9999$).
-    \item In each of the subfolders the data (i.e the images or xml files) can
-    be placed.  And have to be named $00991_XXXXX.ext$, where XXXXX can be
+    \item In each of the subdirectories the data (i.e the images or xml files)
+    can be placed. And have to be named $00991_XXXXX.ext$, where XXXXX can be
     $00000 to 99999$.
-    \item For-loops in the script currently only go up to 9 subfolders, with a
-    maximum of containing 100 images or xml files. These numbers have to be
-    adjusted if the scripts are being used, but with a bigger dataset.
+    \item For-loops in the script currently only go up to 9 subdirectories,
+    with a maximum of containing 100 images or xml files. These numbers have to
+    be adjusted if the scripts are being used, but with a bigger dataset.
 \end{enumerate}
-
-It is of course possible to use your own naming scheme. A search for the
-$filename$ variable will most likely find the occurences where the naming
-scheme is implemented.
-
 
 \subsection*{\texttt{create\_characters.py}}
 
-
+Generates a file containing character objects with their feature vectors. Also,
+the learning set and test set files are created for the given combination of
+NEIGHBOURS and BLUR\_SCALE.
 
 \subsection*{\texttt{create\_classifier.py}}
 
-
+Generates a file containing a classifier object for the given combination of
+NEIGHBOURS and BLUR\_SCALE. The script uses functions from
+\texttt{create\_characters.py} to ensure that the required character files
+exist first. Therefore, \texttt{create\_characters.py} does not need to
+executed manually first.
 
 \subsection*{\texttt{find\_svm\_params.py}}
 
+Performs a grid-search to find the optimal value for \texttt{c} and
+\texttt{gamma}, for the given combination of NEIGHBOURS and BLUR\_SCALE. The
+optimal classifier is saved in
+\emph{data/classifier\_\{BLUR\_SCALE\}\_\{NEIGBOURS\}.dat}, and the accuracy
+scores are saved in in
+\emph{results/results\_\{BLUR\_SCALE\}\_\{NEIGBOURS\}.txt}.
 
+Like \texttt{create\_classifier.py}, the script ensures that the required
+character object files exist first.
+
+\subsection*{\texttt{run\_classifier.py}}
+
+Runs the classifier that has been saved in
+\emph{data/classifier\_\{BLUR\_SCALE\}\_\{NEIGBOURS\}.dat}. If the classifier
+file does not exist yet, a C and GAMMA can be specified so that it is created.
+Therefore, it is not necessary to run \texttt{create\_classifier.py} first.
 
 \subsection*{\texttt{generate\_learning\_set.py}}
 
 Usage of this script could be minimal, since you only need to extract the
-letters carefully and succesfully once. Then other scripts in this list can use
-the extracted images. Most likely the other scripts will use caching to speed
-up the system to. But in short, the script will create images of a single
+letters carefully and successfully once. Then other scripts in this list can
+use the extracted images. Most likely the other scripts will use caching to
+speed up the system to. But in short, the script will create images of a single
 character based on a given dataset of license plate images and corresponding
-xml files. If the xml files give correct locations of the characters they can
-be extracted. The workhorse of this script is $plate =
-xml_to_LicensePlate(filename, save_character=1)$. Where
+XML files. If the XML files give correct locations of the characters they can
+be extracted. The workhorse of this script is \texttt{plate =
+xml\_to\_LicensePlate(filename, save\_character=1)}. Where
 \texttt{save\_character} is an optional variable. If set it will save the image
-in the LearningSet folder and pick the correct subfolder based on the character
-value. So if the XML says a character is an 'A' it will be placed in the 'A'
-folder. These folders will be created automatically if they do not exist yet.
-
-\subsection*{\texttt{load\_learning\_set.py}}
-
-
-
-\subsection*{\texttt{run\_classifier.py}}
-
-
+in the characters folder and pick the correct subdirectory based on the
+character value. So if the XML says a character is an 'A' it will be placed in
+the `A' folder. These folders will be created automatically if they do not
+exist yet.
 
 \section{Finding parameters}
 
