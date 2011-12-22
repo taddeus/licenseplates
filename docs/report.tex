@@ -266,7 +266,7 @@ smaller amounts of dirt in the same way as we reduce normal noise, by applying
 a Gaussian blur to the image. This is the next step in our program.
 
 The Gaussian filter we use comes from the \texttt{scipy.ndimage} module. We use
-this function instead of our own function, because the standard functions are
+this function instead of our own function because the standard functions are
 most likely more optimized then our own implementation, and speed is an
 important factor in this application.
 
@@ -292,9 +292,9 @@ tried the following neighbourhoods:
     \label{fig:tested-neighbourhoods}
 \end{figure}
 
-We name these neighbourhoods respectively (8,3)-, (8,5)- and
+We call these neighbourhoods respectively (8,3)-, (8,5)- and
 (12,5)-neighbourhoods, after the number of points we use and the diameter
-of the `circle´ on which these points lay.
+of the `circle' on which these points lay.
 
 We chose these neighbourhoods to prevent having to use interpolation, which
 would add a computational step, thus making the code execute slower. In the
@@ -330,9 +330,7 @@ For the classification, we use a standard Python Support Vector Machine,
 \texttt{libsvm}. This is an often used SVM, and should allow us to simply feed
 data from the LBP and Feature Vector steps into the SVM and receive results.
 
-
-
-Usage a SVM can be divided in two steps. First, the SVM has to be trained
+Usage of a SVM can be divided in two steps. First, the SVM has to be trained
 before it can be used to classify data. The training step takes a lot of time,
 but luckily \texttt{libsvm} offers us an opportunity to save a trained SVM.
 This means that the SVM only has to be created once, and can be saved for later
@@ -345,7 +343,7 @@ are added to the learning set, and all the following are added to the test set.
 Therefore, if there are not enough examples, all available occurrences end up
 in the learning set, and non of these characters end up in the test set. Thus,
 they do not decrease our score. If such a character would be offered to the
-system (which it will not be in out own test program), the SVM will recognize
+system (which it will not be in our own test program), the SVM will recognize
 it as good as possible because all occurrences are in the learning set.
 
 \subsection{Supporting Scripts}
@@ -390,12 +388,12 @@ scheme is implemented.
 \subsection*{\texttt{generate\_learning\_set.py}}
 
 Usage of this script could be minimal, since you only need to extract the
-letters carefully and succesfully once. Then other scripts in this list can use
-the extracted images. Most likely the other scripts will use caching to speed
-up the system to. But in short, the script will create images of a single
-character based on a given dataset of license plate images and corresponding
-xml files. If the xml files give correct locations of the characters they can
-be extracted. The workhorse of this script is $plate =
+letters carefully and successfully once. Then other scripts in this list can
+use the extracted images. Most likely the other scripts will use caching to
+speed up the system too. But in short, the script will create images of a
+single character based on a given dataset of license plate images and
+corresponding xml files. If the xml files give correct locations of the
+characters they can be extracted. The workhorse of this script is $plate =
 xml_to_LicensePlate(filename, save_character=1)$. Where
 \texttt{save\_character} is an optional variable. If set it will save the image
 in the LearningSet folder and pick the correct subfolder based on the character
@@ -451,9 +449,8 @@ The cell size of the Local Binary Patterns determines over what region a
 histogram is made. The trade-off here is that a bigger cell size makes the
 classification less affected by relative movement of a character compared to
 those in the learning set, since the important structure will be more likely to
-remain in the same cell. However, if the cell size is too big, there will not
-be enough cells to properly describe the different areas of the character, and
-the feature vectors will not have enough elements.
+remain in the same cell. However, if the cell size is too big, the histogram
+loses information on locality of certain patterns.
 
 In order to find this parameter, we used a trial-and-error technique on a few
 cell sizes. During this testing, we discovered that a lot better score was
@@ -465,7 +462,9 @@ single character on a license plate in the provided dataset is very small.
 That means that when dividing it into cells, these cells become simply too
 small to have a really representative histogram. Therefore, the
 concatenated histograms are then a list of only very small numbers, which
-are not significant enough to allow for reliable classification.
+are not significant enough to allow for reliable classification. We do lose
+information on locality of the patterns, but since the images are so small,
+this is not an issue.
 
 \subsection{Parameter \emph{Neighbourhood}}
 
@@ -557,11 +556,6 @@ get a score of $0.93^6 = 0.647$, so $64.7\%$. That is not particularly
 good compared to the commercial ones. However, our focus was on getting
 good scores per character. For us, $93\%$ is a very satisfying result.
 
-Possibilities for improvement of this score would be more extensive
-grid-searches, finding more exact values for $c$ and $\gamma$, more tests
-for finding $\sigma$ and more experiments on the size and shape of the
-neighbourhoods.
-
 \subsubsection*{Faulty classified characters}
 
 As we do not have a $100\%$ score, it is interesting to see what characters are
@@ -571,10 +565,10 @@ these errors are easily explained. For example, some 0's are classified as
 
 Of course, these are not as interesting as some of the weird matches. For
 example, a 'P' is classified as 7. However, if we look more closely, the 'P' is
-standing diagonal, possibly because the datapoints where not very exact in the
-XML file. This creates a large diagonal line in the image, which explains why
-this can be classified as a 7. The same has happened with a 'T', which is also
-marked as 7.
+standing diagonally, possibly because the datapoints where not very exact in
+the XML file. This creates a large diagonal line in the image, which explains
+why this can be classified as a 7. The same has happened with a 'T', which is
+also marked as 7.
 
 Other strange matches include a 'Z' as a 9, but this character has a lot of
 noise surrounding it, which makes classification harder, and a 3 that is
@@ -606,6 +600,10 @@ running at 3.2 GHz.
 \section{Discussion}
 
 There are a few points open for improvement. These are the following.
+
+\subsection{Training of the SVM}
+
+
 
 \subsection{Other Local Binary Patterns}
 
