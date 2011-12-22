@@ -181,7 +181,7 @@ which vectors to associate with a character.
 
 \end{enumerate}
 
-To our knowledge, LBP has yet not been used in this manner before. Therefore,
+To our knowledge, LBP has not yet been used in this manner before. Therefore,
 it will be the first thing to implement, to see if it lives up to the
 expectations. When the proof of concept is there, it can be used in a final,
 more efficient program.
@@ -194,7 +194,7 @@ working with just one cell) gives us the best results.
 Given the LBP of a character, a Support Vector Machine can be used to classify
 the character to a character in a learning set. The SVM uses the concatenation
 of the histograms of all cells in an image as a feature vector (in the case we
-check the entire image no concatenation has to be done of course. The SVM can
+check the entire image no concatenation has to be done of course). The SVM can
 be trained with a subset of the given dataset called the ``learning set''. Once
 trained, the entire classifier can be saved as a Pickle object\footnote{See
 \url{http://docs.python.org/library/pickle.html}} for later usage.
