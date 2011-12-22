@@ -611,7 +611,14 @@ There are a few points open for improvement. These are the following.
 
 \subsection{Training of the SVM}
 
+The current training of the SVM is simply done with a certain part of the
+entire dataset. An optimization in the training would be to use a number of
+different combinations of learning and test sets. This is called
+cross-validation.
 
+We think this would be a usefull improvement since our learning set contains a
+number of weird characters. The effect of these characters would be decreased
+if we can use every character in the dataset to train the SVM.
 
 \subsection{Other Local Binary Patterns}
 
