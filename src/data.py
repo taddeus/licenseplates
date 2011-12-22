@@ -3,7 +3,7 @@ from cPickle import load, dump
 
 
 DATA_FOLDER = 'data/'
-IMAGES_FOLDER = '../images/LearningSet/'
+IMAGES_FOLDER = '../images/characters/'
 RESULTS_FOLDER = 'results/'
 
 
