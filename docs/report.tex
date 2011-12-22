@@ -349,23 +349,10 @@ it as good as possible because all occurrences are in the learning set.
 \subsection{Supporting Scripts}
 
 To be able to use the code efficiently, we wrote a number of scripts. This
-section describes the purpose and usage of each script. For each script it is
-essential that you use the correct folder and subfolder naming scheme. The
-scheme is as follows:
+section describes the purpose and usage of each script.
 
-\begin{enumerate}
-    \item A main folder called `images' placed in the root directory.
-    \item In the images folder there have to be three folders.  Images, Infos
-    characters
-    \item The Images and Infos folder contain subdirectories which are numbered
-    ($0001$ to possibly $9999$).
-    \item In each of the subdirectories the data (i.e the images or xml files)
-    can be placed. And have to be named $00991_XXXXX.ext$, where XXXXX can be
-    $00000 to 99999$.
-    \item For-loops in the script currently only go up to 9 subdirectories,
-    with a maximum of containing 100 images or xml files. These numbers have to
-    be adjusted if the scripts are being used, but with a bigger dataset.
-\end{enumerate}
+The dataset that is used is provided with the project, and should be located at
+\emph{images/characters}.
 
 \subsection*{\texttt{create\_characters.py}}
 
