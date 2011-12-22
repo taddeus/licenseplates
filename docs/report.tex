@@ -616,9 +616,15 @@ entire dataset. An optimization in the training would be to use a number of
 different combinations of learning and test sets. This is called
 cross-validation.
 
-We think this would be a usefull improvement since our learning set contains a
+We think this would be a useful improvement since our learning set contains a
 number of weird characters. The effect of these characters would be decreased
 if we can use every character in the dataset to train the SVM.
+
+\subsection{Number of support vectors}
+
+It could be useful to check the number of support vectors used by the SVM. If
+this number is high in proportion to the number of dimensions in the feature
+vectors, it may be profitable to use a more simple type of SVM.
 
 \subsection{Other Local Binary Patterns}
 
