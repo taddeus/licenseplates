@@ -388,7 +388,7 @@ Performs a grid-search to find the optimal value for \texttt{c} and
 optimal classifier is saved in
 \emph{data/classifier\_\{BLUR\_SCALE\}\_\{NEIGBOURS\}.dat}, and the accuracy
 scores are saved in
-\emph{results/results\_\{BLUR\_SCALE\}\_\{NEIGBOURS\}.txt}.
+\emph{results/result\_\{BLUR\_SCALE\}\_\{NEIGBOURS\}.txt}.
 
 Like \texttt{create\_classifier.py}, the script ensures that the required
 character object files exist first.
@@ -445,7 +445,7 @@ find this parameter, we tested a few values, by trying them and checking the
 results. It turned out that the best value was $\sigma = 1.4$.
 
 Theoretically, this can be explained as follows. The filter has width of
-$6 * \sigma = 6 * 1.4 = 8.4$ pixels. The width of a `stroke' in a character is,
+$6 * \sigma = 6 * 1.6 = 9.6$ pixels. The width of a `stroke' in a character is,
 after our resize operations, around 8 pixels. This means, our filter `matches'
 the smallest detail size we want to be able to see, so everything that is
 smaller is properly suppressed, yet it retains the details we do want to keep,
@@ -558,11 +558,11 @@ According to Wikipedia \cite{wikiplate}, commercial license plate recognition
 that are currently on the market software score about $90\%$ to $94\%$, under
 optimal conditions and with modern equipment.
 
-Our program scores an average of $93.2\%$. However, this is for a single
+Our program scores an average of $93.6\%$. However, this is for a single
 character. That means that a full license plate should theoretically
-get a score of $0.932^6 = 0.655$, so $65.5\%$. That is not particularly
+get a score of $0.936^6 = 0.672$, so $67.2\%$. That is not particularly
 good compared to the commercial ones. However, our focus was on getting
-good scores per character. For us, $93.2\%$ is a very satisfying result.
+good scores per character. For us, $93.6\%$ is a very satisfying result.
 
 \subsubsection*{Faulty classified characters}
 
