@@ -204,7 +204,8 @@ In our case the support vector machine uses a radial gauss kernel function. The
 \section{Implementation}
 
 In this section we will describe our implementation in more detail, explaining
-the choices we made in the process.
+the choices we made in the process. We spent a lot of attention on structuring
+the code in such a fashion that it can easily be extended.
 
 \subsection{Character retrieval}
 
@@ -528,6 +529,26 @@ grid-searches, finding more exact values for $c$ and $\gamma$, more tests
 for finding $\sigma$ and more experiments on the size and shape of the
 neighbourhoods.
 
+\subsubsection*{Faulty classified characters}
+
+As we do not have a $100\%$ score, it is interesting to see what characters are
+classified wrong. These characters are shown in appendix \ref{faucla}. Most of
+these errors are easily explained. For example, some 0's are classified as
+'D', some 1's are classified as 'T' and some 'F's are classified as 'E'.
+
+Of course, these are not as interesting as some of the weird matches. For
+example, a 'P' is classified as 7. However, if we look more closely, the 'P' is
+standing diagonal, possibly because the datapoints where not very exact in the
+XML file. This creates a large diagonal line in the image, which explains why
+this can be classified as a 7. The same has happened with a 'T', which is also
+marked as 7.
+
+Other strange matches include a 'Z' as a 9, but this character has a lot of
+noise surrounding it, which makes classification harder, and a 3 that is
+classified as 9, where the exact opposite is the case. This plate has no noise,
+due to which the background is a large area of equal color. This might cause
+the classification to focus more on this than on the actual character.
+
 \subsection{Speed}
 
 Recognizing license plates is something that has to be done fast, since there
@@ -565,7 +586,10 @@ research would be in place.
 
 The expectation is that using a larger diameter pattern, but with the same
 amount of points is worth trying. The theory behind that is that when using a
-gaussian blur to reduce noise, the edges are blurred as well. By
+Gaussian blur to reduce noise, the edges are blurred as well. By taking larger
+radius, you look over a larger distance, so the blurry part of the edge is
+skipped. By not using more points, there is no penalty in the time needed to
+calculate this larger pattern, so there is an accuracy advantage `for free'.
 
 \subsection{Context information}
 
@@ -647,6 +671,13 @@ are not properly classified. This is of course very problematic, both for
 training the SVM as for checking the performance. This meant we had to check
 each character whether its description was correct.
 
+As final note, we would like to state that an, in our eyes, unrealistic amount
+of characters has a bad quality, with a lot of dirt, or crooked plates
+etcetera. Our own experience is that the average license plate is less hard to
+read. The local binary pattern method has proven to work on this set, and as
+such has proven that it performs good in worst-case scenarios, but we would
+like to see how it performs on a more realistic dataset.
+
 \subsubsection*{SVM}
 
 We also had trouble with the SVM for Python. The standard Python SVM, libsvm,
@@ -685,12 +716,13 @@ were instantaneous! A crew to remember.
 
 \appendix
 
-\section{Faulty Classifications}
+\section{Faulty classified characters}
+\label{faucla}
 
 \begin{figure}[H]
     \hspace{-2cm}
     \includegraphics[scale=0.5]{faulty.png}
-    \caption{Faulty classifications of characters}
+    \caption{Faulty classificatied characters}
 \end{figure}
 
 \begin{thebibliography}{9}
