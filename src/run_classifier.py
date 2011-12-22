@@ -45,7 +45,7 @@ for i, char in enumerate(test_set):
     print '%d of %d (%d%% done)' % (i + 1, l, round(100 * (i + 1) / l))
 
 print '\n%d matches (%.1f%%), %d fails' % (matches, \
-        round(100 * matches / l), len(test_set) - matches)
+        100.0 * matches / l, len(test_set) - matches)
 
 # Show a grid plot of all faulty classified characters
 print 'Plotting faulty classified characters...'
