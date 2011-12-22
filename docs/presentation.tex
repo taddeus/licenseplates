@@ -1,8 +1,9 @@
 \documentclass{beamer}
 \mode<presentation>
+\usetheme{sidebar}
 \setbeamertemplate{footline}[page number]
 
-\title{Character Recognition with Local Binary Patterns}
+\title{Kentekenherkenning met Local Binary Patterns}
 \date{23 december 2011}
 \author{
     Gijs van der Voort\\
@@ -18,90 +19,179 @@
         \titlepage
     \end{frame}
 
-    \section{From local pattern to feature vector}
+    \section{Inleiding}
 
     \begin{frame}
-        \frametitle{From local pattern to feature vector}
+        \frametitle{Probleemomschrijving}
 
         \begin{itemize}
-        \item Uitleggen lbp en hoe onze feature vector eruit ziet
-        \pause
-        \item Dus 8 punten en waar die vandaan komen
+            \item Herkennen van kentekens met LBP
+            \item Focus op herkennen enkele karakters
         \end{itemize}
     \end{frame}
 
-    \section{Setting up the SVM}
+    \begin{frame}
+        \frametitle{Doel}
+
+        \begin{enumerate}
+            \item Omzetten van dataset naar afzonderlijke karakters
+            \item Karakter normaliseren
+            \item Feature vector maken met LBP
+            \item SVM classifier trainen met feature vectors
+            \item Meten van performance
+        \end{enumerate}
+    \end{frame}
+
+    \section{Local Binary Patterns}
 
     \begin{frame}
-        \frametitle{Lib SVM}
+        \frametitle{Wat is een Local Binary Pattern?}
 
         \begin{itemize}
-            \item Wat moet je aanroepen
-            \pause
-            \item Wat kun je instellen .. evt nog meer?
+            \item Vergelijken van grijswaardes op lokaal niveau
+            \item Ongevoelig voor verschillen in belichting (gray-scale
+            invariant)
+            \item Simpel algoritme, dus snelle implementatie mogelijk
         \end{itemize}
     \end{frame}
 
-    \section{Finding the correct SVM parameters}
+    \section{Implementatie}
 
     \begin{frame}
-        \frametitle{Finding the correct SVM parameters}
+        \frametitle{Omzetten karakters}
+
         \begin{itemize}
-            \item Waarom zijn deze belangrijk
-            \pause
-            \item Wat is het doel van goede parameters
-            \pause
-            \item hoe verschilt een slechte van goede
-            \pause
-            \item hoe vindt je de juiste
+            \item Dataset bestaat uit foto's van kentekens met informatie over
+            locaties van karakters
+            \item Dataset bevat veel fouten
+            \item Eenmalige operatie
         \end{itemize}
     \end{frame}
 
-    \section{Training}
-
     \begin{frame}
-        \frametitle{Training the SVM}
+        \frametitle{Karakter normaliseren}
+
         \begin{itemize}
-            \item Zorgen dat je een goede dataset hebt
-            \pause
-            \item Hoe je beste kunt trainen
+            \item Transformeer alle karakters naar dezelfde hoogte om dikte te
+            normaliseren
+            \item Ruisonderdrukking m.b.v. Gaussian blur
         \end{itemize}
     \end{frame}
 
-    \section{Results}
-
     \begin{frame}
-        \frametitle{Good results}
-        Goede resultaten goed.jpg
+        \frametitle{Feature vector maken met LBP}
+
+        \begin{enumerate}
+            \item Kies een pixel
+            \item Kies een aantal buren van de pixel
+            \begin{figure}
+                \includegraphics[scale=.4]{12-5neighbourhood.png}
+            \end{figure}
+            \item Vergelijk de grijswaarde van de eerder gekozen pixel met de
+            grijswaarde van zijn buren
+            \item Elke vergelijking levert een 1 of 0 op (b.v. groter is 1,
+            kleiner gelijk is 0)
+            \item Deze binaire waardes samen vormen \'e\'en LBP
+            \item Maak een histogram van de LBP's, dit is de feature vector van
+            de afbeelding
+        \end{enumerate}
     \end{frame}
 
     \begin{frame}
-        \frametitle{Bad results}
-        Slechte resultaten jammer.jpg
-    \end{frame}
+        \frametitle{Trainen SVM classifier}
 
-
-    \section{What can be improved}
-
-    \begin{frame}
-        \frametitle{What can be improved}
         \begin{itemize}
-            \item Dat er 97 procent met blabla kan gehaald worden of zoiets
-            \pause
-            \item Dat het in C geschreven kan worden
-            \pause
-            \item Dat lib-svm met zijn printjes maf is
+            \item Radial kernel function
+            \item Gebruik \texttt{libsvm}
         \end{itemize}
     \end{frame}
 
-    \section{Conclusion}
-        \begin{frame}
-            Van het project als geheel ook een beetje
-        \end{frame}
+    \begin{frame}
+        \frametitle{Meten van performance}
 
-    \section{References}
-        \begin{frame}
-            Van het project als geheel ook een beetje
-        \end{frame}
+        \begin{itemize}
+            \item Accuratie
+            \item Snelheid
+        \end{itemize}
+    \end{frame}
 
+    \section{Resultaten}
+
+    \begin{frame}
+        \frametitle{Parameter Gaussian blur: $\sigma$}
+
+        \begin{itemize}
+            \item Theorie: proportioneel aan de dikte van een letter
+            \item Beste resultaat met $\sigma = 1.9$ \\
+            $1.9 \cdot 6 = 11$ pixels, breedte karakter is 8 pixels
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Parameters SVM: Soft-margin en $\gamma$}
+
+        \begin{itemize}
+            \item Bepaald door grid-search:
+            \begin{itemize}
+                \item Kies exponentieel oplopende waardes voor $C$ en $\gamma$
+                \item Train een SVM voor elke combinatie van waardes
+                \item Zet de resultaten in een tabel
+            \end{itemize}
+            \item Beste resultaat met $C = 32.0$ en $\gamma = 0.125$
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Resultaten met dataset}
+
+        \begin{itemize}
+            \item Score van $94.3\%$
+            \item Foutief geclassificeerde karakters:
+            \begin{figure}
+                \includegraphics[scale=.2]{faulty.png}
+            \end{figure}
+        \end{itemize}
+    \end{frame}
+
+    \section{Mogelijkheden tot verbetering}
+
+    \begin{frame}
+        \frametitle{Mogelijkheden voor vervolgonderzoek}
+
+        \structure{Snelheid}
+        \begin{itemize}
+            \item Rekenintentensieve taken vertalen naar C
+            \item Andere kernel type
+            \item `Cachen' Gaussian filter
+        \end{itemize}
+
+        \structure{Accuratie}
+        \begin{itemize}
+            \item Andere pixelpatronen voor LBP
+            \item Betere verdeling leerset/testset
+            \item Toevoegen contextinformatie
+        \end{itemize}
+    \end{frame}
+
+    \section{Conclusie}
+
+    \begin{frame}
+        \frametitle{Conclusie}
+
+        \begin{itemize}
+            \item LBP is een geschikt algoritme voor gebruik in
+            kentekenherkenning
+            \item Zowel accuratie als snelheid
+        \end{itemize}
+    \end{frame}
+
+    \section{Referenties}
+
+    \begin{frame}
+        \frametitle{Referenties}
+
+        \begin{itemize}
+            \item \url{http://en.wikipedia.org/wiki/Local\_binary\_patterns}
+        \end{itemize}
+    \end{frame}
 \end{document}
