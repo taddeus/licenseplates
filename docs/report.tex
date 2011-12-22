@@ -543,12 +543,11 @@ XML file. This creates a large diagonal line in the image, which explains why
 this can be classified as a 7. The same has happened with a 'T', which is also
 marked as 7.
 
-Other strange matches include a 'Z' as a 9, but
-this character has a lot of noise surrounding it, which makes classification
-harder, and a 3 that is classified as 9, where the exact opposite is the case.
-This plate has no noise, due to which the background is a large area of equal
-color. This might cause the classification to focus more on this than on the
-actual character.
+Other strange matches include a 'Z' as a 9, but this character has a lot of
+noise surrounding it, which makes classification harder, and a 3 that is
+classified as 9, where the exact opposite is the case. This plate has no noise,
+due to which the background is a large area of equal color. This might cause
+the classification to focus more on this than on the actual character.
 
 \subsection{Speed}
 
@@ -672,6 +671,13 @@ A problem that is more elemental is that some of the characters in the dataset
 are not properly classified. This is of course very problematic, both for
 training the SVM as for checking the performance. This meant we had to check
 each character whether its description was correct.
+
+As final note, we would like to state that an, in our eyes, unrealistic amount
+of characters has a bad quality, with a lot of dirt, or crooked plates
+etcetera. Our own experience is that the average license plate is less hard to
+read. The local binary pattern method has proven to work on this set, and as
+such has proven that it performs good in worst-case scenarios, but we would
+like to see how it performs on a more realistic dataset.
 
 \subsubsection*{SVM}
 
