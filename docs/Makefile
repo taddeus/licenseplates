@@ -1,14 +1,10 @@
 RM=rm -rf
 
-all: plan.pdf report.pdf
+all: plan.pdf report.pdf presentation_lbp.pdf presentation.pdf
 
-plan.pdf: plan.tex
-	pdflatex $^
-	pdflatex $^
-
-report.pdf: report.tex
+%.pdf: %.tex
 	pdflatex $^
 	pdflatex $^
 
 clean:
-	$(RM) *.pdf *.aux *.log *.out *.toc
+	$(RM) *.pdf *.aux *.log *.out *.toc *.snm *.nav
