@@ -356,19 +356,23 @@ essential that you use the correct folder and subfolder naming scheme. The schem
 is as follows:
 
 \begin{enumerate}
-
-\item A main folder called 'images' placed in the current directory as the src folder.
-\item In the images folder there have to be three folders. Images, Infos and LearningSet.
-\item The Images and Infos folder contain subfolders which are numbered ($0001$ to possibly $9999$).
-\item In each of the subfolders the data (i.e the images or xml files) can be placed.
-And have to be named $00991_XXXXX.ext$, where XXXXX can be $00000 to 99999$.
-\item For loops in the script currently only go up to 9 subfolders, with a maximum
-of containing 100 images or xml files. These numbers have to be adjusted if the scripts 
-are being used, but with a bigger dataset.
+    \item A main folder called `images' placed in the current directory as the
+    src folder.
+    \item In the images folder there have to be three folders.  Images, Infos
+    and LearningSet.
+    \item The Images and Infos folder contain subfolders which are numbered
+    ($0001$ to possibly $9999$).
+    \item In each of the subfolders the data (i.e the images or xml files) can
+    be placed.  And have to be named $00991_XXXXX.ext$, where XXXXX can be
+    $00000 to 99999$.
+    \item For-loops in the script currently only go up to 9 subfolders, with a
+    maximum of containing 100 images or xml files. These numbers have to be
+    adjusted if the scripts are being used, but with a bigger dataset.
 \end{enumerate}
 
-It is ofcourse possible to use your own naming scheme. A search for the $filename$ variable will most
-likely find the occurences where the naming scheme is implemented.
+It is of course possible to use your own naming scheme. A search for the
+$filename$ variable will most likely find the occurences where the naming
+scheme is implemented.
 
 
 \subsection*{\texttt{create\_characters.py}}
@@ -385,16 +389,19 @@ likely find the occurences where the naming scheme is implemented.
 
 \subsection*{\texttt{generate\_learning\_set.py}}
 
-Usage of this script could be minimal, since you only need to extract the letters carefully
-and succesfully once. Then other scripts in this list can use the extracted images. Most
-likely the other scripts will use caching to speed up the system to. But in short, the script will create images of a single character based on a given dataset
-of license plate images and corresponding xml files. If the xml files give correct
-locations of the characters they can be extracted. The workhorse of this script is
-$plate = xml_to_LicensePlate(filename, save_character=1)$. Where save_character is
-an optional variable. If set it will save the image in the LearningSet folder and
-pick the correct subfolder based on the character value. So if the XML says a character
-is an 'A' it will be placed in the 'A' folder. These folders will be created automatically
-if they do not exist yet.
+Usage of this script could be minimal, since you only need to extract the
+letters carefully and succesfully once. Then other scripts in this list can use
+the extracted images. Most likely the other scripts will use caching to speed
+up the system to. But in short, the script will create images of a single
+character based on a given dataset of license plate images and corresponding
+xml files. If the xml files give correct locations of the characters they can
+be extracted. The workhorse of this script is $plate =
+xml_to_LicensePlate(filename, save_character=1)$. Where
+\texttt{save\_character} is an optional variable. If set it will save the image
+in the LearningSet folder and pick the correct subfolder based on the character
+value. So if the XML says a character is an 'A' it will be placed in the 'A'
+folder. These folders will be created automatically if they do not exist yet.
+
 \subsection*{\texttt{load\_learning\_set.py}}
 
 
