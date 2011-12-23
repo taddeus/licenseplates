@@ -83,17 +83,19 @@
 
         \begin{enumerate}
             \item Kies een pixel
+            \pause
             \item Kies een aantal buren van de pixel
             \begin{figure}
-                \includegraphics[scale=.4]{12-5neighbourhood.png}
+                \includegraphics[scale=.3]{12-5neighbourhood.png}
             \end{figure}
+            \pause
             \item Vergelijk de grijswaarde van de eerder gekozen pixel met de
-            grijswaarde van zijn buren
-            \item Elke vergelijking levert een 1 of 0 op (b.v. groter is 1,
-            kleiner gelijk is 0)
+            grijswaarde van zijn buren, elke vergelijking levert een 1 of 0 op
+            \pause
             \item Deze binaire waardes samen vormen \'e\'en LBP
-            \item Maak een histogram van de LBP's, dit is de feature vector van
-            de afbeelding
+            \pause
+            \item Maak een histogram van elke cel in de afbeelding,
+            concatenatie van histogrammen is de feature vector
         \end{enumerate}
     \end{frame}
 
@@ -106,16 +108,21 @@
         \end{itemize}
     \end{frame}
 
+    \section{Resultaten}
+
     \begin{frame}
         \frametitle{Meten van performance}
 
         \begin{itemize}
-            \item Accuratie
-            \item Snelheid
+            \item accuratie
+            \item snelheid
+            \begin{itemize}
+                \item $3 \times 3$ omgeving (8 pixels in patroon): 81ms
+                \item $5 \times 5$ omgeving (12 pixels in patroon): 137ms
+                \item feature vector $16\times$ groter, $1.7\times$ zoveel tijd
+            \end{itemize}
         \end{itemize}
     \end{frame}
-
-    \section{Resultaten}
 
     \begin{frame}
         \frametitle{Parameter Gaussian blur: $\sigma$}
@@ -153,7 +160,7 @@
         \end{itemize}
     \end{frame}
 
-    \section{Mogelijkheden tot verbetering}
+    \section{Mogelijkheden voor vervolgonderzoek}
 
     \begin{frame}
         \frametitle{Mogelijkheden voor vervolgonderzoek}
