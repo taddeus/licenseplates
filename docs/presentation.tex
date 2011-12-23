@@ -86,7 +86,7 @@
             \pause
             \item Kies een aantal buren van de pixel
             \begin{figure}
-                \includegraphics[scale=.3]{12-5neighbourhood.png}
+                \includegraphics[scale=.3]{neighbourhoods.png}
             \end{figure}
             \pause
             \item Vergelijk de grijswaarde van de eerder gekozen pixel met de
@@ -109,20 +109,6 @@
     \end{frame}
 
     \section{Resultaten}
-
-    \begin{frame}
-        \frametitle{Meten van performance}
-
-        \begin{itemize}
-            \item accuratie
-            \item snelheid
-            \begin{itemize}
-                \item $3 \times 3$ omgeving (8 pixels in patroon): 81ms
-                \item $5 \times 5$ omgeving (12 pixels in patroon): 137ms
-                \item feature vector $16\times$ groter, $1.7\times$ zoveel tijd
-            \end{itemize}
-        \end{itemize}
-    \end{frame}
 
     \begin{frame}
         \frametitle{Parameter Gaussian blur: $\sigma$}
@@ -149,15 +135,28 @@
     \end{frame}
 
     \begin{frame}
-        \frametitle{Resultaten met dataset}
+        \frametitle{Meten van performance}
 
         \begin{itemize}
-            \item Score van $94.3\%$
-            \item Foutief geclassificeerde karakters:
-            \begin{figure}
-                \includegraphics[scale=.2]{faulty.png}
-            \end{figure}
+            \item Accuratie
+            \begin{itemize}
+                \item Score van $94.3\%$
+            \end{itemize}
+            \item snelheid bij standaardhoogte van 42 pixels:
+            \begin{itemize}
+                \item $3 \times 3$ omgeving (8 pixels in patroon): 81ms
+                \item $5 \times 5$ omgeving (12 pixels in patroon): 137ms
+                \item feature vector $16\times$ groter, $1.7\times$ zoveel tijd
+            \end{itemize}
         \end{itemize}
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Foutief geclassificeerde karakters}
+
+        \begin{figure}
+            \includegraphics[scale=.2]{faulty.png}
+        \end{figure}
     \end{frame}
 
     \section{Mogelijkheden voor vervolgonderzoek}
@@ -165,18 +164,19 @@
     \begin{frame}
         \frametitle{Mogelijkheden voor vervolgonderzoek}
 
+        \structure{Accuratie}
+        \begin{itemize}
+            \item Meerdere cells
+            \item Andere pixelpatronen voor LBP
+            \item Betere verdeling leerset/testset
+            \item Toevoegen contextinformatie
+        \end{itemize}
+
         \structure{Snelheid}
         \begin{itemize}
             \item Rekenintentensieve taken vertalen naar C
             \item Andere kernel type
             \item `Cachen' Gaussian filter
-        \end{itemize}
-
-        \structure{Accuratie}
-        \begin{itemize}
-            \item Andere pixelpatronen voor LBP
-            \item Betere verdeling leerset/testset
-            \item Toevoegen contextinformatie
         \end{itemize}
     \end{frame}
 
@@ -199,6 +199,8 @@
 
         \begin{itemize}
             \item \url{http://en.wikipedia.org/wiki/Local\_binary\_patterns}
+            \item \url{http://en.wikipedia.org/wiki/Support\_vector\_machine}
+            \item \url{http://www.csie.ntu.edu.tw/~cjlin/libsvm/}
         \end{itemize}
     \end{frame}
 \end{document}
